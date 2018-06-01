@@ -3,7 +3,6 @@ class Api::V1::SessionsController < Devise::SessionsController
   skip_before_action :verify_authenticity_token
 
   def create
-    binding.pry
     user = User.where(username: user_params[:username]).first
     if user&.valid_password?(user_params[:password])
       sign_in("user", user)
@@ -20,7 +19,14 @@ class Api::V1::SessionsController < Devise::SessionsController
   end
 
   def new
-    head(:unauthorized)
+    token = request.headers["X-User-Token"]
+    email = request.headers["X-User-Email"]
+    @user = User.where(email: email, authentication_token: token).first
+    if(@user)
+      self.sign_in_and_redirect @user, :event => :authentication
+    else
+      head(:unauthorized)
+    end
   end
 
   private

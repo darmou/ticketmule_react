@@ -10,8 +10,13 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from '../components/App';
+import { BrowserRouter } from 'react-router-dom';
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('#root');
-    render(<App/>, container);
+    render(
+        <BrowserRouter>
+          <App/>
+        </BrowserRouter>, container
+    );
 });

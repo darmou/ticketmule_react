@@ -2,6 +2,7 @@
 capybara-*.html
 .rspec
 .DS_Store
+.idea
 /public/packs
 /log
 /tmp
