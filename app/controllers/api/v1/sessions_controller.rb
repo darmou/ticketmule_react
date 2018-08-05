@@ -6,24 +6,27 @@ class Api::V1::SessionsController < Devise::SessionsController
     user = User.where(username: user_params[:username]).first
     if user&.valid_password?(user_params[:password])
       sign_in("user", user)
-      render json: user.as_json(only: [:username, :authentication_token]), status: :created
+      render json: user.as_json(only: [:email, :authentication_token]), status: :created
     else
       head(:unauthorized)
     end
   end
 
   def destroy
-    current_user.authentication_token = nil
-    current_user.save!
+    current_api_v1_user.authentication_token = nil
+    current_api_v1_user.save!
     head(:no_content)
   end
+
+
 
   def new
     token = request.headers["X-User-Token"]
     email = request.headers["X-User-Email"]
     @user = User.where(email: email, authentication_token: token).first
-    if(@user)
-      self.sign_in_and_redirect @user, :event => :authentication
+    user = (@user) ? @user : current_api_v1_user
+    if(user)
+      self.sign_in_and_redirect user, :event => :authentication
     else
       head(:unauthorized)
     end

@@ -2,12 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from "styles/Login";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import { login } from '../actions';
+import { bindActionCreators } from 'redux';
+
+const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
+Object.freeze(formTypeEnum);
 
 class  Login extends React.Component {
 
-  handleSubmit(event) {
+  state = {
+    username: '',
+    password: ''
+  };
 
+  onChange(type, event) {
+    if (type == formTypeEnum.USERNAME) {
+      this.setState({ username: event.target.value });
+    } else {
+      this.setState({ password: event.target.value });
+    }
   }
+
+
+
+  handleSubmit(event)  {
+    this.props.login(this.state.username, this.state.password);
+    event.preventDefault();
+  }
+
+
 
   render() {
 
@@ -18,7 +42,7 @@ class  Login extends React.Component {
 
       <div className={styles.box}>
 
-        <form acceptCharset="UTF-8" onSubmit={this.handleSubmit} className="new_user_session" id="new_user_session">
+        <form acceptCharset="UTF-8" onSubmit={this.handleSubmit.bind(this)} className="new_user_session" id="new_user_session">
           <div style={{margin:0, padding:0,display:'inline'}}>
             <input name="utf8" type="hidden" value="✓"/>
             <input name="authenticity_token" type="hidden" value="PPV4FAKIY2sHEPq1ePKoEzs5JFzP08t6geRxZDgnQI0="/>
@@ -30,6 +54,8 @@ class  Login extends React.Component {
             <dd>
               <input className={[styles.textfield, styles.loginInputs].join(' ')} id="user_session_username"
                      name="user_session[username]" size="20"
+
+                     onChange={this.onChange.bind(this, formTypeEnum.USERNAME)}
                      type="text" autoComplete="off"/>
             </dd>
             <dt>
@@ -39,6 +65,7 @@ class  Login extends React.Component {
               <input className={[styles.textfield, styles.loginInputs, styles.password].join(' ')}
                      id="user_session_password" name="user_session[password]"
                      size="20"
+                     onChange={this.onChange.bind(this, formTypeEnum.PASSWORD)}
                      type="password" autoComplete="off"/>
             </dd>
             <dd>
@@ -59,4 +86,15 @@ class  Login extends React.Component {
   }
   }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+
+  return bindActionCreators({
+    login: login
+  }, dispatch);
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -6,6 +6,7 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets
   def index
+    require 'pry'; binding.pry
     @tickets = Ticket.all
     json_response(@tickets)
   end

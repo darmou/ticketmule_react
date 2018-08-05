@@ -10,31 +10,7 @@
     padding-bottom: 30px;
   }
 
-  .appHeader {
-    width: 100%;
-    background: #2d2d2d;
-    border-bottom: 4px solid #90af4c;
-    height: 80px;
-    overflow: hidden;
-    padding-top: 0;
-    padding-right: 4%;
-    padding-left: 4%;
 
-    .appTitle {
-      line-height: 74px;
-      margin-top: 6px;
-      color: #999;
-      width: 0;
-      font-family: "Trebuchet MS",sans-serif;
-      text-shadow: 0 3px 0 #111;
-      font-size: 22px;
-      letter-spacing: -1px;
-      &:hover {
-        color: #ccc;
-        cursor: default;
-      }
-    }
-  }
 
 
 }
