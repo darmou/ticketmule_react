@@ -22,6 +22,7 @@ Status.create name: 'Unresolved'
 
 Priority.create name: 'Urgent'
 Priority.create name: 'Standard'
+Priority.create name: 'Low'
 
 TimeType.create name: 'Trivial'
 TimeType.create name: 'Medium'

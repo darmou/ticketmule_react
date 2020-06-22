@@ -1,14 +1,31 @@
 class Api::V1::TicketsController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_ticket, only: [:show, :update, :destroy]
-  before_action :authenticate_api_v1_user!
   skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   # GET /tickets
   def index
-    require 'pry'; binding.pry
-    @tickets = Ticket.all
-    json_response(@tickets)
+    tickets = Ticket.all.includes(
+        :group,
+        :contact,
+        :creator,
+        :priority,
+        :status,
+        :time_type,
+        :owner
+        )
+    ticket_records_with_associations = tickets.map do |ticket|
+      ticket.attributes.merge(
+          'group' => ticket.group,
+          'contact' => ticket.contact,
+          'creator' => ticket.creator,
+          'priority' => ticket.priority,
+          'status' => ticket.status,
+          'time_type' => ticket.time_type,
+          'owner' => ticket.owner,
+      )
+    end
+    json_response(ticket_records_with_associations)
   end
 
   # POST /tickets

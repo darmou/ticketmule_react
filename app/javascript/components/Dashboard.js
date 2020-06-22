@@ -1,29 +1,36 @@
-import React from 'react';
-import {
-  Switch,
-  Route
-} from "react-router-dom";
-import Login from "./Login";
-import Footer from "./Footer";
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { checkLogin } from '../actions';
-import { bindActionCreators } from 'redux';
+import styled from "styled-components";
+import TicketBoard from "./TicketBoard";
+import React from "react";
 
-import styles from "styles/Dashboard";
+const Dashboard = () => {
+    return (
+        <DashboardStyled>
+            <MainStyled>
+                <div>
+                    <TicketBoard/>
+                </div>
+            </MainStyled>
+        </DashboardStyled>
+    );
+};
 
-class Dashboard extends React.Component {
+const DashboardStyled = styled.div`
+    width: 75%;
+`;
 
-  state = {
-    tickets: []
-  };
+export const leftColumn = `
+    float: left;
+    padding-left: 15px;
+    margin: 0 1% 0 0;
+`;
 
-  render() {
-    return <div className={styles.Dashboard}>
-      <h1>Test</h1>
-    </div>;
-
-  }
-}
+const MainStyled = styled.div`
+    padding: 15px 0 0 0;
+    overflow: hidden;
+    width: 92%;
+    min-width: 860px;
+    margin: 0 auto 20px;
+    ${leftColumn}
+`;
 
 export default Dashboard;

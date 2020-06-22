@@ -1,7 +1,10 @@
-
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from "styles/Header";
+import React, { useContext } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import Menu from "./Menu";
+import { TicketContext } from "../packs/application";
+import { logout } from "../actions";
+import HeadBackground from "../images/head-bg.gif";
 
 const menuItems = [
   { id: 0, path: "/", text: "Dashboard" },
@@ -9,29 +12,70 @@ const menuItems = [
   { id: 2, path: "/contacts", text: "Contacts" },
   { id: 3, path: "/users", text: "Users" },
   { id: 4, path: "/admin", text: "Admin" }
-
 ];
 
 const Header = () => {
+  const { dispatch, state } = useContext(TicketContext);
+
+  const signedIn = (state.user) ? (<div><StatusStyled>Signed in as&nbsp;
+          <a href="/users/1">{state.user.username}</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;<Link to="/" onClick={async () => {
+            if (window.confirm("Really sign out?")) await logout(dispatch);
+          }
+      }>Sign out</Link></StatusStyled>
+      <Menu menuItems={menuItems}/></div>) : null;
+
   return (
-      <header className={styles.Header}>
-        <h1 className={styles.appTitle}>TicketMule</h1>
-        <p id="status">Signed in as&nbsp;
-          <a href="/users/1">{this.props.username}</a>
-          &nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout" data-confirm="Really sign out?" data-method="delete" rel="nofollow">Sign out</a></p>
-        <Menu menuItems={menuItems}/>
-      </header>
-  )
+      <HeaderStyled>
+          <AppTitleStyled>TicketMule</AppTitleStyled>
+          {signedIn}
+      </HeaderStyled>
+  );
 };
 
+const HeaderStyled = styled.header`
+    width: 100%;
+    background: #2d2d2d url(${HeadBackground}) top left repeat-x;
+    border-bottom: 4px solid #90af4c;
+    height: 80px;
+    overflow: hidden;
+    padding-top: 0;
+    padding-right: 4%;
+    padding-left: 15px;
+`;
 
-Header.propTypes = {
-  user: PropTypes.shape({
-    username: PropTypes.username.isRequired,
-    email: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired
-  }).isRequired
-}
+const AppTitleStyled = styled.h1`
+    line-height: 74px;
+    margin-top: 6px;
+    color: #999;
+    width: 0;
+    font-family: "Trebuchet MS",sans-serif;
+    text-shadow: 0 3px 0 #111;
+    font-size: 22px;
+    letter-spacing: -1px;
+    &:hover {
+      color: #ccc;
+      cursor: default;
+    }
+`;
+
+const StatusStyled = styled.p`
+    position: absolute;
+    top: 6px;
+    background-color: #2d2d2d;
+    font: 11px/16px Verdana,sans-serif;
+    right: 40px;
+    color: #bbb;
+    border: 1px solid #bbb;
+    padding: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-top: 0;
+    border-top-color: #2d2d2d;
+    a {
+      color: #bbb;
+    }
+`;
 
 export default Header;
 

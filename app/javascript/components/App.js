@@ -3,67 +3,82 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import styles from "styles/App";
+import styled from "styled-components";
 import Login from "./Login";
 import Footer from "./Footer";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { receiveLogin } from '../actions';
-import { bindActionCreators } from 'redux';
-import { withCookies, Cookies } from 'react-cookie';
-import Menu from "./Menu";
+import { withCookies } from 'react-cookie';
+import { receiveLogin } from "../actions";
+import PropTypes from "prop-types";
+import { TicketContext } from "../packs/application";
+import Tickets from "./Tickets";
+import TicketControls from "./TicketControls";
+
+function BaseApp ({context}) {
+
+    React.useEffect(() => {
+        if (!context || !context.state.user) {
+            if (sessionStorage.getItem("authentication_token")) {
+
+                const user = {
+                    email: sessionStorage.getItem("email"),
+                    authentication_token: sessionStorage.getItem("authentication_token"),
+                    username: sessionStorage.getItem("username")
+                };
+                context.dispatch(receiveLogin(user));
+            }
+        }
+    });
+
+    const isLoggedIn = new Boolean(context && context.state.user).valueOf();
+    const Dash = (isLoggedIn === true)
+        ? Dashboard : Login;
 
 
+    return (<AppStyled>
+        <Header/>
+        <ContentStyled>
+            <Switch>
+                <Route exact path='/tickets/new' render={props => <Ticket {...props}/>}/>
+                <Route exact path='/tickets' render={props => <Tickets {...props}/>}/>
+                <Route exact path='/' render={props => <Dash {...props}/>}/>;
+            </Switch>
+            <RightColumnStyled>
+                <TicketControls loggedIn={isLoggedIn}/>
+            </RightColumnStyled>
+            <Footer/>
+        </ContentStyled>
+    </AppStyled>);
+}
 
-class App extends React.Component {
+const AppStyled = styled.div`
+  height: 100%;
+  color: #333;
+  font: 11px/16px Verdana,sans-serif;
+`;
 
-    state = {
-        tickets: []
-    };
+const ContentStyled = styled.div`
+    padding-bottom: 30px;
+`;
 
+const RightColumnStyled = styled.div`
+    padding: 15px 15px 15px 0;
+    float: right;
+    width: 25%;
+`;
 
-  componentDidMount() {
-     if(!this.props.user || !this.props.user.token) {
-       if(sessionStorage.getItem("token")) {
-         const user = {
-           email:sessionStorage.getItem("email"),
-           authentication_token: sessionStorage.getItem("token"),
-         };
-         this.props.receiveLogin(user);
-       }
-     }
-  }
+BaseApp.propTypes = {
+    context: PropTypes.object
+};
 
-    render() {
-
-        const dash = (this.props.user && this.props.user.token) ? Dashboard : Login;
-
-        return (
-            <div className={styles.App}>
-              <Header user={this.props.user}/>
-              <div className={styles.content}>
-                <Switch>
-                  <Route exact path='/' component={dash}/>
-                </Switch>
-              <Footer/>
-              </div>
-            </div>
-        );
-    }
+function App() {
+    return (
+        <TicketContext.Consumer>
+            {ticketContext => <BaseApp context={ticketContext}/>}
+        </TicketContext.Consumer>);
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-
-  return bindActionCreators({
-    receiveLogin: receiveLogin
-  }, dispatch);
-};
-
-const mapStateToProps = (state) => ({
-  user: state.user
-});
-
-export default withCookies(withRouter(connect(mapStateToProps, mapDispatchToProps)(App)))
+export default withCookies(withRouter(App));

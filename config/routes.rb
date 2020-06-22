@@ -8,7 +8,11 @@ Rails.application.routes.draw do
           sessions: 'api/v1/sessions',
       }
       resources :sessions, only: [:create, :destroy]
+      resources :groups, only: [:index]
+      resources :time_types, only: [:index]
+      resources :statuses, only: [:index]
       resources :tickets
+      resources :priorities, only: [:index]
     end
   end
 

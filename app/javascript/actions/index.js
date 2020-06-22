@@ -15,10 +15,14 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+export const LOGOUT_RESET = 'LOGOUT_RESET';
 
-const SendMethod = {GET: 'GET', POST: 'POST', PUT: 'PUT'};
+const SendMethod = { GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
 
-Object.freeze(SendMethod)
+Object.freeze(SendMethod);
 
 
 const createHeaders = (email = null, token = null) => {
@@ -46,20 +50,17 @@ const doNetworkRequest = async (url, method, email = null, token = null, body = 
   const myRequest = new Request(url, myInit);
   const response = await fetch(myRequest);
   if (response.ok) {
-    const json = await response.json();
+    const json = (response.status === 204) ? {} : await response.json();
     return json;
   } else {
     throw response.statusText;
   }
-
 };
-
-
 
 export const requestTicket = () => {
   return {
     type: REQUEST_TICKET
-  }
+  };
 };
 
 export const receiveTicket = (ticket) => {
@@ -67,7 +68,7 @@ export const receiveTicket = (ticket) => {
     type: RECEIVE_TICKET,
     ticket: ticket,
     receivedAt: Date.now()
-  }
+  };
 };
 
 export const receiveTicketFailure = (error) => {
@@ -75,13 +76,13 @@ export const receiveTicketFailure = (error) => {
     type: RECEIVE_TICKET_FAILURE,
     error: error,
     receivedAt: Date.now()
-  }
+  };
 };
 
 export const requestTickets = () => {
   return {
     type: REQUEST_TICKETS
-  }
+  };
 };
 
 export const receiveTickets = (tickets) => {
@@ -89,7 +90,7 @@ export const receiveTickets = (tickets) => {
     type: RECEIVE_TICKETS,
     tickets: tickets,
     receivedAt: Date.now()
-  }
+  };
 };
 
 export const receiveTicketsFailure = (error) => {
@@ -97,7 +98,7 @@ export const receiveTicketsFailure = (error) => {
     type: RECEIVE_TICKETS_FAILURE,
     error: error,
     receivedAt: Date.now()
-  }
+  };
 };
 
 export const requestLogin = () => {
@@ -105,7 +106,33 @@ export const requestLogin = () => {
     type: LOGIN_REQUEST,
     isFetching: true,
     isAuthenticated: false
-  }
+  };
+};
+
+export const requestLogout = () => {
+    return {
+        type: LOGOUT_REQUEST,
+        isLoggingOut: true,
+        isAuthenticated: true
+    };
+};
+
+export const receiveLogout = () => {
+    return {
+        type: LOGOUT_SUCCESS,
+        isLoggingOut: false,
+        isAuthenticated: false,
+        user: null
+    };
+};
+
+export const logoutError = (message) => {
+    return {
+        type: LOGOUT_FAILURE,
+        isFetching: false,
+        isAuthenticated: false,
+        message
+    };
 };
 
 export const receiveLogin = (user) => {
@@ -113,10 +140,8 @@ export const receiveLogin = (user) => {
     type: LOGIN_SUCCESS,
     isFetching: false,
     isAuthenticated: true,
-    token: user.authentication_token,
-    email: user.email
-
-  }
+    user,
+  };
 };
 
 export const loginError = (message) =>{
@@ -140,18 +165,29 @@ export const loginError = (message) =>{
   }
 };*/
 
-
-
 const doLogin = async (username, password) => {
 
   return doNetworkRequest('/api/v1/users/sign_in',
       SendMethod.POST, null, null, `{"user":{"username":"${username}","password":"${password}"}}`);
 };
 
+const doLogout = async () => {
+    return doNetworkRequest('/api/v1/users/sign_out',
+        SendMethod.DELETE);
+};
 
-export const login = (username, password) => {
+export const logout = async (dispatch) => {
+    try {
+        dispatch(requestLogout());
+        await doLogout();
+        dispatch(receiveLogout());
+    } catch (e) {
+        // catch errors from delete request
+        dispatch(logoutError(e));
+    }
+};
 
-  return async dispatch => {
+export const login = async (username, password, dispatch) => {
     try {
       // wait for the fetch to finish then dispatch the result
       dispatch(requestLogin());
@@ -161,47 +197,30 @@ export const login = (username, password) => {
       // catch errors from fetch
       dispatch(loginError(e));
     }
-  };
 };
 
-
-const fetchATicket = async (id, email, token) => {
-  return doNetworkRequest(`/api/v1/tickets/${id}`, SendMethod.GET, email, token);
+export const fetchTicket = async (id, email, token, dispatch) => {
+    try {
+        // wait for the fetch to finish then dispatch the result
+        dispatch(requestTicket());
+        const data = await doNetworkRequest(`/api/v1/tickets/${id}`, SendMethod.GET, email, token);
+        dispatch(receiveTicket(data));
+    } catch (e) {
+        // catch errors from fetch
+        dispatch(receiveTicketFailure(e));
+    }
 };
 
-export const fetchTicket = (id, email, token) => {
-
-return async dispatch => {
-  try {
-    // wait for the fetch to finish then dispatch the result
-    dispatch(requestTicket());
-    const data = await fetchATicket(id, email, token);
-    dispatch(receiveTicket(data));
-  } catch (e) {
-
-    // catch errors from fetch
-    dispatch(receiveTicketFailure(e));
-  }
-};
-};
-
-
-const fetchTheTickets = async (email, token) => {
-  return doNetworkRequest(`/api/v1/tickets/`, SendMethod.GET, email, token);
-};
-
-export const fetchTickets = (email, token) => {
-
-  return async dispatch => {
+export const fetchTickets = async (email, token, dispatch) => {
     try {
       // wait for the fetch to finish then dispatch the result
-      dispatch(requestTicket());
-      const data = await fetchTheTickets(email, token);
-      dispatch(receiveTicket(data));
+      dispatch(requestTickets());
+      const data = await doNetworkRequest(`/api/v1/tickets/`, SendMethod.GET, email, token);
+
+      dispatch(receiveTickets(data));
     } catch (e) {
 
       // catch errors from fetch
       dispatch(receiveTicketFailure(e));
     }
-  };
 };

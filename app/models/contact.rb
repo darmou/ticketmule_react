@@ -3,11 +3,11 @@ class Contact < ApplicationRecord
   has_many :tickets
 
   # Scopes
-  scope :enabled, -> {where (order: 'last_name, first_name', conditions: { disabled_at: nil })  }
+  scope :enabled, -> { where(disabled_at: nil) && order(last_name: :asc) }
 
   # Validations
   validates_presence_of :last_name
-  validates_format_of :email, :with => Authlogic::Regex.email
+  #validates_format_of :email, :with => Authlogic::Regex.email
 
   def full_name
     if first_name.blank?

@@ -1,7 +1,5 @@
-const { environment } = require('@rails/webpacker');
-const customConfig = require('./custom');
+const { environment } = require('@rails/webpacker')
+const typescript =  require('./loaders/typescript')
 
-// Merge custom config
-environment.config.merge(customConfig);
-
-module.exports = environment;
+environment.loaders.prepend('typescript', typescript)
+module.exports = environment
