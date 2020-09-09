@@ -8,7 +8,7 @@ This is a complete redesign of the origoal Ticketmule by Lee Smith (rails 2.3, h
 
 It is still very much a work in progress. Many features still to be implemented including porting to use Typescript 4.0.
 
-Also once finished sholud include, Jest and rspec for unit testing and cypress tests for integration.
+Also once finished will include, Jest and rspec for unit testing and Cypress tests for integration.
 
 ## Features
 
@@ -38,7 +38,7 @@ populator and faker are only used to load fake data.
 
 ## Database support
 
-TicketMule runs on PostgreSQL by default. MySQL and SQLite can be used with a small change to a couple of queries in the Ticket model. See [issue #10](https://github.com/appogee/ticket_mule/issues/#issue/10) for details.
+TicketMule runs on PostgreSQL by default. MySQL and SQLite can be used with a small change to a couple of queries in the Ticket model.
 
 ## Install
 
@@ -74,7 +74,7 @@ When you add an alert to a ticket, you will only receive an email alert when the
 
 ## License
 
-Copyright (c) 2009 by J. Lee Smith. All rights reserved. Changes may by Daryl Moulder for Rails 5.2 and React JS with other changes to Ticket properties and reporting (c) 2018
+Copyright (c) 2009 by J. Lee Smith. All rights reserved. Redesign by Daryl Moulder for Rails 6.0 and ReactJS with other changes to Ticket properties and reporting (c) 2020
 
 TicketMule is released under the MIT License. See the LICENSE file for details.
 
