@@ -5,11 +5,11 @@ import * as Yup from 'yup';
 import styled from "styled-components";
 import PrimaryButton from "./PrimaryButton";
 import ButtonGradient from "../images/button-gradient.png";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const newTicket = (event) => {
-    console.log(event);
+const newTicket = (event, navigate) => {
+   navigate("/tickets/new");
 };
 
 const newContact = (event) => {
@@ -17,11 +17,11 @@ const newContact = (event) => {
 };
 
 const TicketControls = ({loggedIn}) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const buttons = (location.pathname !== '/admin') ?
-        (<Fragment><PrimaryButton click={newTicket} text="New ticket"/>
+        (<Fragment><PrimaryButton click={e => newTicket(e, navigate)} text="New ticket"/>
         <PrimaryButton click={newContact} text="New Contact"/></Fragment>) : null;
 
     if (loggedIn === false) return null;
@@ -35,7 +35,7 @@ const TicketControls = ({loggedIn}) => {
                     onSubmit={(values, {setSubmitting}) => {
 
                         setSubmitting(false);
-                        history.push(`/tickets/${values.jump_id}`);
+                        navigate(`/tickets/${values.jump_id}`);
                     }}
                     validationSchema={Yup.object().shape({
                         jump_id: Yup.number()

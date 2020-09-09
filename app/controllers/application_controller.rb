@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Rails::Pagination
   include Response
   include ExceptionHandler
   before_action :require_login

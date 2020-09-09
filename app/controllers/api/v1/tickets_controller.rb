@@ -25,7 +25,7 @@ class Api::V1::TicketsController < ApplicationController
           'owner' => ticket.owner,
       )
     end
-    json_response(ticket_records_with_associations)
+    paginate json: ticket_records_with_associations
   end
 
   # POST /tickets

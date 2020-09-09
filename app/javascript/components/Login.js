@@ -1,49 +1,72 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { login } from '../actions';
-import { successFlash } from "../utils/display_utils";
+import { login } from '../utils/network';
+import { useQuery } from "react-query";
+import { msgFlash } from "../utils/display_utils";
 import { TicketContext } from "../packs/application";
+import TicketStore from "../actions/ticket_store";
 
 const formTypeEnum = {USERNAME: 1, PASSWORD: 2};
 Object.freeze(formTypeEnum);
 
 const Login = () =>  {
-
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [isLoggingIn, setIsLoggingIn] = React.useState(false);
+    const { state, dispatch } = React.useContext(TicketContext);
+    let flashMsg = null;
 
-    const ticketContext = React.useContext(TicketContext);
+    const { isLoading, error, data } = useQuery("login", () =>
+        login(username, password), {enabled: isLoggingIn, refetchOnWindowFocus: false, retry: false, refetchOnMount: false, cacheTime: 0 }
+    );
+
+    useEffect(() => {
+        if (data) {
+            dispatch({action_fn: TicketStore.setUser, user: data});
+        }
+    }, [data, TicketStore]);
+
+    if (error && !isLoading) {
+        const msg = (error.response.status === 401 ) ? 'Incorrect login details' : 'Error occurred';
+        if (flashMsg == null) {
+            flashMsg = (<FlashStyled><ErrorNotificationStyled> {msg} </ErrorNotificationStyled></FlashStyled>);
+        }
+
+        if (isLoggingIn) {
+            setIsLoggingIn(false); // Reset
+        }
+    }
+
+    if (state.isLoggingOut && flashMsg == null && !isLoggingIn) {
+        flashMsg = (<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
+    }
 
     const onChange = (type, event) => {
         const { target } = event;
         if (type == formTypeEnum.USERNAME) {
             setUsername(target.value);
-
         } else {
             setPassword(target.value);
         }
     };
 
     const handleSubmit = async (event) => {
-        const { dispatch } = ticketContext;
         event.preventDefault();
-        await login(username, password, dispatch);
+        if (flashMsg) {
+            flashMsg = null;
+        }
+        if (!isLoggingIn) {
+            setIsLoggingIn(true);
+        }
     };
 
-    const { state } = ticketContext;
-    let flash_msg = null;
-    if (state.isLoggingOut === false) {
-        flash_msg = <SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled>;
-    }
 
     return (<LoginStyled>
         <h1>Sign in</h1>
 
         <BoxStyled>
-            <FlashStyled>
-                {flash_msg}
-            </FlashStyled>
+            {flashMsg}
             <form acceptCharset="UTF-8" onSubmit={handleSubmit}
                   className="new_user_session" id="new_user_session">
                 <div style={{margin: 0, padding: 0, display: 'inline'}}>
@@ -60,7 +83,7 @@ const Login = () =>  {
                                id="user_session_username"
                                name="user_session[username]" size="20"
 
-                               onChange={onChange.bind(this, formTypeEnum.USERNAME)}
+                               onChange={e => onChange(formTypeEnum.USERNAME, e)}
                                type="text" autoComplete="off"/>
                     </dd>
                     <dt>
@@ -70,7 +93,7 @@ const Login = () =>  {
                         <StyledInputPassword
                                id="user_session_password" name="user_session[password]"
                                size="20"
-                               onChange={onChange.bind(this, formTypeEnum.PASSWORD)}
+                               onChange={e => onChange(formTypeEnum.PASSWORD, e)}
                                type="password" autoComplete="off"/>
                     </dd>
                     <dd>
@@ -80,7 +103,7 @@ const Login = () =>  {
                         <label htmlFor="user_session_remember_me">Remember me</label>
                     </dd>
                     <dd>
-                        <ButtonStyled name="commit" type="submit"
+                        <ButtonStyled disabled={isLoading} name="commit" type="submit"
                                value="Sign in"/>&nbsp;&nbsp;
                         <Link to="/password_resets/new">
                             Forgot your password?
@@ -93,21 +116,28 @@ const Login = () =>  {
 
 };
 
-
-const SuccessNotificationStyled = styled.div`
+const NotificationStyled = styled.div`
   width: 100%;
   text-align: left;
   padding: 5px 10px 5px;
 
-  background-color: #efe;
-  color: #585;
-
-  animation:${successFlash} 0.5s 1;
+  animation:${msgFlash} 0.5s 1;
   animation-fill-mode: forwards;
 
   animation-delay:2s;
   -webkit-animation-delay:1s; /* Safari and Chrome */
   -webkit-animation-fill-mode: forwards;
+`;
+
+const SuccessNotificationStyled = styled(NotificationStyled)`
+
+  background-color: #efe;
+  color: #585;
+`;
+
+const ErrorNotificationStyled = styled(NotificationStyled)`
+    color: #D8000C;
+    background-color: #FFBABA;
 `;
 
 const ButtonStyled = styled.input`

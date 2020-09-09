@@ -29,6 +29,9 @@ const PrimaryButtonStyled = styled.button`
     font-family: verdana,sans-serif;
     font-weight: bold;
     text-shadow: 0 -1px 1px rgba(0,0,0,0.35);
+    &:focus {
+        outline:0;
+    }
     &:hover {
       cursor: pointer;
        background-color: #839F45;

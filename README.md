@@ -2,6 +2,14 @@
 
 No frills, general use support ticket tracking. Easily document and communicate client relations within a support team.
 
+## Note
+
+This is a complete redesign of the origoal Ticketmule by Lee Smith (rails 2.3, https://github.com/leesmith/ticket_mule).
+
+It is still very much a work in progress. Many features still to be implemented including porting to use Typescript 4.0.
+
+Also once finished sholud include, Jest and rspec for unit testing and cypress tests for integration.
+
 ## Features
 
 * Clean interface that is compatible with modern web browsers
@@ -14,18 +22,17 @@ Subscribe to ticket updates via email (alerts)
 * In-line admin controls to delete comments, attachments, and tickets
 * Basic reporting in the admin interface
 * Gravatar integration
-* Ruby on Rails 5.2
+* Ruby on Rails 6.0, ReactJS 16.13.1
+
 
 ## Included Gems
 
-* will_paginate 3.0.2
-* authlogic 3.0.3
-* meta_search 1.1.1
-* paperclip 2.4.2
-* prawn 0.12.0
-* ruport 1.6.3
-* populator 1.0.0
+* api-pagination 4.0.2
+* paperclip 6.0.0
 * faker 1.0.1
+* devise 4.7.2
+* byebug 11.0
+* puma 4.3.6
 
 populator and faker are only used to load fake data.
 

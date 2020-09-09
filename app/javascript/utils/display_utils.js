@@ -13,7 +13,7 @@ export const renderTableHeader = (header_items) => {
     </HeaderStyled>;
 };
 
-export const successFlash = keyframes`
+export const msgFlash = keyframes`
   from {opacity :1;}
   to {opacity :0;}
 `;

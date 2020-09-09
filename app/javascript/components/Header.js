@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
 import { TicketContext } from "../packs/application";
-import { logout } from "../actions";
+import TicketStore from "../actions/ticket_store";
 import HeadBackground from "../images/head-bg.gif";
 
 const menuItems = [
@@ -20,7 +20,9 @@ const Header = () => {
   const signedIn = (state.user) ? (<div><StatusStyled>Signed in as&nbsp;
           <a href="/users/1">{state.user.username}</a>
           &nbsp;&nbsp;|&nbsp;&nbsp;<Link to="/" onClick={async () => {
-            if (window.confirm("Really sign out?")) await logout(dispatch);
+            if (window.confirm("Really sign out?")) {
+                dispatch({action_fn: TicketStore.setUser, user: null});
+            }
           }
       }>Sign out</Link></StatusStyled>
       <Menu menuItems={menuItems}/></div>) : null;

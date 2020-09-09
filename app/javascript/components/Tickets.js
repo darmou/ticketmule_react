@@ -1,22 +1,11 @@
-import React, {useContext, useEffect} from "react";
+import React, { useContext } from "react";
 import TicketTable from "./TicketTable";
 import styled from "styled-components";
-import {TicketBoardStyled} from "./TicketBoard";
-import {TicketContext} from "../packs/application";
-import {fetchTickets} from "../actions";
+import { TicketBoardStyled } from "./TicketBoard";
+import { TicketContext } from "../packs/application";
 
 const Tickets = () => {
-    const { state, dispatch } = useContext(TicketContext);
-    const { tickets, user} = state;
-
-    useEffect( () => {
-        async function fetchTicketData() {
-            await fetchTickets(user.email, user.authentication_token, dispatch);
-        }
-        if (tickets == null) {
-            fetchTicketData();
-        }
-    }, [tickets, user, dispatch]); // Or [] if effect doesn't need props or state*/
+    const { state } = useContext(TicketContext);
 
     return(<TicketsStyled>
         <h2>Tickets</h2>

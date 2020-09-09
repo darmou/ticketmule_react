@@ -1,9 +1,8 @@
 import React from "react";
+import { TicketStyled } from "./Ticket";
 
-const Ticket = () => {
-
-    return(<TicketStyled>
-        <h2>New ticket</h2>
-        <TicketForm />
-    </TicketStyled>);
+const TicketForm = ({id}) => {
+    return(<div>{id}</div>);
 };
+
+export default TicketForm;

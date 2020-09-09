@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Switch,
+  Routes,
   Route
 } from "react-router-dom";
 import styled from "styled-components";
@@ -8,12 +8,14 @@ import Login from "./Login";
 import Footer from "./Footer";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
-import { withRouter } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
-import { receiveLogin } from "../actions";
 import PropTypes from "prop-types";
 import { TicketContext } from "../packs/application";
+import TicketDash from "./TicketDash";
+import TicketNew from "./TicketNew";
 import Tickets from "./Tickets";
+import TicketStore from "../actions/ticket_store";
+import Ticket from "./Ticket";
 import TicketControls from "./TicketControls";
 
 function BaseApp ({context}) {
@@ -21,32 +23,33 @@ function BaseApp ({context}) {
     React.useEffect(() => {
         if (!context || !context.state.user) {
             if (sessionStorage.getItem("authentication_token")) {
-
                 const user = {
                     email: sessionStorage.getItem("email"),
                     authentication_token: sessionStorage.getItem("authentication_token"),
                     username: sessionStorage.getItem("username")
                 };
-                context.dispatch(receiveLogin(user));
+                context.dispatch({action_fn: TicketStore.setUser, user});
             }
         }
-    });
+    }, [TicketStore]);
 
-    const isLoggedIn = new Boolean(context && context.state.user).valueOf();
-    const Dash = (isLoggedIn === true)
+    const Dash = (context && context.state.user != null)
         ? Dashboard : Login;
 
 
     return (<AppStyled>
         <Header/>
         <ContentStyled>
-            <Switch>
-                <Route exact path='/tickets/new' render={props => <Ticket {...props}/>}/>
-                <Route exact path='/tickets' render={props => <Tickets {...props}/>}/>
-                <Route exact path='/' render={props => <Dash {...props}/>}/>;
-            </Switch>
+            <Routes>
+                <Route path='/tickets' element={<TicketDash/>}>
+                    <Route path='/' element={<Tickets/>} />
+                    <Route exact path='/new' element={<TicketNew/>} />
+                    <Route path=':slug' element={<Ticket/>} />
+                </Route>
+                <Route path='/' element={<Dash />}/>
+            </Routes>
             <RightColumnStyled>
-                <TicketControls loggedIn={isLoggedIn}/>
+                <TicketControls loggedIn={context && context.state.user != null}/>
             </RightColumnStyled>
             <Footer/>
         </ContentStyled>
@@ -81,4 +84,4 @@ function App() {
 }
 
 
-export default withCookies(withRouter(App));
+export default withCookies(App);

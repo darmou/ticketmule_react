@@ -3,15 +3,10 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const isActive = (path, match, location) => {
-    return path === location.pathname;
-};
-
 const Menu = (props) => {
-
   const menu_items = props.menuItems.map(menu_item =>
       <li key={menu_item.id} >
-        <LinkElem isActive={isActive.bind(this, menu_item.path)} to={menu_item.path} activeClassName="active">
+        <LinkElem end={menu_item.path === '/'} exact to={menu_item.path} >
           {menu_item.text}
         </LinkElem>
       </li>

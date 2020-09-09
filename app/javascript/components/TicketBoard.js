@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import styled, { css } from "styled-components";
 import MinusImage from "../images/minus.gif";
+import PlusImage from "../images/plus.gif";
 import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import TicketStore from "../actions/ticket_store";
 import { renderTableHeader, renderList } from "../utils/display_utils";
 import moment from "moment";
 import { TicketContext } from "../packs/application";
@@ -11,15 +14,18 @@ import differenceInDays from "date-fns/differenceInDays";
 import differenceInWeeks from "date-fns/differenceInWeeks";
 import differenceInMonths from "date-fns/differenceInMonths";
 import differenceInYears from "date-fns/differenceInYears";
-import { fetchTickets } from "../actions";
+import { fetchTickets } from "../utils/network";
+import { TableSection, H3ToggleStyled  } from "./TableSection";
 import RedBullet from "../images/bullet_red.png";
 import YellowBullet from "../images/bullet_yellow.png";
 import BlueBullet from "../images/bullet_blue.png";
+import SlideToggle from "react-slide-toggle";
 
-const ticket_types = {
+const TICKET_TYPES = {
     OPENED: 'opened',
     CLOSED: 'closed'
 };
+Object.freeze(TICKET_TYPES);
 
 const main_header_items = [
     { id: 0, content: "Ticket #" },
@@ -31,7 +37,7 @@ const main_header_items = [
     { id: 6, content: "Owner" }
 ];
 
-const header_items = [
+const headerItems = [
     ...main_header_items,
     { id: 7, content: "Last Activity" }
 ];
@@ -141,20 +147,23 @@ const renderTickets = (tickets) => {
 
 };
 
+const SLIDE_DURATION = 800;
+
 const TicketBoard = () => {
 
     const { state, dispatch } = useContext(TicketContext);
     const { tickets, user } = state;
 
+    const { data } = useQuery("tickets", () =>
+        fetchTickets(user), { enabled: tickets == null }
+    );
 
-    useEffect( () => {
-        async function fetchTicketData() {
-            await fetchTickets(user.email, user.authentication_token, dispatch);
+    useEffect(() => {
+        if (!tickets && data != null) {
+            dispatch({action_fn: TicketStore.setTickets, tickets: data});
         }
-        if (tickets == null) {
-            fetchTicketData();
-        }
-    }, [tickets, user, dispatch]);
+    }, [state, tickets, data, TicketStore]);
+
 
     const theTickets = renderTickets(state.tickets);
 
@@ -162,40 +171,27 @@ const TicketBoard = () => {
        <TicketBoardStyled>
             <h2>Dashboard</h2>
 
-           <H3ToggleStyled>Active Tickets</H3ToggleStyled>
-            <div id="active-listing">
-                <TableListingStyled cellSpacing="0">
-                    <thead>
-                    { renderTableHeader(header_items, css(header)) }
-                    </thead>
-                    <tbody>
-                    {theTickets}
-                    </tbody>
-                </TableListingStyled>
-            </div>
+           <TableSection slideDuration={SLIDE_DURATION} headerItems={headerItems} theTickets={theTickets} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} theTickets={[]} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
-           <H3ToggleStyled>Recently Closed Tickets</H3ToggleStyled>
-            <div id="closed-listing">
-                <TableListingStyled cellSpacing="0">
-                    <thead>
-                    {renderTableHeader(closed_ticket_items, css(header))}
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </TableListingStyled>
-            </div>
-
-            <H3ToggleStyled>Timeline</H3ToggleStyled>
-            <TimelineWrapperStyled>
-                <TimelineStyled isLeft={true}>
-                    {ticketTimeLineList(ticket_types.OPENED, null)}
-                    <SpanTimelineLabel>Opened Tickets</SpanTimelineLabel>
-                </TimelineStyled>
-                <TimelineStyled isLeft={false}>
-                    {ticketTimeLineList(ticket_types.CLOSED, null)}
-                    <SpanTimelineLabel>Closed Tickets</SpanTimelineLabel>
-                </TimelineStyled>
-            </TimelineWrapperStyled>
+           <SlideToggle
+               duration={SLIDE_DURATION}
+               render={({ toggle, setCollapsibleElement, toggleState }) => (
+                   <>
+                       <H3ToggleStyled  isOpen={toggleState} onClick={toggle}>Timeline</H3ToggleStyled>
+                       <TimelineWrapperStyled css={css``} ref={setCollapsibleElement}>
+                           <TimelineStyled isLeft={true}>
+                               {ticketTimeLineList(TICKET_TYPES.OPENED, null)}
+                               <SpanTimelineLabel>Opened Tickets</SpanTimelineLabel>
+                           </TimelineStyled>
+                           <TimelineStyled isLeft={false}>
+                               {ticketTimeLineList(TICKET_TYPES.CLOSED, null)}
+                               <SpanTimelineLabel>Closed Tickets</SpanTimelineLabel>
+                           </TimelineStyled>
+                       </TimelineWrapperStyled>
+                   </>
+               )}
+           />
        </TicketBoardStyled>
     );
 };
@@ -204,20 +200,12 @@ export const header = `
     background: #f1f1f1;
 `;
 
-const toggle = `
-    padding: 6px 0 6px 20px;
-    background: url(${MinusImage}) no-repeat left center;
-    &:hover {
-      cursor: pointer;
-      color: #90af4c;
-    }
-`;
 
 const ImageTD = styled.td.attrs(props => ({
     background: props.background
 }))`
     font-weight: bold;
-    background: ${props => props.background};
+    background: ${({background}) => background};
     padding-left: 17px !important;
 
     a:hover {
@@ -273,19 +261,12 @@ const CountSpanStyled = styled.span`
       overflow: hidden;
 `;
 
-
-const H3ToggleStyled = styled.h3`
-    ${toggle}
-`;
-
-
-
 const TimelineStyled = styled.div`
     padding: 0;
     margin: 0;
     width: auto;
     background: #fff;
-    float: ${props => { return (props.isLeft) ? 'left': 'right';}};
+    float: ${({isLeft}) => (isLeft) ? 'left': 'right'};
 `;
 
 export const TicketBoardStyled = styled.div`

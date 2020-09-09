@@ -4,6 +4,6 @@ class Api::V1::GroupsController < ApplicationController
 
   def index
     @groups = Group.select(:name, :id)
-    json_response(@groups)
+    paginate json: @groups
   end
 end
