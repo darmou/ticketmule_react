@@ -30,6 +30,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'kaminari'
 gem 'rack-cors'
 gem 'ruport'
+gem 'prawn-rails', '~> 1.3.0'
+gem 'prawn', '~> 2.3.0'
 
 #gem 'protected_attributes'
 

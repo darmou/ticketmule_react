@@ -36,7 +36,17 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets/:id
   def show
-    json_response(@ticket)
+    respond_to do | format |
+      format.json { json_response(@ticket)}
+      format.pdf do
+        pdf = TicketPdf.new(@ticket)
+            send_data pdf.render,
+                  filename: "#{@ticket.id}.pdf",
+                  type: "application/pdf",
+                  disposition: "inline"
+      end
+    end
+
   end
 
   # PUT /tickets/:id
