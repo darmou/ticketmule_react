@@ -11,12 +11,17 @@ Rails.application.routes.draw do
       resources :groups, only: [:index]
       resources :time_types, only: [:index]
       resources :statuses, only: [:index]
-      resources :tickets
+      resources :tickets do
+        resources :comments, only: [:create, :destroy]
+      end
+
       resources :priorities, only: [:index]
     end
   end
 
-
+  get '*all', to: 'home#index', constraints: lambda { |req|
+    req.path.exclude? 'rails/active_storage'
+  }
 
 
 end

@@ -1,18 +1,20 @@
 class Attachment < ApplicationRecord
   include AttachmentConcern
-  # Paperclip config
-  has_attached_file :data,
-                    :default_url => "/attachments/:ticket_id/:id",
-                    :path => ":rails_root/attachments/:ticket_id/:id/:basename.:extension"
+  has_one_attached :data
+  # Old Paperclip config
+  #has_attached_file :data,
+  #                  :default_url => "/attachments/:ticket_id/:id",
+  #                  :path => ":rails_root/attachments/:ticket_id/:id/:basename.:extension"
 
-  #validates_attachment_content_type :data, content_type: /\Aimage\/.*\z/
 
   # Validations
-  validates_attachment_presence :data
-  validates_attachment_size :data, :less_than => APP_CONFIG['attachment_size_limit'].megabytes, :message => "attachment file size is limited to #{APP_CONFIG['attachment_size_limit']} megabytes."
-  validates_presence_of :ticket_id, :user_id
+  #          ,file_content_type: { allow: ['image/jpeg', 'image/png', 'image/gif'] }
+  validates :ticket_id, :user_id, presence: true
+  validates :data, presence: true, file_size: { less_than_or_equal_to: APP_CONFIG['attachment_size_limit'].megabytes }
 
-  attr_protected :data_file_name, :data_content_type, :data_file_size
+  def self.strong_params(params)
+    params.permit(:attachment).permit(:data_file_name, :data_content_type, :data_file_size)
+  end
 
   def url
     data.url

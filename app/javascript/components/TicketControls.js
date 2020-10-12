@@ -20,7 +20,7 @@ const TicketControls = ({loggedIn}) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const buttons = (location.pathname !== '/admin') ?
+    const buttons = (location != null && location.pathname !== '/admin') ?
         (<Fragment><PrimaryButton click={e => newTicket(e, navigate)} text="New ticket"/>
         <PrimaryButton click={newContact} text="New Contact"/></Fragment>) : null;
 

@@ -3,6 +3,8 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
+import {ticketsTypes} from "../actions/ticket_store";
+
 require("@rails/ujs").start();
 require("turbolinks").start();
 require("@rails/activestorage").start();
@@ -25,16 +27,25 @@ import "idempotent-babel-polyfill";
 import { CookiesProvider } from "react-cookie";
 import functionReducer from "function-reducer";
 
+const logReducer = (state, action) => {
+    const {action_fn, ...params} = action;
+    console.log(`${new Date().toISOString()}| name: ${action_fn?.name}, params: ${JSON.stringify(params)}`);
+    return functionReducer(state, action);
+};
+
 export const TicketContext = createContext(null);
 export const TicketContextProvider = props => {
     const initialState = {
-        tickets: null,
+        tickets: {
+            [ticketsTypes.NOT_CLOSED]: null,
+            [ticketsTypes.CLOSED]: null
+        },
         ticket: null,
         user: null,
         isLoggingOut: null,
     };
 
-    const [state, dispatch] = useReducer(functionReducer, initialState);
+    const [state, dispatch] = useReducer(logReducer, initialState);
     return (
         <TicketContext.Provider value={{state, dispatch}}>
             {props.children}

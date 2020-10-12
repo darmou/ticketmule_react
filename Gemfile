@@ -25,7 +25,6 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'acts_as_reportable'
 gem 'api-pagination'
-gem 'grape', '>= 0.10.0'
 gem 'jbuilder', '~> 2.7'
 gem 'kaminari'
 gem 'rack-cors'
@@ -35,10 +34,10 @@ gem 'prawn', '~> 2.3.0'
 
 #gem 'protected_attributes'
 
-gem "paperclip", "~> 6.0.0"
+gem 'file_validators', '~> 2.3.0'
 
 # Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

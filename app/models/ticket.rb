@@ -37,10 +37,13 @@ class Ticket < ApplicationRecord
   before_update :set_closed_at
 
   # Scopes
-  scope :not_closed, -> { where(joins: :status, conditions:  ['statuses.name <> ?', 'Closed']) }
-  scope :recently_assigned_to, lambda { | user_id | { limit: 5, conditions:  { owned_by: user_id }, include: [:creator, :owner, :group, :status, :priority, :time_type, :contact], order: 'tickets.updated_at DESC' } }
-  scope :active_tickets, -> { where(limit: 5, include: [:creator, :owner, :group, :status, :priority], order: 'tickets.updated_at DESC')  }
-  scope :closed_tickets, -> { where(limit: 5, joins: :status, include: [:creator, :owner, :group, :status, :time_type, :priority], conditions: ['statuses.name = ?', 'Closed'], order: 'closed_at DESC') }
+  scope :ticket_includes, -> { includes(:group, :contact, :creator, :priority, :status, :time_type, :owner)}
+  scope :with_related_records, -> { includes(:comments, :alerts) }
+  scope :with_long_title, -> { where("LENGTH(title) > 20") }
+  scope :not_closed, -> { joins(:status).where("statuses.name is not 'Closed'") }
+  scope :recently_assigned_to, -> (user_id) { where(owned_by: user_id).order(updated_at: :desc).limit(5) }
+  scope :active_tickets, -> { joins(:status).where("statuses.name = 'Re-opened' OR statuses.name = 'Open'").order(updated_at: :desc).limit(5) }
+  scope :closed_tickets, -> { joins(:status).where("statuses.name is 'Closed'").order(created_at: :desc).limit(5) }
 
   def self.timeline_opened_tickets
     self.count(group: 'date(created_at)', having: ['date(tickets.created_at) >= ? and date(tickets.created_at) <= ?', (Time.zone.now.beginning_of_day - 30.days).to_date.to_s, (Time.zone.now.end_of_day - 1.day).to_date.to_s])

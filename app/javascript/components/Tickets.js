@@ -1,23 +1,28 @@
-import React, { useContext } from "react";
-import TicketTable from "./TicketTable";
+import React from "react";
+import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import { TicketBoardStyled } from "./TicketBoard";
-import { TicketContext } from "../packs/application";
+import useGetTickets from "../hooks/use_get_tickets";
+import { ticketsTypes } from "../actions/ticket_store";
 
-const Tickets = () => {
-    const { state } = useContext(TicketContext);
+const Tickets =  () => {
+    const { tickets, isLoading } = useGetTickets(ticketsTypes.NOT_CLOSED);
 
     return(<TicketsStyled>
         <h2>Tickets</h2>
-        <TicketTable tickets={state.tickets}/>
+        { (tickets && !isLoading) &&
+            <TicketsTable isAgo={false} tickets={tickets}/>
+        }
+
 
     </TicketsStyled>);
 };
 
-export default Tickets;
+export default React.memo(Tickets);
 
-const TicketsStyled = styled(TicketBoardStyled)`
+export const TicketsStyled = styled(TicketBoardStyled)`
     float: left;
-    margin: 15px 0 0 15px;
+    margin: 15px 0 60px 15px;
     width: calc(72% - 3em);
+    min-height: 100%;
 `;

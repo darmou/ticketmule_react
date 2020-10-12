@@ -5,25 +5,13 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets
   def index
-    tickets = Ticket.all.includes(
-        :group,
-        :contact,
-        :creator,
-        :priority,
-        :status,
-        :time_type,
-        :owner
-        )
+    if params[:type] and params[:type] == 'CLOSED'
+      tickets = Ticket.closed_tickets.ticket_includes
+    else
+      tickets = Ticket.not_closed.ticket_includes
+    end
     ticket_records_with_associations = tickets.map do |ticket|
-      ticket.attributes.merge(
-          'group' => ticket.group,
-          'contact' => ticket.contact,
-          'creator' => ticket.creator,
-          'priority' => ticket.priority,
-          'status' => ticket.status,
-          'time_type' => ticket.time_type,
-          'owner' => ticket.owner,
-      )
+      helpers.ticket_with_attributes ticket
     end
     paginate json: ticket_records_with_associations
   end
@@ -36,8 +24,16 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets/:id
   def show
+    begin
+      Ticket.where(id: params[:id]).ticket_includes.with_related_records
+      ticket_with_attributes = helpers.ticket_with_attributes @ticket
+      ticket_with_records = helpers.ticket_with_related_records @ticket
+    rescue ActiveRecord::RecordNotFound
+      logger.error(":::Attempt to access invalid ticket_id => #{params[:id]}")
+      head :not_found
+    end
     respond_to do | format |
-      format.json { json_response(@ticket)}
+      format.json { json_response(ticket_with_attributes.merge(ticket_with_records)) }
       format.pdf do
         pdf = TicketPdf.new(@ticket)
             send_data pdf.render,
@@ -65,7 +61,6 @@ class Api::V1::TicketsController < ApplicationController
 
   def ticket_params
     # whitelist ticket params
-    #params.permit(:title, :created_by)
     params.require(:ticket).permit!
   end
 

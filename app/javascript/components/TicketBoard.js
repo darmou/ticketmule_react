@@ -1,25 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
-import MinusImage from "../images/minus.gif";
-import PlusImage from "../images/plus.gif";
-import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import TicketStore from "../actions/ticket_store";
-import { renderTableHeader, renderList } from "../utils/display_utils";
+
+import { renderList } from "../utils/display_utils";
+import { ticketsTypes } from "../actions/ticket_store";
 import moment from "moment";
-import { TicketContext } from "../packs/application";
-import differenceInMinutes from "date-fns/differenceInMinutes";
-import differenceInHours from "date-fns/differenceInHours";
-import differenceInDays from "date-fns/differenceInDays";
-import differenceInWeeks from "date-fns/differenceInWeeks";
-import differenceInMonths from "date-fns/differenceInMonths";
-import differenceInYears from "date-fns/differenceInYears";
-import { fetchTickets } from "../utils/network";
 import { TableSection, H3ToggleStyled  } from "./TableSection";
 import RedBullet from "../images/bullet_red.png";
 import YellowBullet from "../images/bullet_yellow.png";
 import BlueBullet from "../images/bullet_blue.png";
-import SlideToggle from "react-slide-toggle";
+import useSliderToggle from "react-slide-toggle-hooks";
 
 const TICKET_TYPES = {
     OPENED: 'opened',
@@ -60,60 +49,8 @@ const ticketTimeLineList = (type, style) => {
     return renderList(type_tickets, style);
 };
 
-const diffTime = (createdDate, type, diffFunc, cutoff) => {
-    const diffInTime = diffFunc(new Date(), new Date(createdDate));
-    if (diffInTime > cutoff && cutoff !== -1) {
-        return [];
-    }
-    const label = diffInTime == 1 ? type : `${type}s`;
-    return [diffInTime, label];
-};
 
-export const getTimeDiff = (createdDate) => {
-    const timeDiffHashArray = [
-        {
-            type: 'min',
-            timeFunc: differenceInMinutes,
-            cutoff: 60
-        },
-        {
-            type: 'hour',
-            timeFunc: differenceInHours,
-            cutoff: 24,
-        },
-        {
-            type: 'day',
-            timeFunc: differenceInDays,
-            cutoff: 7,
-        },
-        {
-            type: 'week',
-            timeFunc: differenceInWeeks,
-            cutoff: 4,
-        },
-        {
-            type: 'month',
-            timeFunc: differenceInMonths,
-            cutoff: 12,
-        },
-        {
-            type: 'year',
-            timeFunc: differenceInYears,
-            cutoff: -1,
-        },
-    ];
-    let diffInTime = [];
-    let timeHash = {};
-    let index = 0;
-    while (diffInTime.length === 0) {
-        timeHash = timeDiffHashArray[index];
-        diffInTime = diffTime(createdDate, timeHash.type, timeHash.timeFunc, timeHash.cutoff);
-        index = index +1;
-    }
-    return diffInTime;
-};
-
-const getTicketImage = (priorityId) => {
+export const getTicketImage = (priorityId) => {
   const priorityIdMap = {
       1: `url(${RedBullet}) left center no-repeat;`,
       2: `url(${YellowBullet}) left center no-repeat;`,
@@ -122,76 +59,33 @@ const getTicketImage = (priorityId) => {
   return priorityIdMap[priorityId];
 };
 
-const renderTickets = (tickets) => {
 
-    if (tickets) {
-        return tickets.map((ticket, index) => {
-            const timeDiff = getTimeDiff(ticket.updated_at);
-
-            return (<tr key={`${index}`} >
-                <ImageTD background={getTicketImage(ticket.priority.id)}>
-                    <Link to={`/tickets/${ticket.id}`}  title={ticket.title}>{ticket.id}</Link>
-                </ImageTD>
-                <td>{ticket.title}</td>
-                <td>{ticket.group.name}</td>
-                <td>{ticket.status.name}</td>
-                <td>{ticket.priority.name}</td>
-                <td>{ticket.time_type.name}</td>
-                <td><Link to={`/users/${ticket.owner.username}`}>{ticket.owner.username}</Link></td>
-                <td>{timeDiff[0]} {timeDiff[1]} ago</td>
-            </tr>);
-        });
-    }
-
-    return null;
-
-};
-
-const SLIDE_DURATION = 800;
+export const SLIDE_DURATION = 800;
 
 const TicketBoard = () => {
-
-    const { state, dispatch } = useContext(TicketContext);
-    const { tickets, user } = state;
-
-    const { data } = useQuery("tickets", () =>
-        fetchTickets(user), { enabled: tickets == null }
-    );
-
-    useEffect(() => {
-        if (!tickets && data != null) {
-            dispatch({action_fn: TicketStore.setTickets, tickets: data});
-        }
-    }, [state, tickets, data, TicketStore]);
-
-
-    const theTickets = renderTickets(state.tickets);
+    const { toggle, setCollapsibleElement, slideToggleState } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (
        <TicketBoardStyled>
             <h2>Dashboard</h2>
 
-           <TableSection slideDuration={SLIDE_DURATION} headerItems={headerItems} theTickets={theTickets} sectionName="Active Tickets" sectionId="active-listing"/>
-           <TableSection slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} theTickets={[]} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
+           <TableSection type={ticketsTypes.NOT_CLOSED} slideDuration={SLIDE_DURATION} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection type={ticketsTypes.CLOSED} slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
-           <SlideToggle
-               duration={SLIDE_DURATION}
-               render={({ toggle, setCollapsibleElement, toggleState }) => (
-                   <>
-                       <H3ToggleStyled  isOpen={toggleState} onClick={toggle}>Timeline</H3ToggleStyled>
-                       <TimelineWrapperStyled css={css``} ref={setCollapsibleElement}>
-                           <TimelineStyled isLeft={true}>
-                               {ticketTimeLineList(TICKET_TYPES.OPENED, null)}
-                               <SpanTimelineLabel>Opened Tickets</SpanTimelineLabel>
-                           </TimelineStyled>
-                           <TimelineStyled isLeft={false}>
-                               {ticketTimeLineList(TICKET_TYPES.CLOSED, null)}
-                               <SpanTimelineLabel>Closed Tickets</SpanTimelineLabel>
-                           </TimelineStyled>
-                       </TimelineWrapperStyled>
-                   </>
-               )}
-           />
+           <>
+               <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>
+               <TimelineWrapperStyled ref={setCollapsibleElement} css={css``} >
+                   <TimelineStyled isLeft={true}>
+                       {ticketTimeLineList(TICKET_TYPES.OPENED, null)}
+                       <SpanTimelineLabel>Opened Tickets</SpanTimelineLabel>
+                   </TimelineStyled>
+                   <TimelineStyled isLeft={false}>
+                       {ticketTimeLineList(TICKET_TYPES.CLOSED, null)}
+                       <SpanTimelineLabel>Closed Tickets</SpanTimelineLabel>
+                   </TimelineStyled>
+               </TimelineWrapperStyled>
+           </>
+
        </TicketBoardStyled>
     );
 };
@@ -201,7 +95,7 @@ export const header = `
 `;
 
 
-const ImageTD = styled.td.attrs(props => ({
+export const ImageSpan = styled.span.attrs(props => ({
     background: props.background
 }))`
     font-weight: bold;
@@ -237,7 +131,9 @@ export const TableListingStyled = styled.table`
     th, td {
       text-align: left;
       padding: 4px 2px;
-      border-bottom: 1px solid #ccc;
+    }
+    tr {
+       border-bottom: 1px solid #ccc;
     }
 `;
 
@@ -251,7 +147,7 @@ const CountSpanStyled = styled.span`
       padding: 0;
       margin: 0;
       display: block;
-      position: absolute;
+      position: relative;
       bottom: 0;
       left: 0;
       height: 0;

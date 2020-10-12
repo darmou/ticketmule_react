@@ -1,64 +1,52 @@
-import React, {useEffect} from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { login } from '../utils/network';
-import { useQuery } from "react-query";
+import useTicketmule from "../hooks/use_ticketmule";
 import { msgFlash } from "../utils/display_utils";
 import { TicketContext } from "../packs/application";
 import TicketStore from "../actions/ticket_store";
 
+const MIN_PASSWORD_LEN = 7;
+export const TIMEOUT = 2000;
 const formTypeEnum = {USERNAME: 1, PASSWORD: 2};
 Object.freeze(formTypeEnum);
 
 const Login = () =>  {
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [isLoggingIn, setIsLoggingIn] = React.useState(false);
+    const ticketMule = useTicketmule();
+    const { register, handleSubmit, errors } = useForm();
+    const [ flashMsg, setFlashMsg ] = React.useState(null);
     const { state, dispatch } = React.useContext(TicketContext);
-    let flashMsg = null;
+    let isLoading = false;
 
-    const { isLoading, error, data } = useQuery("login", () =>
-        login(username, password), {enabled: isLoggingIn, refetchOnWindowFocus: false, retry: false, refetchOnMount: false, cacheTime: 0 }
-    );
-
-    useEffect(() => {
-        if (data) {
-            dispatch({action_fn: TicketStore.setUser, user: data});
+    React.useEffect(() => {
+        if (state.isLoggingOut && flashMsg == null) {
+            setFlashMsg(<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
+            dispatch({action_fn: TicketStore.resetIsLoggingOut });
         }
-    }, [data, TicketStore]);
-
-    if (error && !isLoading) {
-        const msg = (error.response.status === 401 ) ? 'Incorrect login details' : 'Error occurred';
-        if (flashMsg == null) {
-            flashMsg = (<FlashStyled><ErrorNotificationStyled> {msg} </ErrorNotificationStyled></FlashStyled>);
-        }
-
-        if (isLoggingIn) {
-            setIsLoggingIn(false); // Reset
-        }
-    }
-
-    if (state.isLoggingOut && flashMsg == null && !isLoggingIn) {
-        flashMsg = (<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
-    }
-
-    const onChange = (type, event) => {
-        const { target } = event;
-        if (type == formTypeEnum.USERNAME) {
-            setUsername(target.value);
-        } else {
-            setPassword(target.value);
-        }
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
         if (flashMsg) {
-            flashMsg = null;
+            setTimeout(() => {
+                setFlashMsg(null);
+            }, TIMEOUT);
         }
-        if (!isLoggingIn) {
-            setIsLoggingIn(true);
+    }, [flashMsg]);
+
+
+    const onSubmit = async (data) => {
+        isLoading = true;
+        try {
+            const response = await ticketMule.login(data.username, data.password);
+
+            if (response != null) {
+                dispatch({action_fn: TicketStore.setUser, user: response});
+            }
+        } catch (error) {
+            const msg = (error.response.status === 401 ) ? 'Incorrect login details' : 'Error occurred';
+            if (flashMsg == null) {
+                setFlashMsg(<FlashStyled><ErrorNotificationStyled> {msg} </ErrorNotificationStyled></FlashStyled>);
+            }
         }
+        isLoading = false;
     };
 
 
@@ -67,7 +55,7 @@ const Login = () =>  {
 
         <BoxStyled>
             {flashMsg}
-            <form acceptCharset="UTF-8" onSubmit={handleSubmit}
+            <form acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit)}
                   className="new_user_session" id="new_user_session">
                 <div style={{margin: 0, padding: 0, display: 'inline'}}>
                     <input name="utf8" type="hidden" value="✓"/>
@@ -81,29 +69,31 @@ const Login = () =>  {
                     <dd>
                         <StyledInput
                                id="user_session_username"
-                               name="user_session[username]" size="20"
-
-                               onChange={e => onChange(formTypeEnum.USERNAME, e)}
+                               ref={register({required:true})}
+                               name="username" size="20"
                                type="text" autoComplete="off"/>
+                        {errors.username && <ValidationDiv>Username is required</ValidationDiv>}
                     </dd>
                     <dt>
                         <label htmlFor="user_session_password">Password:</label>
                     </dt>
                     <dd>
                         <StyledInputPassword
-                               id="user_session_password" name="user_session[password]"
+                               id="user_session_password" name="password"
                                size="20"
-                               onChange={e => onChange(formTypeEnum.PASSWORD, e)}
+                               ref={register({required:true, minLength:MIN_PASSWORD_LEN})}
                                type="password" autoComplete="off"/>
+                        {errors.password && <ValidationDiv> {(errors.password.type === 'required') ? "Password is required" : `Password length must be at least ${MIN_PASSWORD_LEN} characters.`} </ValidationDiv>}
                     </dd>
                     <dd>
                         <input name="user_session[remember_me]" type="hidden" value="0"/>
                         <input id="user_session_remember_me" name="user_session[remember_me]"
+                               ref={register}
                                type="checkbox" value="1"/>
                         <label htmlFor="user_session_remember_me">Remember me</label>
                     </dd>
                     <dd>
-                        <ButtonStyled disabled={isLoading} name="commit" type="submit"
+                        <SecondaryButtonStyled disabled={isLoading} name="commit" type="submit"
                                value="Sign in"/>&nbsp;&nbsp;
                         <Link to="/password_resets/new">
                             Forgot your password?
@@ -115,9 +105,14 @@ const Login = () =>  {
     </LoginStyled>);
 
 };
+const ValidationDiv = styled.div`
+    margin-top: 3px;
+    margin-bottom: 3px;
+    color: red;
+    background-color: #F4CCC3;
+`;
 
-const NotificationStyled = styled.div`
-  width: 100%;
+export const NotificationStyled = styled.div`
   text-align: left;
   padding: 5px 10px 5px;
 
@@ -129,18 +124,17 @@ const NotificationStyled = styled.div`
   -webkit-animation-fill-mode: forwards;
 `;
 
-const SuccessNotificationStyled = styled(NotificationStyled)`
-
+export const SuccessNotificationStyled = styled(NotificationStyled)`
   background-color: #efe;
   color: #585;
 `;
 
-const ErrorNotificationStyled = styled(NotificationStyled)`
+export const ErrorNotificationStyled = styled(NotificationStyled)`
     color: #D8000C;
     background-color: #FFBABA;
 `;
 
-const ButtonStyled = styled.input`
+export const SecondaryButtonStyled = styled.input`
     margin: 3px 0;
     padding: 2px 12px 2px;
     width: auto;
@@ -217,7 +211,7 @@ const StyledInputPassword = styled.input`
     ${password}
 `;
 
-const FlashStyled = styled.div`
+export const FlashStyled = styled.div`
     width: calc(100% - 20px);
 `;
 

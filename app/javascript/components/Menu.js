@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 const Menu = (props) => {
   const menu_items = props.menuItems.map(menu_item =>
       <li key={menu_item.id} >
-        <LinkElem end={menu_item.path === '/'} exact to={menu_item.path} >
+        <LinkElem end={menu_item.path === '/'}  to={menu_item.path} >
           {menu_item.text}
         </LinkElem>
       </li>

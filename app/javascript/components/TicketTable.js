@@ -1,74 +1,61 @@
 import React from "react";
-import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
-//import matchSorter from "match-sorter";
 import { useTable } from "react-table";
-//import tbStyles from "styles/TicketBoard";
-import { TableListingStyled, header } from "./TicketBoard";
-import { getTimeDiff } from "./TicketBoard";
+import { TableListingStyled } from "./TicketBoard";
 
-/*const fuzzyTextFilterFn = (rows, id, filterValue) => {
-    return matchSorter(rows, filterValue, {keys: [row => row.values[id]]});
-};*/
-
-const TicketTable = ({tickets}) => {
+const TicketTable = React.memo(({ticket}) => {
     const columns = [
         {
-            Header: 'Ticket #',
-            accessor: 'id',
+            Header: 'Heading 1',
+            accessor: 'heading1',
         },
         {
-            Header: 'Title',
-            accessor: 'title',
+            Header: 'Data 1',
+            accessor: 'data1',
         },
         {
-            Header: 'Group',
-            accessor: 'group',
+            Header: 'Heading 2',
+            accessor: 'heading2',
         },
         {
-            Header: 'Status',
-            accessor: 'status',
+            Header: 'Data 2',
+            accessor: 'data2',
         },
-        {
-            Header: 'Priority',
-            accessor: 'priority',
-        },
-        {
-            Header: 'Time Type',
-            accessor: 'timeType',
-        },
-        {
-            Header: 'Owner',
-            accessor: 'owner',
-        },
-        {
-            Header: 'Last Activity',
-            accessor: 'lastActivity',
-        },
-
     ];
 
-    const data = (tickets != null ) ? tickets.map((ticket) => {
-        const timeDiff = getTimeDiff(ticket.updated_at);
+   const dateFormat = (strDate) => {
+        return new Intl.DateTimeFormat("en-GB", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            hour12: true,
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+        }).format(new Date(strDate));
+    };
+    const contact = `${ticket.contact.last_name}, ${ticket.contact.first_name}`;
+    const data = (ticket != null) ? [
+        {heading1: <strong>Title:</strong>, data1: ticket.title},
+        {heading1: <strong>Contact:</strong>,
+            data1: <Link to={`/contacts/${ticket.contact_id}`}>{contact}</Link>,
+            heading2: <strong>Created by:</strong>,
+            data2: ticket.owner.username
+        },
+        {
+            heading1: <strong>Created at:</strong>, data1: dateFormat(ticket.created_at),
+            heading2: <strong>Updated at:</strong>, data2: dateFormat(ticket.updated_at)
+        },
+        {heading1: <strong>Owner:</strong>, data1: ticket.owner.username, heading2: <strong>Group:</strong>, data2: ticket.group.name},
+        {heading1: <strong>Status:</strong>, data1: ticket.status.name, heading2: <strong>Priority:</strong>, data2: ticket.priority.name},
+        {heading1: <strong>Time Type:</strong>, data1: ticket.time_type.name},
+        {heading1: <strong>Details:</strong>},
+        {data1: ticket.details}
+    ]: [];
 
-        return {
-            id: ticket.id,
-            title: ticket.title,
-            group: ticket.group.name,
-            status: ticket.status.name,
-            priority: ticket.priority.name,
-            timeType: ticket.time_type.name,
-            owner: ticket.owner.username,
-            lastActivity: `${timeDiff[0]} ${timeDiff[1]} ago`
-        };
-    }) : [];
 
     const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
         rows,
-        prepareRow,
+        prepareRow
     } = useTable({
         columns,
         data,
@@ -76,17 +63,8 @@ const TicketTable = ({tickets}) => {
 
     // Render the UI for your table
     return (
-        <TableListingStyled {...getTableProps()}>
-            <thead>
-            {headerGroups.map((headerGroup, index) => (
-                <TRHeaderStyled key={index} {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column, idx) => (
-                        <th key={idx} {...column.getHeaderProps()}>{column.render('Header')}</th>
-                    ))}
-                </TRHeaderStyled>
-            ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
+        <TableListingStyled >
+            <tbody>
             {rows.map(
                 (row, idx) => {
                     prepareRow(row);
@@ -101,15 +79,12 @@ const TicketTable = ({tickets}) => {
             </tbody>
         </TableListingStyled>
     );
-};
+});
 
 
 TicketTable.propTypes = {
-    tickets: PropTypes.array
+    ticket: PropTypes.object
 };
 
 export default TicketTable;
 
-const TRHeaderStyled = styled.tr`
-    ${header}
-`;

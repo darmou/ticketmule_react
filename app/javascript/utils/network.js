@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const SendMethod = { GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
+export const SendMethod = { GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
 Object.freeze(SendMethod);
 
 const createHeaders = (email = null, token = null) => {
@@ -15,15 +15,19 @@ const createHeaders = (email = null, token = null) => {
     return myHeaders;
 };
 
-const doNetworkRequest = async (url, method, email = null, token = null, data = null) => {
+export const doNetworkRequest = async (url, method, email = null, token = null, data = null) => {
     const myHeaders = createHeaders(email, token);
     const requestConfig = { method: method,
         headers: myHeaders,
         url,
     };
 
+    if (url.indexOf(".pdf") > -1) {
+        requestConfig["responseType"] = "arraybuffer";
+    }
+
     if (data) {
-        requestConfig['data'] = data;
+        requestConfig["data"] = data;
     }
 
     //const myRequest = new Request(url, myInit);
@@ -37,37 +41,7 @@ const doNetworkRequest = async (url, method, email = null, token = null, data = 
 };
 
 
-export const login = async (username, password) => {
-
-    return doNetworkRequest('/api/v1/users/sign_in',
-        SendMethod.POST, null, null, `{"user":{"username":"${username}","password":"${password}"}}`);
-};
-
-export const logout = async () => {
-    return doNetworkRequest('/api/v1/users/sign_out',
-        SendMethod.DELETE);
-};
 
 
 
-export const fetchTicket = async (id, email, token) => {
-    try {
-        // wait for the fetch to finish then dispatch the result
-        return await doNetworkRequest(`/api/v1/tickets/${id}`, SendMethod.GET, email, token);
-    } catch (e) {
-        // catch errors from fetch
-        console.log(e);
-    }
-};
 
-export const fetchTickets = async (user) => {
-    try {
-        // wait for the fetch to finish then dispatch the result
-        return await doNetworkRequest(`/api/v1/tickets/`, SendMethod.GET, user.email, user.authentication_token);
-
-    } catch (e) {
-        console.log(e);
-        // catch errors from fetch
-       // dispatch(receiveTicketFailure(e));
-    }
-};

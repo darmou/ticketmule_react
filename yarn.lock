@@ -3914,7 +3914,7 @@ escalade@^3.0.2:
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.0.2.tgz#6a580d70edb87880f22b4c91d0d56078df6962c4"
   integrity sha512-gPYAU37hYCUhW5euPeR+Y74F7BL+IBsV93j5cvGriSaD1aG6MGsqsV1yamRdrWrb2j3aiZvb0X+UBOWpx3JWtQ==
 
-escape-html@~1.0.3:
+escape-html@^1.0.3, escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
@@ -4515,7 +4515,7 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-"function-reducer@file:../../js/node/function_reducer":
+"function-reducer@file:../../../../../../../Users/darmou/development/js/node/function_reducer":
   version "1.0.3"
 
 functional-red-black-tree@^1.0.1:
@@ -5127,6 +5127,15 @@ interpret@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
+
+interweave@^12.5.0:
+  version "12.5.0"
+  resolved "https://registry.yarnpkg.com/interweave/-/interweave-12.5.0.tgz#c1c6cbda55e3d2864c94eeed8e86f4159111f493"
+  integrity sha512-R6PE+FkhexspBwBS9wa+w0ZHORsXpFgDoLTKt+kazZRZVlO9+b0bpOcimMQ77hY+UwcE3eppGqhsNUVi3EfQmQ==
+  dependencies:
+    "@types/react" "*"
+    escape-html "^1.0.3"
+    prop-types "^15.7.2"
 
 invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
@@ -7661,6 +7670,11 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
+react-hook-form@^6.8.6:
+  version "6.8.6"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.8.6.tgz#c82b38b01e0a77689214c3ceb873eab9405d27a0"
+  integrity sha512-ZCp7Y+IrlsQma08uy3H6l/qF7dZWqAWMkZ4vVbHVfh1EHjsO1SwU7aYVHgJSQpriHtEdGszCW8NS/aujGsLk0g==
+
 react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.9.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -7671,10 +7685,12 @@ react-lifecycles-compat@^3.0.2:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-query@^2.15.4:
-  version "2.15.4"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-2.15.4.tgz#0447510fc30aebba5a4b99879ec4b7155d9b3f20"
-  integrity sha512-gEF2Ebe1MtiyLKEaVEIlRMl6rwvP/RVwP+Xf68vhXDfD91IeZkkW7plRjoaHa0/NeUPM1AgTHb1Z7NtqaYDXjA==
+react-query@^2.23.0:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-2.23.0.tgz#9f9552a30380dfc1da2c165b5011465a78128ace"
+  integrity sha512-LHBhrr7ntstjpt85ssEaW3cGJx4BqQBFleTM3fXMO0MFzaMDQx0oxdUur+iQSOpLGPlrpToJbrjFNMQTpEExdA==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
 
 react-redux@^7.1.1:
   version "7.2.1"
@@ -7702,10 +7718,10 @@ react-router@6.0.0-beta.0:
   dependencies:
     prop-types "^15.7.2"
 
-react-slide-toggle@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/react-slide-toggle/-/react-slide-toggle-0.3.5.tgz#7fd3a6847ca10eb986af29d54eb02a870202be82"
-  integrity sha512-dV2PkLGiE7m66Ohk36jLqaaneUYc0ZpQe/ZmYEU3+7TVXfZwddimFyjeDfVzPhlqDcpK1yfKJ8NN7aIyR9bOTA==
+react-slide-toggle-hooks@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/react-slide-toggle-hooks/-/react-slide-toggle-hooks-0.0.8.tgz#2af4d430ab97e3ad03b886c528de04a2ef898f6d"
+  integrity sha512-FeGOxlOz1VidchfCasoXj99ZW8UJ99ZFPgJQwvA+qZ/viWraGEGZsX2js7lLQnFoMBUWmyZh+cTDPuo9T2K29w==
 
 react-table@^7.5.0:
   version "7.5.0"

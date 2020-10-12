@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import { TicketContext } from "../packs/application";
 import TicketStore from "../actions/ticket_store";
 import HeadBackground from "../images/head-bg.gif";
+import useTicketMule from "../hooks/use_ticketmule";
 
 const menuItems = [
   { id: 0, path: "/", text: "Dashboard" },
@@ -15,7 +16,9 @@ const menuItems = [
 ];
 
 const Header = () => {
+  const ticketMule = useTicketMule();
   const { dispatch, state } = useContext(TicketContext);
+  const navigate = useNavigate();
 
   const signedIn = (state.user) ? (<div><StatusStyled>Signed in as&nbsp;
           <a href="/users/1">{state.user.username}</a>
@@ -29,7 +32,7 @@ const Header = () => {
 
   return (
       <HeaderStyled>
-          <AppTitleStyled>TicketMule</AppTitleStyled>
+          <AppTitleStyled onClick={() => navigate('/')}>TicketMule</AppTitleStyled>
           {signedIn}
       </HeaderStyled>
   );

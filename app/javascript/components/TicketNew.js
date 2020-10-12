@@ -1,5 +1,6 @@
 import React from "react";
 import TicketForm from "./TicketForm";
+import TicketStyled from "./Ticket";
 
 const TicketNew = () => {
     return (<TicketStyled>
