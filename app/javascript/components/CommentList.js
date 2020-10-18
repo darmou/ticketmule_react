@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import moment from "moment";
 import {H3ToggleStyled } from "./TableSection";
 import {SLIDE_DURATION} from "./TicketBoard";
@@ -9,17 +9,8 @@ import TrashIcon from "../images/trash.png";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useMutation, queryCache } from "react-query";
-import { TicketContext } from "../packs/application";
 import useTicketmule from "../hooks/use_ticketmule";
-/*
-<div class="comment">
-  <h4>
-    <span class="counter">1</span>
-    <a href="/users/1">admin</a>    <span class="timestamp">at 08 Oct 2020 07:50 PM</span>
-          <span class="delete-comment"><a href="/tickets/1/comments/5" onclick="if (confirm('Really delete comment #1?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', 'zQrsapjZt0UhvcLZzhGydG6YxgA16UgFpkdGvyl/+3s='); f.appendChild(s);f.submit(); };return false;">Delete</a></span>
-      </h4>
-  <p>oeie</p></div>
- */
+
 const CommentSquare = styled.span`
     padding: 3px 2px;
     font-size: 13px;
@@ -54,11 +45,11 @@ const Comment = styled.div`
     }
 `;
 
-const Timestamp = styled.span`
+export const Timestamp = styled.span`
     font-style: italic;
 `;
 
-const DeleteLink = styled(Link)`
+export const DeleteLink = styled(Link)`
     margin: 0 0 0 6px;
     padding: 3px 4px 3px 20px;
     background: #fee url(${TrashIcon}) no-repeat 2px center;
@@ -73,8 +64,8 @@ const DeleteLink = styled(Link)`
 const CommentList = React.memo(({comments, state}) => {
     const ticketMule = useTicketmule();
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
-    const [deleteTheComment, info] = useMutation(
-        ticketMule.deleteComment.bind(this, state),
+    const [deleteTheComment] = useMutation(
+        ticketMule.deleteRelatedTicketRecord.bind(this, state, "comments"),
         {
             onSuccess: async () => {
                 // Query Invalidations
@@ -97,8 +88,8 @@ const CommentList = React.memo(({comments, state}) => {
        return (
            <Comment key={`comment_id_${comment.id}`}>
 
-                   <CommentSquare>#{comment.id}</CommentSquare>
-                    <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
+               <CommentSquare>#{comment.id}</CommentSquare>
+               <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
                <Timestamp>{moment(comment.created_at).format("DD MMM YYYY hh:mm A")}</Timestamp>
                <DeleteLink to="" onClick={() => deleteComment(comment.id)}>Delete</DeleteLink>
                <p>

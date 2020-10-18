@@ -3,35 +3,23 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import useTicketmule from "../hooks/use_ticketmule";
 import {
     SecondaryButtonStyled,
     ErrorNotificationStyled,
     TIMEOUT,
     SuccessNotificationStyled
 } from "./Login";
-import { queryCache, useMutation } from "react-query";
 
 
 export const CommentForm = React.forwardRef((props, ref) => {
-    const ticketMule = useTicketmule();
-    const { toggleForm } = props;
+    const { toggleForm, addTheComment } = props;
     const [ flashMsg, setFlashMsg ] = React.useState(null);
     const { register, handleSubmit, clearErrors, errors, reset } = useForm();
-    const [addTheComment] = useMutation(
-        ticketMule.addComment.bind(this, props.state),
-        {
-            onSuccess: async () => {
-                // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
-            },
-        }
-    );
 
     const onSubmit = async data => {
         //We want to submit our form
         try {
-            await addTheComment(data);
+            await addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
             reset();
             setFlashMsg(<SuccessNotificationStyled> Comment added! </SuccessNotificationStyled>);
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
@@ -102,7 +90,7 @@ const StyledTextArea = styled.textarea`
 
 CommentForm.propTypes = {
     toggleForm: PropTypes.func,
-    state: PropTypes.object,
+    addTheComment: PropTypes.func,
     id: PropTypes.string
 };
 

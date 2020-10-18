@@ -3,18 +3,15 @@ import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import { TicketBoardStyled } from "./TicketBoard";
 import useGetTickets from "../hooks/use_get_tickets";
-import { ticketsTypes } from "../actions/ticket_store";
 
 const Tickets =  () => {
-    const { tickets, isLoading } = useGetTickets(ticketsTypes.NOT_CLOSED);
-
+    const { tickets, isLoading } = useGetTickets();
+    const filteredTickets = (tickets) ? tickets.filter(ticket => ticket.status.name  !== "Closed") : null;
     return(<TicketsStyled>
         <h2>Tickets</h2>
-        { (tickets && !isLoading) &&
-            <TicketsTable isAgo={false} tickets={tickets}/>
+        { (filteredTickets && !isLoading) &&
+            <TicketsTable isAgo={false} tickets={filteredTickets}/>
         }
-
-
     </TicketsStyled>);
 };
 

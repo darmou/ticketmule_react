@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import ButtonGradient from "../images/button-gradient.png";
 import useTicketmule from "../hooks/use_ticketmule";
 import { msgFlash } from "../utils/display_utils";
 import { TicketContext } from "../packs/application";
@@ -22,7 +23,7 @@ const Login = () =>  {
     React.useEffect(() => {
         if (state.isLoggingOut && flashMsg == null) {
             setFlashMsg(<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
-            dispatch({action_fn: TicketStore.resetIsLoggingOut });
+            dispatch({action_fn: TicketStore.resetIsLoggingOut } );
         }
         if (flashMsg) {
             setTimeout(() => {
@@ -136,7 +137,7 @@ export const ErrorNotificationStyled = styled(NotificationStyled)`
 
 export const SecondaryButtonStyled = styled.input`
     margin: 3px 0;
-    padding: 2px 12px 2px;
+    padding: 2px 12px 2px !important;
     width: auto;
     color: #839F45;
     font-size: 12px;
@@ -147,7 +148,7 @@ export const SecondaryButtonStyled = styled.input`
     -webkit-border-radius: 14px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    background: #fff;
+    background: #fff url(${ButtonGradient}) repeat-x 0 0 !important;
     border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
     border-style: solid;
     border-width: 1px;

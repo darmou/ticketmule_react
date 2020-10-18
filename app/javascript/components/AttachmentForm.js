@@ -4,6 +4,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import useTicketmule from "../hooks/use_ticketmule";
+import { getAttachmentFileSize } from "../utils/display_utils";
 import {
     SecondaryButtonStyled,
     ErrorNotificationStyled,
@@ -15,11 +16,11 @@ import { queryCache, useMutation } from "react-query";
 
 export const AttachmentForm = React.forwardRef((props, ref) => {
     const ticketMule = useTicketmule();
-    const { toggleForm } = props;
+    const { toggleForm, addTheComment, state } = props;
     const [ flashMsg, setFlashMsg ] = React.useState(null);
-    const { handleSubmit, clearErrors, errors, reset } = useForm();
-    const [addTheAttachment, info] = useMutation(
-        ticketMule.addAttachment.bind(this, props.state),
+    const { register, handleSubmit, clearErrors, errors, reset } = useForm();
+    const [addTheAttachment] = useMutation(
+        ticketMule.addRelatedTicketRecord.bind(this, state, "attachments"),
         {
             onSuccess: async () => {
                 // Query Invalidations
@@ -32,7 +33,18 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
         console.log(data);
         //We want to submit our form
         try {
-            await addTheAttachment(data);
+            const formData = new FormData();
+            const file = data.data[0];
+            formData.append("attachment[data]", file);
+            await addTheAttachment(formData);
+            // We want to add comment here
+            const fileSizeKB = getAttachmentFileSize(file.size);
+            data = {
+                comment: `<strong>Attached</strong> ${file.name} (${fileSizeKB}KB)`,
+                close_ticket: false
+            };
+            addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
+
             reset();
             setFlashMsg(<SuccessNotificationStyled> Attachment added! </SuccessNotificationStyled>);
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
@@ -48,7 +60,7 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
 
     React.useEffect(() => {
         if (errors.comment && flashMsg == null) {
-            setFlashMsg(<ErrorNotificationStyled> Comment field is required </ErrorNotificationStyled>);
+            setFlashMsg(<ErrorNotificationStyled> Attachment field is required </ErrorNotificationStyled>);
             clearErrors("comment");
         }
         if (flashMsg) {
@@ -65,7 +77,7 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
                 { flashMsg }
 
                 <p>
-                    <input id="attachment_data" name="attachment[data]" size="30" type="file"/>
+                    <input ref={register} id="attachment_data" name="data" size="30" type="file"/>
                         <span id="attachment_limit">Limit 10 megabytes</span>
                 </p>
 
@@ -91,6 +103,7 @@ const StyledAttachmentForm = styled.div`
 `;
 
 AttachmentForm.propTypes = {
+    addTheComment: PropTypes.func,
     toggleForm: PropTypes.func,
     state: PropTypes.object,
     id: PropTypes.string

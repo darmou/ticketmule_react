@@ -49,7 +49,7 @@ function BaseApp ({context}) {
                     <Route path='/' element={<Tickets/>} />
                     <Route path='/new' element={<TicketNew/>} />
                     <Route path=':slug' element={<Ticket/>} />
-                    <Route path=':slug/edit' element={<TicketEdit/>} />
+                    <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
 
                 </Route>
                 <Route path='/' element={<Dash />}/>

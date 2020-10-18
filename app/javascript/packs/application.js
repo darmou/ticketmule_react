@@ -36,12 +36,10 @@ const logReducer = (state, action) => {
 export const TicketContext = createContext(null);
 export const TicketContextProvider = props => {
     const initialState = {
-        tickets: {
-            [ticketsTypes.NOT_CLOSED]: null,
-            [ticketsTypes.CLOSED]: null
-        },
+        tickets: null,
         ticket: null,
         user: null,
+        options: null,
         isLoggingOut: null,
     };
 

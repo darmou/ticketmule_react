@@ -1,12 +1,12 @@
 import axios from "axios";
 
-export const SendMethod = { GET: 'GET', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
+export const SendMethod = { GET: 'GET', POST: 'POST', PATCH: 'PATCH', PUT: 'PUT', DELETE: 'DELETE' };
 Object.freeze(SendMethod);
 
-const createHeaders = (email = null, token = null) => {
+const createHeaders = (email,token, isAttachment) => {
     const myHeaders = {};
     myHeaders['Accept'] = 'application/json';
-    myHeaders['Content-Type'] = 'application/json';
+    myHeaders['Content-Type'] = (isAttachment) ? 'multipart/form-data' :'application/json';
     if (email && token) {
         myHeaders['X-User-Email'] = email;
         myHeaders['X-User-Token'] = token;
@@ -15,8 +15,9 @@ const createHeaders = (email = null, token = null) => {
     return myHeaders;
 };
 
-export const doNetworkRequest = async (url, method, email = null, token = null, data = null) => {
-    const myHeaders = createHeaders(email, token);
+export const doNetworkRequest = async (url, method, email = null, token = null, data = null,
+                                       isAttachment = false) => {
+    const myHeaders = createHeaders(email, token, isAttachment);
     const requestConfig = { method: method,
         headers: myHeaders,
         url,

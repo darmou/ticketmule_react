@@ -5,14 +5,15 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets
   def index
-    if params[:type] and params[:type] == 'CLOSED'
-      tickets = Ticket.closed_tickets.ticket_includes
-    else
-      tickets = Ticket.not_closed.ticket_includes
-    end
-    ticket_records_with_associations = tickets.map do |ticket|
-      helpers.ticket_with_attributes ticket
-    end
+    tickets = Ticket.all_relevant_tickets
+    @pagy, @tickets = pagy(tickets)
+    ticket_records_with_associations =
+        TicketSerializer.new(@tickets, { params: { :ticketlist => true } }).hash_for_collection[:data].map { | ticket |
+      ticket[:attributes]
+    }
+    # When we need pagination lets use the below
+    #render json: { data: ticket_records_with_associations,
+    #               pagy: pagy_metadata(@pagy) }
     paginate json: ticket_records_with_associations
   end
 
@@ -25,15 +26,13 @@ class Api::V1::TicketsController < ApplicationController
   # GET /tickets/:id
   def show
     begin
-      Ticket.where(id: params[:id]).ticket_includes.with_related_records
-      ticket_with_attributes = helpers.ticket_with_attributes @ticket
-      ticket_with_records = helpers.ticket_with_related_records @ticket
+      @ticket = Ticket.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       logger.error(":::Attempt to access invalid ticket_id => #{params[:id]}")
       head :not_found
     end
     respond_to do | format |
-      format.json { json_response(ticket_with_attributes.merge(ticket_with_records)) }
+      format.json { json_response(TicketSerializer.new(@ticket, { params: { :ticketlist => false, :user_id => @user.id } }).serializable_hash[:data][:attributes]) }
       format.pdf do
         pdf = TicketPdf.new(@ticket)
             send_data pdf.render,
@@ -48,13 +47,13 @@ class Api::V1::TicketsController < ApplicationController
   # PUT /tickets/:id
   def update
     @ticket.update(ticket_params)
-    head :no_content
+    json_response({}, :ok)
   end
 
   # DELETE /tickets/:id
   def destroy
     @ticket.destroy
-    head :no_content
+    json_response({}, :ok)
   end
 
   private

@@ -1,8 +1,8 @@
-import React, {useContext} from "react";
+import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
+import { useMutation, queryCache } from "react-query";
 import EditTicketIcon from "../images/edit-ticket.png";
 import PDFIcon from "../images/document-pdf.png";
 import AddAlertIcon from "../images/add-alert.png";
@@ -10,53 +10,100 @@ import AddCommentIcon from "../images/add-comment.png";
 import AddAttachmentIcon from "../images/add-attachment.png";
 import DeleteIcon from "../images/delete.png";
 import BackArrowIcon from "../images/back-arrow.png";
-import { TicketContext } from "../packs/application";
 import TicketmuleNetwork from "../utils/ticketmule_network_class";
+import TicketStore, { ticketsTypes } from "../actions/ticket_store";
+
 
 /*
 Edit | Pdf | Add Alert | Add Comment | Add Attachment | Delete | BackTicket #435
 
  */
-const Controls = ({id, setShowCommentForm, setShowAlertForm, setShowAttachmentForm}) => {
-    const { state } = useContext(TicketContext);
-    const navigation = useNavigate();
-    const mutate = useMutation();
-    const ticketMule = new TicketmuleNetwork(state.user);
+const Controls = ({alert, dispatch, state, setShowCommentForm, setShowAttachmentForm}) => {
+    const { user, ticket } = state;
+    const navigate = useNavigate();
+    const ticketMule = new TicketmuleNetwork(user);
 
-    const addAlert = (id) => {
-        if (window.confirm("Really add alert?")) {
+    const [deleteTheAlert] = useMutation(
+        ticketMule.deleteRelatedTicketRecord.bind(this, state, "alerts"),
+        {
+            onSuccess: async () => {
+                // Query Invalidations
+                await queryCache.invalidateQueries('ticket');
+            },
+        }
+    );
+
+    const [deleteTheTicket] = useMutation(
+        ticketMule.deleteTicket.bind(this, state),
+        {
+            onSuccess: async () => {
+                // Query Invalidations
+                await queryCache.invalidateQueries('tickets');
+            },
+        }
+    );
+
+    const [addTheAlert] = useMutation(
+        ticketMule.addRelatedTicketRecord.bind(this, state, "alerts"),
+        {
+            onSuccess: async () => {
+                // Query Invalidations
+                await queryCache.invalidateQueries('ticket');
+            },
+        }
+    );
+
+    const addAlert = async () => {
+        if (window.confirm(`Really add alert for ticket #${ticket.id}?`)) {
             //useMutation to post to alerts endpoint!
+            await addTheAlert('{"alert":{}}');
         }
     };
 
-    const deleteTicket = (id) => {
-        if (window.confirm(`Really delete ticket #${id} and all its associated data?`)) {
+    const removeAlert = async () => {
+        if (window.confirm(`Really remove alert for ticket #${ticket.id}?`)) {
+            //useMutation to delete this alert
+            await deleteTheAlert(alert.id);
+        }
+    };
+
+    const deleteTicket = async () => {
+        if (window.confirm(`Really delete ticket #${ticket.id} and all its associated data?`)) {
             //useMutation to use delete method on ticket
-
+            const ticketId = ticket.id;
+            await deleteTheTicket();
+            dispatch({action_fn: TicketStore.deleteTicket, id: ticketId});
+            navigate("/tickets");
         }
     };
 
-    const getPdf = async (id) => {
-        const pdf = await ticketMule.fetchTicket(id, true);
+    const getPdf = async () => {
+        const pdf = await ticketMule.fetchTicket(ticket.id, true);
         if (pdf) {
-            const a = document.createElement("a");
+            const a = document
+                .createElement("a");
             // eslint-disable-next-line no-undef
             const b64encoded = btoa([].reduce.call(new Uint8Array(pdf),
                 (p,c) => p + String.fromCharCode(c),''));
             a.href = "data:application/pdf;base64,"+ b64encoded;
-            a.download = `ticket_${id}.pdf`;
+            a.download = `ticket_${ticket.id}.pdf`;
             a.click();
         }
     };
 
+    if (!state.ticket) {
+        return null;
+    }
+
     //node Add alert becomes remove alert if there is already an alert on the ticket
+    const alertKey = (alert == null) ? "Add Alert" : "Remove Alert";
     const controlList = {
-        "Edit": { link: `/tickets/${id}/edit`, icon: EditTicketIcon },
-        "Pdf": { link: () => getPdf(id), icon: PDFIcon },
-        "Add Alert": { link: () => addAlert(id), icon: AddAlertIcon },
+        "Edit": { link: `/tickets/${state.ticket.id}/edit`, icon: EditTicketIcon },
+        "Pdf": { link: () => getPdf(state.ticket.id), icon: PDFIcon },
+        [alertKey]: { link: () => (alert != null) ? removeAlert() : addAlert(), icon: AddAlertIcon },
         "Add Comment": { link: () => setShowCommentForm(), icon: AddCommentIcon },
         "Add Attachment": { link: () => setShowAttachmentForm(), icon: AddAttachmentIcon },
-        "Delete": { link: () => deleteTicket(id), icon: DeleteIcon },
+        "Delete": { link: () => deleteTicket(), icon: DeleteIcon },
         "Back": { link: "/tickets/", icon: BackArrowIcon }
     };
 
@@ -70,6 +117,7 @@ const Controls = ({id, setShowCommentForm, setShowAlertForm, setShowAttachmentFo
            {controlLabel}</StyledLink>
             {bar}</span>;
     });
+
 
     return (
         <ControlsStyled>
@@ -98,8 +146,9 @@ const ControlsStyled = styled.div`
 `;
 
 Controls.propTypes = {
-    id: PropTypes.string,
-    setShowAlertForm: PropTypes.func,
+    dispatch: PropTypes.func,
+    state: PropTypes.object,
+    alert: PropTypes.object,
     setShowCommentForm: PropTypes.func,
     setShowAttachmentForm: PropTypes.func
 };

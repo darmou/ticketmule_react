@@ -16,41 +16,50 @@ class TicketmuleNetwork {
         }
     }
 
+    async updateTicket(appState, data) {
+        debugger;
+        if (appState.user) {
+            return await doNetworkRequest(`/api/v1/tickets/${appState.ticket.id}`,
+                SendMethod.PATCH, appState.user.email, appState.user.authentication_token,
+                data);
+        }
+    }
 
+    async deleteTicket(app_state) {
+        if (app_state.user && app_state.ticket.id != null) {
+            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}`,
+                SendMethod.DELETE, app_state.user.email, app_state.user.authentication_token);
+        }
+    }
 
-    async deleteTicket(id) {
+    async fetchOptions() {
         if (this.user) {
-            return await doNetworkRequest(`${this.prefix}/tickets/${id}`, SendMethod.DELETE, this.user.email,
+            // wait for the fetch to finish then dispatch the result
+            return await doNetworkRequest(`${this.prefix}/options`, SendMethod.GET, this.user.email,
                 this.user.authentication_token);
         }
     }
 
-    async deleteComment(app_state, id) {
+    async deleteRelatedTicketRecord(app_state, type, id) {
         if (app_state.user && id != null && app_state.ticket.id != null) {
-            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/comments/${id}`,
+            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/${type}/${id}`,
                 SendMethod.DELETE, app_state.user.email,
                 app_state.user.authentication_token);
         }
     }
 
-    async addComment(app_state, data) {
-        if (app_state.user) {
-            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/comments`,
-                SendMethod.POST, app_state.user.email, app_state.user.authentication_token,
-                `{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
+    async addRelatedTicketRecord(appState, type, data) {
+
+        if (appState.user) {
+            return await doNetworkRequest(`/api/v1/tickets/${appState.ticket.id}/${type}`,
+                SendMethod.POST, appState.user.email, appState.user.authentication_token,
+                data, type === "attachments");
         }
     }
 
-    async addAttachment(app_state, data) {
-        if (app_state.user) {
-            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/attachments`,
-                SendMethod.POST, app_state.user.email, app_state.user.authentication_token,
-                `{"attachment":{"attachment":"${data["attachment"]}}}`);
-        }
-    }
+
 
     async fetchTickets (type = null)  {
-
         if (this.user) {
             // wait for the fetch to finish then dispatch the result
             const typeParam = (type && type !== ticketsTypes.NOT_CLOSED) ? `?type=${type.toString()}` : '/';

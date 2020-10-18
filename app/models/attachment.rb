@@ -1,6 +1,8 @@
 class Attachment < ApplicationRecord
   include AttachmentConcern
+  include Rails.application.routes.url_helpers
   has_one_attached :data
+  belongs_to :user
   # Old Paperclip config
   #has_attached_file :data,
   #                  :default_url => "/attachments/:ticket_id/:id",
@@ -17,7 +19,7 @@ class Attachment < ApplicationRecord
   end
 
   def url
-    data.url
+    url_for(data)
   end
 
   def name

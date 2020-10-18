@@ -7,12 +7,15 @@ Rails.application.routes.draw do
       devise_for :users, controllers: {
           sessions: 'api/v1/sessions',
       }
+      get "/options/", to: "options#index"
       resources :sessions, only: [:create, :destroy]
       resources :groups, only: [:index]
       resources :time_types, only: [:index]
       resources :statuses, only: [:index]
       resources :tickets do
         resources :comments, only: [:create, :destroy]
+        resources :attachments, only: [:create, :destroy]
+        resources :alerts, only: [:create, :destroy]
       end
 
       resources :priorities, only: [:index]

@@ -9,6 +9,7 @@ import RedBullet from "../images/bullet_red.png";
 import YellowBullet from "../images/bullet_yellow.png";
 import BlueBullet from "../images/bullet_blue.png";
 import useSliderToggle from "react-slide-toggle-hooks";
+import useGetTickets from "../hooks/use_get_tickets";
 
 const TICKET_TYPES = {
     OPENED: 'opened',
@@ -63,14 +64,15 @@ export const getTicketImage = (priorityId) => {
 export const SLIDE_DURATION = 800;
 
 const TicketBoard = () => {
+    const { tickets, isLoading } = useGetTickets();
     const { toggle, setCollapsibleElement, slideToggleState } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (
        <TicketBoardStyled>
             <h2>Dashboard</h2>
 
-           <TableSection type={ticketsTypes.NOT_CLOSED} slideDuration={SLIDE_DURATION} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
-           <TableSection type={ticketsTypes.CLOSED} slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.NOT_CLOSED} slideDuration={SLIDE_DURATION} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.CLOSED} slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
            <>
                <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>

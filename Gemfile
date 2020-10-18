@@ -25,12 +25,13 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'acts_as_reportable'
 gem 'api-pagination'
+gem 'pagy', '~> 3.8'
 gem 'jbuilder', '~> 2.7'
-gem 'kaminari'
 gem 'rack-cors'
 gem 'ruport'
 gem 'prawn-rails', '~> 1.3.0'
 gem 'prawn', '~> 2.3.0'
+gem 'jsonapi-serializer'
 
 #gem 'protected_attributes'
 
@@ -46,6 +47,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry'
+  gem 'figaro'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.5'
 end
@@ -73,3 +75,4 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+

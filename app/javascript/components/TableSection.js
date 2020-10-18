@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import PlusImage from "../images/plus.gif";
 import MinusImage from "../images/minus.gif";
 import TicketsTable from "./TicketsTable";
-import useGetTickets from "../hooks/use_get_tickets";
 import useSliderToggle from "react-slide-toggle-hooks";
+import {ticketsTypes} from "../actions/ticket_store";
 
 export const SLIDE_STATES = {
     EXPANDED: 'EXPANDED',
@@ -15,24 +15,28 @@ export const SLIDE_STATES = {
 };
 Object.freeze(SLIDE_STATES);
 
+const TableSection = memo(({isLoading, type, tickets, slideDuration, sectionName, sectionId}) => {
 
-const TableSection = memo(({type, slideDuration, sectionName, sectionId}) => {
-    const { tickets, isLoading } = useGetTickets(type);
+    const filteredTickets = (tickets) ? tickets.filter(ticket => {
+       return (type == ticketsTypes.NOT_CLOSED) ? ticket.status.name !== "Closed" : ticket.status.name === "Closed";
+    }) : null;
 
     const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: slideDuration});
 
     return (<>
         <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>{sectionName}</H3ToggleStyled>
         <div  css={css``} id={sectionId}  ref={expandableRef}>
-            {(!isLoading && tickets) &&
-            <TicketsTable isAgo={true} tickets={tickets}/>
+            {(!isLoading && filteredTickets) &&
+            <TicketsTable isAgo={true} tickets={filteredTickets}/>
             }
         </div>
-            </>);
+    </>);
 });
 
 TableSection.propTypes = {
+    isLoading: PropTypes.bool,
     type: PropTypes.string,
+    tickets: PropTypes.array,
     slideDuration: PropTypes.number,
     headerItems: PropTypes.array,
     sectionName: PropTypes.string,

@@ -31,8 +31,7 @@ class Api::V1::CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    json_response({})
-    head :ok
+    json_response({}, :ok)
   end
 
   private

@@ -10,14 +10,20 @@ const TicketStore = {
     add: function ({state, ticket}) {
         return {...state, tickets: [...state.tickets, ticket]};
     },
-    update: function ({state, index, ticket}) {
+    update: function ({state, aTicket}) {
+        const index = state.tickets.findIndex(ticket => ticket.id === aTicket.id);
         return produce(state, draftState => {
-            draftState.tickets[index] = {...draftState.tickets[index], ...ticket};
+            draftState.tickets[index] = {...draftState.tickets[index], ...aTicket};
         });
     },
-    setTickets: function ({state, tickets, type}) {
+    setTickets: function ({state, tickets}) {
         return produce(state, draftState => {
-            draftState.tickets[type] = tickets;
+            draftState.tickets = tickets;
+        });
+    },
+    setOptions: function ({state, options}) {
+        return produce(state, draftState => {
+            draftState.options = options;
         });
     },
     setTicket: function ({state, ticket}) {
@@ -25,9 +31,15 @@ const TicketStore = {
             draftState.ticket = ticket;
         });
     },
-    delete: function ({state, index}) {
+    deleteTicket: function ({state, id}) {
+        const index = state.tickets.findIndex(ticket => ticket.id === id);
         return produce(state, draftState => {
             draftState.tickets.splice(index, 1);
+        });
+    },
+    resetIsLoggingOut: function ({state}) {
+        return produce(state, draftState => {
+            draftState.isLoggingOut = false;
         });
     },
     setUser: function ({state, user}) {

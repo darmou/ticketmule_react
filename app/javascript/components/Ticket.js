@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import useSliderToggle from "react-slide-toggle-hooks";
@@ -9,16 +9,19 @@ import TicketTable from "./TicketTable";
 import useGetTicket from "../hooks/use_get_ticket";
 import Controls from "./Controls";
 import { CommentForm } from "./CommentForm";
+import AttachmentList from "./AttachmentList";
 import CommentList from "./CommentList";
 import { TicketsStyled } from "./Tickets";
 import { TicketContext } from "../packs/application";
 import { AttachmentForm } from "./AttachmentForm";
+import { queryCache, useMutation } from "react-query";
+import useTicketmule from "../hooks/use_ticketmule";
 
 const Ticket = React.memo(() => {
-    const { state } = useContext(TicketContext);
+    const { state, dispatch } = useContext(TicketContext);
     const { slug } = useParams();
     const ticket = useGetTicket(slug);
-    const [showAlertForm, setShowAlertForm] = React.useState(false);
+    const ticketMule = useTicketmule();
 
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
     const { expandableRef, toggle } = getSliderToggle(
@@ -29,28 +32,37 @@ const Ticket = React.memo(() => {
             initialState: SLIDE_STATES.COLLAPSED, duration: SLIDE_DURATION }
     );
 
+    const [addTheComment] = useMutation(
+        ticketMule.addRelatedTicketRecord.bind(this, state, "comments"),
+        {
+            onSuccess: async () => {
+                // Query Invalidations
+                await queryCache.invalidateQueries('ticket');
+            },
+        }
+    );
+
     return(<TicketStyled>
         <h2>Ticket #{slug}</h2>
 
-        <Controls id={slug} setShowCommentForm={toggle} setShowAlertForm={setShowAlertForm} setShowAttachmentForm={attachmentToggle.toggle}/>
+        <Controls id={slug} alert={ticket?.alert || null}
+                  dispatch={dispatch} state={state}
+                  setShowCommentForm={toggle}
+                  setShowAttachmentForm={attachmentToggle.toggle}/>
 
         {(state.ticket) &&
             <TicketTable ticket={state.ticket}/>
         }
 
-        <CommentForm ref={expandableRef} state={state} toggleForm={toggle} id={slug}/>
-        <AttachmentForm ref={attachmentToggle.expandableRef} state={state} toggleForm={attachmentToggle.toggle} id={slug}/>
+        <CommentForm ref={expandableRef} addTheComment={addTheComment} toggleForm={toggle} id={slug}/>
+        <AttachmentForm ref={attachmentToggle.expandableRef} addTheComment={addTheComment} state={state}
+                        toggleForm={attachmentToggle.toggle} id={slug}/>
 
+        { (ticket && ticket != null && ticket.attachments != null && ticket.attachments.length > 0) &&
+            <AttachmentList  state={state} attachments={ticket.attachments}/>
+        }
         { (ticket && ticket != null && ticket.comments != null && ticket.comments.length > 0) &&
             <CommentList state={state} comments={ticket.comments}/>
-        }
-
-
-        {
-            /*
-                 <AlertForm isShown={showAlertForm}/>
-                 <AttachmentForm isShown={showAttachmentForm}/>
-             */
         }
 
     </TicketStyled>);
