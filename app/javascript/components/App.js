@@ -14,7 +14,7 @@ import TicketDash from "./TicketDash";
 import TicketNew from "./TicketNew";
 import TicketEdit from "./TicketEdit";
 import Tickets from "./Tickets";
-import TicketStore from "../actions/ticket_store";
+import TicketStore from "../actions/ticketStore";
 import Ticket from "./Ticket";
 import TicketControls from "./TicketControls";
 

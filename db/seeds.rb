@@ -28,6 +28,8 @@ TimeType.create name: 'Trivial'
 TimeType.create name: 'Medium'
 TimeType.create name: 'Major Project'
 
+#Create a default admin user
+
 user_attrs = {
     username: 'admin',
     password: 'welcome',

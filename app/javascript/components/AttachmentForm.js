@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import useTicketmule from "../hooks/use_ticketmule";
-import { getAttachmentFileSize } from "../utils/display_utils";
+import useTicketmule from "../hooks/useTicketMule";
+import { getAttachmentFileSize } from "../utils/displayUtils";
 import {
     SecondaryButtonStyled,
     ErrorNotificationStyled,

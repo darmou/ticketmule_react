@@ -1,12 +1,12 @@
 import React from "react";
 import { TicketStyled } from "./Ticket";
 import { useParams} from "react-router-dom";
-import useGetTicket from "../hooks/use_get_ticket";
+import useGetTicket from "../hooks/useGetTicket";
 import TicketForm from "./TicketForm";
 import {queryCache, useMutation} from "react-query";
-import useTicketmule from "../hooks/use_ticketmule";
+import useTicketmule from "../hooks/useTicketMule";
 import { PropTypes } from "prop-types";
-import TicketStore, { ticketsTypes } from "../actions/ticket_store";
+import TicketStore from "../actions/ticketStore";
 
 const TicketEdit = ({context}) => {
     const { state, dispatch } = context;
@@ -25,7 +25,7 @@ const TicketEdit = ({context}) => {
     );
 
     const editTicket = (ticket) => {
-        dispatch({action_fn: TicketStore.update, aTicket: ticket, type});
+        dispatch({action_fn: TicketStore.update, aTicket: ticket});
     };
 
     return (<TicketStyled>

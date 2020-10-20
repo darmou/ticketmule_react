@@ -11,10 +11,13 @@ const TicketStore = {
         return {...state, tickets: [...state.tickets, ticket]};
     },
     update: function ({state, aTicket}) {
-        const index = state.tickets.findIndex(ticket => ticket.id === aTicket.id);
-        return produce(state, draftState => {
-            draftState.tickets[index] = {...draftState.tickets[index], ...aTicket};
-        });
+        if (state && state.tickets) {
+            const index = state.tickets.findIndex(ticket => ticket.id === aTicket.id);
+            return produce(state, draftState => {
+                draftState.tickets[index] = {...draftState.tickets[index], ...aTicket};
+            });
+        }
+        return state;
     },
     setTickets: function ({state, tickets}) {
         return produce(state, draftState => {

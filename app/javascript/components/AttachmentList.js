@@ -13,9 +13,9 @@ import MusicDocumentIcon from "../images/document-music.png";
 import WordDocumentIcon from "../images/document-word.png";
 import ImageDocumentIcon from "../images/document-image.png";
 import { useMutation, queryCache } from "react-query";
-import useTicketmule from "../hooks/use_ticketmule";
+import useTicketmule from "../hooks/useTicketMule";
 import { Timestamp, DeleteLink } from "./CommentList";
-import { getAttachmentFileSize } from "../utils/display_utils";
+import { getAttachmentFileSize } from "../utils/displayUtils";
 
 const DOC_TYPES = {
     "application/pdf": PdfDocumentIcon,
@@ -74,7 +74,7 @@ const AttachmentList = React.memo(({attachments, state}) => {
     };
 
     const getAttachmentImage = (dataContentType) => {
-        if (DOC_TYPES.hasOwnProperty(dataContentType)) {
+        if (Object.prototype.hasOwnProperty.call(DOC_TYPES, dataContentType)) {
             return DOC_TYPES[dataContentType];
         } else if (dataContentType.search(/image\//i) > -1) {
             return ImageDocumentIcon;

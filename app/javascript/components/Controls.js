@@ -10,8 +10,8 @@ import AddCommentIcon from "../images/add-comment.png";
 import AddAttachmentIcon from "../images/add-attachment.png";
 import DeleteIcon from "../images/delete.png";
 import BackArrowIcon from "../images/back-arrow.png";
-import TicketmuleNetwork from "../utils/ticketmule_network_class";
-import TicketStore, { ticketsTypes } from "../actions/ticket_store";
+import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
+import TicketStore, { ticketsTypes } from "../actions/ticketStore";
 
 
 /*

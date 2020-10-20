@@ -7,6 +7,7 @@ Rails.application.configure do
   Rails.application.routes.default_url_options[:only_path] = true
   config.cache_classes = false
 
+
   # Do not eager load code on boot.
   config.eager_load = false
 

@@ -2,7 +2,7 @@ import React from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import { TicketBoardStyled } from "./TicketBoard";
-import useGetTickets from "../hooks/use_get_tickets";
+import useGetTickets from "../hooks/useGetTickets";
 
 const Tickets =  () => {
     const { tickets, isLoading } = useGetTickets();

@@ -6,7 +6,7 @@ import { SLIDE_DURATION } from "./TicketBoard";
 import { SLIDE_STATES } from "./TableSection";
 import { PropTypes } from "prop-types";
 import TicketTable from "./TicketTable";
-import useGetTicket from "../hooks/use_get_ticket";
+import useGetTicket from "../hooks/useGetTicket";
 import Controls from "./Controls";
 import { CommentForm } from "./CommentForm";
 import AttachmentList from "./AttachmentList";
@@ -15,7 +15,7 @@ import { TicketsStyled } from "./Tickets";
 import { TicketContext } from "../packs/application";
 import { AttachmentForm } from "./AttachmentForm";
 import { queryCache, useMutation } from "react-query";
-import useTicketmule from "../hooks/use_ticketmule";
+import useTicketmule from "../hooks/useTicketMule";
 
 const Ticket = React.memo(() => {
     const { state, dispatch } = useContext(TicketContext);

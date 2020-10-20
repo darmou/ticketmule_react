@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import PropTypes from "prop-types";
-import TicketmuleNetwork from "../utils/ticketmule_network_class";
-import TicketStore from "../actions/ticket_store";
+import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
+import TicketStore from "../actions/ticketStore";
 import { TicketContext } from "../packs/application";
 
 const useGetOptions = () => {

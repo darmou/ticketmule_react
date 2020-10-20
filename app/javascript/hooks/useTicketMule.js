@@ -1,6 +1,6 @@
 import React, { useContext} from "react";
 import { TicketContext } from "../packs/application";
-import TicketmuleNetwork from "../utils/ticketmule_network_class";
+import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 
 
 function useTicketMule() {

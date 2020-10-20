@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import { TicketContext } from "../packs/application";
-import TicketStore from "../actions/ticket_store";
+import TicketStore from "../actions/ticketStore";
 import HeadBackground from "../images/head-bg.gif";
-import useTicketMule from "../hooks/use_ticketmule";
+import useTicketMule from "../hooks/useTicketMule";
 
 const menuItems = [
   { id: 0, path: "/", text: "Dashboard" },

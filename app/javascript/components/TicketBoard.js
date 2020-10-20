@@ -1,15 +1,15 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import { renderList } from "../utils/display_utils";
-import { ticketsTypes } from "../actions/ticket_store";
+import { renderList } from "../utils/displayUtils";
+import { ticketsTypes } from "../actions/ticketStore";
 import moment from "moment";
 import { TableSection, H3ToggleStyled  } from "./TableSection";
 import RedBullet from "../images/bullet_red.png";
 import YellowBullet from "../images/bullet_yellow.png";
 import BlueBullet from "../images/bullet_blue.png";
 import useSliderToggle from "react-slide-toggle-hooks";
-import useGetTickets from "../hooks/use_get_tickets";
+import useGetTickets from "../hooks/useGetTickets";
 
 const TICKET_TYPES = {
     OPENED: 'opened',

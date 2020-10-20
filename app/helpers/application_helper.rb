@@ -4,4 +4,8 @@ module ApplicationHelper
     date.strftime("%d %b %Y %I:%M %p")
   end
 
+  def ticket_url ticket
+    "#{APP_CONFIG['host']}/tickets/#{ticket.id}"
+  end
+
 end

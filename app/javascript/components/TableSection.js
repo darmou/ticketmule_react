@@ -5,7 +5,7 @@ import PlusImage from "../images/plus.gif";
 import MinusImage from "../images/minus.gif";
 import TicketsTable from "./TicketsTable";
 import useSliderToggle from "react-slide-toggle-hooks";
-import {ticketsTypes} from "../actions/ticket_store";
+import { ticketsTypes } from "../actions/ticketStore";
 
 export const SLIDE_STATES = {
     EXPANDED: 'EXPANDED',

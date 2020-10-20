@@ -9,7 +9,7 @@ import TrashIcon from "../images/trash.png";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useMutation, queryCache } from "react-query";
-import useTicketmule from "../hooks/use_ticketmule";
+import useTicketmule from "../hooks/useTicketMule";
 
 const CommentSquare = styled.span`
     padding: 3px 2px;

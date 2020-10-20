@@ -4,6 +4,7 @@ development:
   attachment_size_limit: 10
   domain_name: "localhost:3000"
   app_email: "ticketmule@mycompany.com"
+  host: "http://127.0.0.1:3000"
 
 test:
   failed_logins_limit: 5

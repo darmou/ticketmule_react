@@ -1,5 +1,5 @@
 import { doNetworkRequest, SendMethod } from "./network";
-import { ticketsTypes } from "../actions/ticket_store";
+import { ticketsTypes } from "../actions/ticketStore";
 
 class TicketmuleNetwork {
     constructor(user) {
@@ -17,7 +17,6 @@ class TicketmuleNetwork {
     }
 
     async updateTicket(appState, data) {
-        debugger;
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/tickets/${appState.ticket.id}`,
                 SendMethod.PATCH, appState.user.email, appState.user.authentication_token,
@@ -57,19 +56,16 @@ class TicketmuleNetwork {
         }
     }
 
-
-
-    async fetchTickets (type = null)  {
+    async fetchTickets ()  {
         if (this.user) {
             // wait for the fetch to finish then dispatch the result
-            const typeParam = (type && type !== ticketsTypes.NOT_CLOSED) ? `?type=${type.toString()}` : '/';
-            return await doNetworkRequest(`${this.prefix}/tickets${typeParam}`, SendMethod.GET, this.user.email,
+            return await doNetworkRequest(`${this.prefix}/tickets`, SendMethod.GET, this.user.email,
                 this.user.authentication_token);
         }
     }
 
-    async login(username, password) {
-        return await doNetworkRequest(`${this.prefix}/users/sign_in`,
+    async login({username, password}) {
+        return await doNetworkRequest(`/api/v1/users/sign_in`,
             SendMethod.POST, null, null,
             `{"user":{"username":"${username}","password":"${password}"}}`);
     }

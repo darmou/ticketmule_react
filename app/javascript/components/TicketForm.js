@@ -3,10 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ErrorNotificationStyled, FlashStyled, SecondaryButtonStyled} from "./Login";
 import { useForm } from "react-hook-form";
-import useGetOptions from "../hooks/use_get_options";
+import useGetOptions from "../hooks/useGetOptions";
 import PropTypes from "prop-types";
-import useTicketmule from "../hooks/use_ticketmule";
-import TicketStore, {ticketsTypes} from "../actions/ticket_store";
 
 const Row = styled.div`
   float: left;
@@ -61,7 +59,7 @@ const TicketForm = ({addOrUpdate, formAction, slug, ticket}) => {
 
     const cleanData = (data) => {
         Object.keys(data).map(key => {
-           if (key.endsWith("_id")) {
+           if (key.endsWith("_id") || key.endsWith("_by")) {
                data[key] = (data[key]) ? parseInt(data[key]) : null;
            }
         });
@@ -70,13 +68,13 @@ const TicketForm = ({addOrUpdate, formAction, slug, ticket}) => {
 
     const onSubmit = async (data) => {
         isLoading = true;
-
+        data = cleanData(data);
         try {
             const toSend = {
-                ticket: cleanData(data)
+                ticket: data
             };
             await formAction(JSON.stringify(toSend));
-            addOrUpdate(data, ticket.clsoed_at);
+            addOrUpdate({...ticket, ...data});
          } catch (error) {
 
          }
@@ -91,50 +89,50 @@ const TicketForm = ({addOrUpdate, formAction, slug, ticket}) => {
         </Row>
         <Row>
             <StyledLabel>Contact:</StyledLabel>
-            <select name="contact" ref={register}>
-                <option value="" selected={ticket.contact == null}></option>
-                { (options && options.hasOwnProperty('contacts')) && options.contacts.map(contact => {
-                    return (<option see={ticket.contact && ticket.contact.id === contact.id} key={`contact_${contact.id}`} value={contact.id}>{contact.first_name} {contact.last_name}</option>);
+            <select defaultValue={(ticket.contact) ? ticket.contact.id : null} name="contact_id" ref={register}>
+                <option value=""></option>
+                { (options && Object.prototype.hasOwnProperty.call(options, 'contacts')) && options.contacts.map(contact => {
+                    return (<option key={`contact_${contact.id}`} value={contact.id}>{contact.first_name} {contact.last_name}</option>);
                 })
                 }
             </select>
         </Row>
         <Row>
             <StyledLabel>Group:</StyledLabel>
-            <select name="group" ref={register}>
-                <option value="" selected={ticket.group == null}></option>
-                { (options && options.hasOwnProperty('groups')) && options.groups.map(group => {
-                    return (<option selected={ticket.group && group.id === ticket.group.id} key={`group_${group.id}`} value={group.id}>{group.name}</option>);
+            <select defaultValue={(ticket.group) ? ticket.group.id : null} name="group_id" ref={register}>
+                <option  value=""></option>
+                { (options && Object.prototype.hasOwnProperty.call(options, 'groups')) && options.groups.map(group => {
+                    return (<option  key={`group_${group.id}`} value={group.id}>{group.name}</option>);
                 })
                 }
             </select>
         </Row>
         <Row>
             <StyledLabel>Time Type:</StyledLabel>
-            <select name="time_type" ref={register}>
-                <option selected={ticket.time_type == null} value=""></option>
-                { (options && options.hasOwnProperty('time_types')) && options.time_types.map(time_type => {
-                    return (<option selected={ticket.time_type && time_type.id === ticket.time_type.id} key={`time_type_${time_type.id}`} value={time_type.id}>{time_type.name}</option>);
+            <select defaultValue={(ticket.time_type) ? ticket.time_type.id : null}  name="time_type_id" ref={register}>
+                <option value=""></option>
+                { (options && Object.prototype.hasOwnProperty.call(options, 'time_types')) && options.time_types.map(time_type => {
+                    return (<option key={`time_type_${time_type.id}`} value={time_type.id}>{time_type.name}</option>);
                 })
                 }
             </select>
         </Row>
         <Row>
             <StyledLabel>Priority:</StyledLabel>
-            <select name="priority" ref={register}>
-                <option selected={ticket.priority == null} value=""></option>
-                { (options && options.hasOwnProperty('priorities')) && options.priorities.map(priority => {
-                    return (<option selected={ticket.priority && priority.id === ticket.priority.id} key={`time_type_${priority.id}`} value={priority.id}>{priority.name}</option>);
+            <select  defaultValue={(ticket.priority) ? ticket.priority.id : null} name="priority_id" ref={register}>
+                <option value=""></option>
+                { (options && Object.prototype.hasOwnProperty.call(options, 'priorities')) && options.priorities.map(priority => {
+                    return (<option key={`time_type_${priority.id}`} value={priority.id}>{priority.name}</option>);
                 })
                 }
             </select>
         </Row>
         <Row>
             <StyledLabel>Owner:</StyledLabel>
-            <select name="owner" ref={register}>
-                <option selected={ticket.owner == null} value=""></option>
-                { (options && options.hasOwnProperty('owners')) && options.owners.map(owner => {
-                    return (<option selected={ticket.owner && owner.id === ticket.owner.id} key={`owner_${owner.id}`} value={owner.id}>{owner.username}</option>);
+            <select defaultValue={(ticket.owner) ? ticket.owner.id : null} name="owned_by" ref={register}>
+                <option value=""></option>
+                { (options && Object.prototype.hasOwnProperty.call(options, 'owners')) && options.owners.map(owner => {
+                    return (<option key={`owner_${owner.id}`} value={owner.id}>{owner.username}</option>);
                 })
                 }
             </select>

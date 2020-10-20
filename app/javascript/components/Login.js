@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import ButtonGradient from "../images/button-gradient.png";
-import useTicketmule from "../hooks/use_ticketmule";
-import { msgFlash } from "../utils/display_utils";
+import useTicketmule from "../hooks/useTicketMule";
+import { msgFlash } from "../utils/displayUtils";
 import { TicketContext } from "../packs/application";
-import TicketStore from "../actions/ticket_store";
+import TicketStore from "../actions/ticketStore";
+import {queryCache, useMutation} from "react-query";
 
 const MIN_PASSWORD_LEN = 7;
 export const TIMEOUT = 2000;
@@ -19,6 +20,10 @@ const Login = () =>  {
     const [ flashMsg, setFlashMsg ] = React.useState(null);
     const { state, dispatch } = React.useContext(TicketContext);
     let isLoading = false;
+
+    const [login] = useMutation(
+        ticketMule.login.bind(this), {},
+    );
 
     React.useEffect(() => {
         if (state.isLoggingOut && flashMsg == null) {
@@ -36,7 +41,7 @@ const Login = () =>  {
     const onSubmit = async (data) => {
         isLoading = true;
         try {
-            const response = await ticketMule.login(data.username, data.password);
+            const response = await login(data);
 
             if (response != null) {
                 dispatch({action_fn: TicketStore.setUser, user: response});
