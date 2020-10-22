@@ -26,7 +26,7 @@ import { CookiesProvider } from "react-cookie";
 import functionReducer from "function-reducer";
 
 //We can remove this once we dont' need debugging
-const logReducer = (state, action) => {
+const logReducer = (functionReducer, state, action) => {
     const {action_fn, ...params} = action;
     console.log(`${new Date().toISOString()} | name: ${action_fn?.name}, params: ${JSON.stringify(params)}`);
     return functionReducer(state, action);
@@ -42,7 +42,7 @@ export const TicketContextProvider = props => {
         isLoggingOut: null,
     };
 
-    const [state, dispatch] = useReducer(logReducer, initialState);
+    const [state, dispatch] = useReducer((state, action) => logReducer(functionReducer, state, action), initialState);
     return (
         <TicketContext.Provider value={{state, dispatch}}>
             {props.children}

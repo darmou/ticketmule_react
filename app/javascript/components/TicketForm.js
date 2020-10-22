@@ -139,7 +139,7 @@ const TicketForm = ({addOrUpdate, formAction, slug, ticket}) => {
         </Row>
         <Row>
             <StyledLabel>Details: </StyledLabel>
-            <textarea name="details" ref={register} cols="45" rows="6">{ticket.details}</textarea>
+            <textarea defaultValue={ticket.details} name="details" ref={register} cols="45" rows="6"/>
         </Row>
         <Row>
             <StyledLabel>&nbsp;</StyledLabel>

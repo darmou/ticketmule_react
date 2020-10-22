@@ -7,11 +7,11 @@ import useTicketmule from "../hooks/useTicketMule";
 import { msgFlash } from "../utils/displayUtils";
 import { TicketContext } from "../packs/application";
 import TicketStore from "../actions/ticketStore";
-import {queryCache, useMutation} from "react-query";
+import { useMutation } from "react-query";
 
 const MIN_PASSWORD_LEN = 7;
 export const TIMEOUT = 2000;
-const formTypeEnum = {USERNAME: 1, PASSWORD: 2};
+const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
 Object.freeze(formTypeEnum);
 
 const Login = () =>  {
@@ -30,6 +30,7 @@ const Login = () =>  {
             setFlashMsg(<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
             dispatch({action_fn: TicketStore.resetIsLoggingOut } );
         }
+
         if (flashMsg) {
             setTimeout(() => {
                 setFlashMsg(null);
@@ -61,7 +62,7 @@ const Login = () =>  {
 
         <BoxStyled>
             {flashMsg}
-            <form acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit)}
+            <form acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}
                   className="new_user_session" id="new_user_session">
                 <div style={{margin: 0, padding: 0, display: 'inline'}}>
                     <input name="utf8" type="hidden" value="✓"/>

@@ -1,5 +1,4 @@
 import { doNetworkRequest, SendMethod } from "./network";
-import { ticketsTypes } from "../actions/ticketStore";
 
 class TicketmuleNetwork {
     constructor(user) {
