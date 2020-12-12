@@ -75,7 +75,6 @@ class TicketmuleNetwork {
     }
 
     async addOption(appState, type, option) {
-        debugger;
         const plural = getPlural(type);
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/${plural}/`,

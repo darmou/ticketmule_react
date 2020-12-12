@@ -28,7 +28,6 @@ const Tickets =  React.memo(() => {
     const updatePageLength = (event, pageLen) => {
         event.preventDefault();
         event.stopPropagation();
-        //debugger;
         //_perPageRef.current = pageLen;
         dispatch({action_fn: TicketStore.setPerPage, perPage: pageLen});
     };

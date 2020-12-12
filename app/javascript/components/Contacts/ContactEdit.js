@@ -21,7 +21,6 @@ const ContactEdit = () => {
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.CONTACT),
         {
             onSuccess: async (contact) => {
-                debugger;
                 editContact(contact);
                 // Query Invalidations
                 await queryCache.invalidateQueries('contact');
