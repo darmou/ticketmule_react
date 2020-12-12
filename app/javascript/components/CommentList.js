@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
-import {H3ToggleStyled } from "./TableSection";
-import {SLIDE_DURATION} from "./TicketBoard";
+import { H3ToggleStyled } from "../components/ComponentLibrary/H3ToggleStyled";
+import { SLIDE_DURATION } from "../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import styled from "styled-components";
 import Interweave from "interweave";

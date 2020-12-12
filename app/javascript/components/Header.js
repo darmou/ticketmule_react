@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import { TicketContext } from "../packs/application";
-import TicketStore from "../actions/ticketStore";
 import HeadBackground from "../images/head-bg.gif";
-import useTicketMule from "../hooks/useTicketMule";
+import UserStore from "../actions/userStore";
 
 const menuItems = [
   { id: 0, path: "/", text: "Dashboard" },
@@ -16,7 +15,6 @@ const menuItems = [
 ];
 
 const Header = () => {
-  const ticketMule = useTicketMule();
   const { dispatch, state } = useContext(TicketContext);
   const navigate = useNavigate();
 
@@ -24,7 +22,7 @@ const Header = () => {
           <a href="/users/1">{state.user.username}</a>
           &nbsp;&nbsp;|&nbsp;&nbsp;<Link to="/" onClick={async () => {
             if (window.confirm("Really sign out?")) {
-                dispatch({action_fn: TicketStore.setUser, user: null});
+                dispatch({action_fn: UserStore.setUser, user: null});
             }
           }
       }>Sign out</Link></StatusStyled>

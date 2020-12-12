@@ -1,21 +1,23 @@
 import React from "react";
-import { TicketStyled } from "./Ticket";
+import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { useParams} from "react-router-dom";
-import useGetTicket from "../hooks/useGetTicket";
+import useGetTicket from "../../hooks/useGetTicket";
 import TicketForm from "./TicketForm";
 import {queryCache, useMutation} from "react-query";
-import useTicketmule from "../hooks/useTicketMule";
+import useTicketmule from "../../hooks/useTicketMule";
 import { PropTypes } from "prop-types";
-import TicketStore from "../actions/ticketStore";
+import TicketStore from "../../actions/ticketStore";
+import { RESOURCE_TYPES } from "../../utils/types";
 
 const TicketEdit = ({context}) => {
     const { state, dispatch } = context;
+    const { user } = state;
     const { slug } = useParams();
     const ticket = useGetTicket(slug);
 
     const ticketMule = useTicketmule();
     const [editTheTicket] = useMutation(
-        ticketMule.updateTicket.bind(this, state),
+        ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.TICKET),
         {
             onSuccess: async () => {
                 // Query Invalidations
@@ -28,11 +30,11 @@ const TicketEdit = ({context}) => {
         dispatch({action_fn: TicketStore.update, aTicket: ticket});
     };
 
-    return (<TicketStyled>
+    return (<AResourceStyled>
         <h2>Editing ticket #{slug}</h2>
-        <TicketForm addOrUpdate={editTicket} formAction={editTheTicket} slug={slug} ticket={ticket}/>
+        <TicketForm addOrUpdate={editTicket} user={user} formAction={editTheTicket} slug={slug} ticket={ticket}/>
 
-    </TicketStyled>);
+    </AResourceStyled>);
 };
 
 TicketEdit.propTypes = {

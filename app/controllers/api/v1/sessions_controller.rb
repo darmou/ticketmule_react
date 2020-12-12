@@ -6,7 +6,7 @@ class Api::V1::SessionsController < Devise::SessionsController
     user = User.where(username: user_params[:username]).first
     if user&.valid_password?(user_params[:password])
       sign_in("user", user)
-      render json: user.as_json(only: [:email, :authentication_token, :username]), status: :created
+      render json: user.as_json(only: [:email, :authentication_token, :username, :id]), status: :created
     else
       head(:unauthorized)
     end
@@ -25,7 +25,7 @@ class Api::V1::SessionsController < Devise::SessionsController
     email = request.headers["X-User-Email"]
     @user = User.where(email: email, authentication_token: token).first
     user = (@user) ? @user : current_api_v1_user
-    if(user)
+    if (user)
       self.sign_in_and_redirect user, :event => :authentication
     else
       head(:unauthorized)

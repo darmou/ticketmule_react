@@ -5,14 +5,13 @@ import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import TicketStore from "../actions/ticketStore";
 import { TicketContext } from "../packs/application";
 
-const useGetOptions = () => {
+const useGetOptions = (shouldFetchPeoeple) => {
     const { state, dispatch } = useContext(TicketContext);
     const { user, options } = state;
     const ticketMule = new TicketmuleNetwork(user);
 
-
-    const { data, isLoading } = useQuery(`options`, () =>
-        ticketMule.fetchOptions(), { refetchOnMount: false,
+    const { data, isLoading } = useQuery("options", () =>
+        ticketMule.fetchOptions(shouldFetchPeoeple), { refetchOnMount: false,
         refetchOnWindowFocus: false,
         enabled: (user != null && options == null) }
     );

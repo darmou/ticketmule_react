@@ -62,9 +62,9 @@ Basic installation create database and schema, and initialize with seed data:
 
 ```$ rake db:setup```
 
-Test drive create database and schema, initialize with seed data, and load 150 contacts, 500 tickets, and 4 non-admin users (see +lib+/+tasks+/+faker+.+rake+ for details):
+Test drive initialize with seed data, and load 150 contacts, 500 tickets, and 4 non-admin users (see +lib+/+tasks+/+faker+.+rake+ for details):
 
-```$ rake faker```
+```$ rake db:seed; rake db:populate```
 
 ## Notes
 

@@ -10,16 +10,24 @@ import Dashboard from "./Dashboard";
 import { withCookies } from 'react-cookie';
 import PropTypes from "prop-types";
 import { TicketContext } from "../packs/application";
-import TicketDash from "./TicketDash";
-import TicketNew from "./TicketNew";
-import TicketEdit from "./TicketEdit";
-import Tickets from "./Tickets";
+import TicketDash from "./Tickets/TicketDash";
+import TicketNew from "./Tickets/TicketNew";
+import TicketEdit from "./Tickets/TicketEdit";
+import Tickets from "./Tickets/Tickets";
 import TicketStore from "../actions/ticketStore";
-import Ticket from "./Ticket";
-import TicketControls from "./TicketControls";
+import Ticket from "./Tickets/Ticket";
+import TicketControls from "./Tickets/TicketControls";
+import ContactRoutes from "./Contacts/ContactRoutes";
+import UserRoutes from "./Users/UsersRoutes";
+import Admin from "./Admin/Admin";
+import UserStore from "../actions/userStore";
+import AdminOptions from "./Admin/AdminOptions";
+import AdminUsers from "./Admin/AdminUsers";
+import { TIMEOUT } from "./ComponentLibrary/FlashMessages";
 
 function BaseApp ({context}) {
     const navigate = useNavigate();
+    const [ flashMsg, setFlashMsg ] = React.useState(null);
 
     React.useEffect(() => {
         if (!context || !context.state.user) {
@@ -27,18 +35,23 @@ function BaseApp ({context}) {
                 const user = {
                     email: sessionStorage.getItem("email"),
                     authentication_token: sessionStorage.getItem("authentication_token"),
-                    username: sessionStorage.getItem("username")
+                    username: sessionStorage.getItem("username"),
+                    id: sessionStorage.getItem("id")
                 };
-                context.dispatch({action_fn: TicketStore.setUser, user});
+                context.dispatch({action_fn: UserStore.setUser, user});
             } else { // Woops no user available navigate to login page
                 navigate("/");
             }
         }
-    }, [TicketStore]);
+        if (flashMsg) {
+            setTimeout(() => {
+                setFlashMsg(null);
+            }, TIMEOUT);
+        }
+    }, [TicketStore, flashMsg, setFlashMsg, TIMEOUT]);
 
     const Dash = (context && context.state.user != null)
         ? Dashboard : Login;
-
 
     return (<AppStyled>
 
@@ -47,10 +60,19 @@ function BaseApp ({context}) {
             <Routes>
                 <Route path='/tickets' element={<TicketDash/>}>
                     <Route path='/' element={<Tickets/>} />
-                    <Route path='/new' element={<TicketNew/>} />
+                    <Route path='/new' element={<TicketNew context={context}/>} />
                     <Route path=':slug' element={<Ticket/>} />
                     <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
-
+                </Route>
+                <Route path='/contacts/*' element={<ContactRoutes/>}/>
+                <Route path='/users/*' element={<UserRoutes/>}/>
+                <Route path='/admin' element={<Admin flashMsg={flashMsg}/>}>
+                    <Route path='/' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/groups' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/statuses' element={<AdminOptions type="status" setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/priorities' element={<AdminOptions type="priority" setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/time_types' element={<AdminOptions type="time_type" setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/users' element={<AdminUsers/>}/>
                 </Route>
                 <Route path='/' element={<Dash />}/>
             </Routes>

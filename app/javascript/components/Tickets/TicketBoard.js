@@ -1,15 +1,18 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-import { renderList } from "../utils/displayUtils";
-import { ticketsTypes } from "../actions/ticketStore";
+import ResourceWrapperStyled from "../ComponentLibrary/ResourceWrapperStyled";
+import { renderList } from "../../utils/displayUtils";
+import { ticketsTypes } from "../../actions/ticketStore";
 import moment from "moment";
-import { TableSection, H3ToggleStyled  } from "./TableSection";
-import RedBullet from "../images/bullet_red.png";
-import YellowBullet from "../images/bullet_yellow.png";
-import BlueBullet from "../images/bullet_blue.png";
+import { TableSection } from "../TableSection";
+import { H3ToggleStyled } from "../ComponentLibrary/H3ToggleStyled";
+import RedBullet from "../../images/bullet_red.png";
+import YellowBullet from "../../images/bullet_yellow.png";
+import BlueBullet from "../../images/bullet_blue.png";
+import { SLIDE_DURATION } from "../../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
-import useGetTickets from "../hooks/useGetTickets";
+import useGetTickets from "../../hooks/useGetTickets";
 
 const TICKET_TYPES = {
     OPENED: 'opened',
@@ -60,19 +63,16 @@ export const getTicketImage = (priorityId) => {
   return priorityIdMap[priorityId];
 };
 
-
-export const SLIDE_DURATION = 800;
-
 const TicketBoard = () => {
     const { tickets, isLoading } = useGetTickets();
     const { toggle, setCollapsibleElement, slideToggleState } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (
-       <TicketBoardStyled>
+       <ResourceWrapperStyled>
             <h2>Dashboard</h2>
 
-           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.NOT_CLOSED} slideDuration={SLIDE_DURATION} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
-           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.CLOSED} slideDuration={SLIDE_DURATION} headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
+           <TableSection pageisLoading={isLoading} tickets={tickets} type={ticketsTypes.NOT_CLOSED}  headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.CLOSED}  headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
            <>
                <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>
@@ -88,13 +88,10 @@ const TicketBoard = () => {
                </TimelineWrapperStyled>
            </>
 
-       </TicketBoardStyled>
+       </ResourceWrapperStyled>
     );
 };
 
-export const header = `
-    background: #f1f1f1;
-`;
 
 
 export const ImageSpan = styled.span.attrs(props => ({
@@ -119,25 +116,7 @@ const SpanTimelineLabel = styled.span`
   line-height: 20px;
 `;
 
-export const TableListingStyled = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    margin: 2px 0 16px 0;
-    background: #fff;
-    line-height: 11px;
-    border-top: 1px solid #ccc;
-    th {
-      color: #888;
-      padding: 6px 2px;
-    }
-    th, td {
-      text-align: left;
-      padding: 4px 2px;
-    }
-    tr {
-       border-bottom: 1px solid #ccc;
-    }
-`;
+
 
 const TimelineWrapperStyled = styled.div`
     margin: 0 0 10px 0;
@@ -167,37 +146,5 @@ const TimelineStyled = styled.div`
     float: ${({isLeft}) => (isLeft) ? 'left': 'right'};
 `;
 
-export const TicketBoardStyled = styled.div`
-  padding: 10px;
-  margin: 0 5px 5px 0;
-  background: #fff;
-  border: 1px solid #bbb;
-  border-radius: 8px;
-  box-shadow: 2px 2px 3px #ddd;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  -moz-box-shadow: 2px 2px 3px #ddd;
-  -webkit-box-shadow: 2px 2px 3px #ddd;
-
-  h3 {
-    font-size: 13px;
-    line-height: 16px;
-    margin: 0 0 5px 0;
-    color: #4d88cf;
-  }
-  
-  h2 {
-    font-size: 18px;
-    line-height: 16px;
-    letter-spacing: -1px;
-    text-shadow: 1px 1px 2px #cecece;
-  }
-
-  h1, h2 {
-    color: #90af4c;
-    margin: 0 0 16px 0;
-    height: auto;
-  }
-`;
 
 export default TicketBoard;

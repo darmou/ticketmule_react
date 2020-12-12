@@ -4,11 +4,23 @@ class TicketSerializer
   attributes  :id, :time_type, :group, :priority, :title, :status, :details, :comments_count, :created_at, :updated_at
 
   attribute :contact do |object|
-    object.contact
+    if (object.contact)
+      ContactSerializer.new(object.contact).serializable_hash[:data][:attributes]
+    else
+      nil
+    end
   end
 
   attribute :owner do | object |
-    object.owner
+    if (object.owner)
+      UserSerializer.new(object.owner).serializable_hash[:data][:attributes]
+    else
+      nil
+    end
+  end
+
+  attribute :creator do | object |
+    UserSerializer.new(object.creator).serializable_hash[:data][:attributes]
   end
 
   attribute :comments, if: Proc.new { |record, params|

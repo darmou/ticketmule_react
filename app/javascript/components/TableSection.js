@@ -1,33 +1,27 @@
-import styled, { css } from "styled-components";
+import { css } from "styled-components";
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import PlusImage from "../images/plus.gif";
-import MinusImage from "../images/minus.gif";
-import TicketsTable from "./TicketsTable";
+import { H3ToggleStyled } from "../components/ComponentLibrary/H3ToggleStyled";
+import TicketsTable from "./Tickets/TicketsTable";
 import useSliderToggle from "react-slide-toggle-hooks";
 import { ticketsTypes } from "../actions/ticketStore";
+import { SLIDE_DURATION } from "../utils/displayUtils";
 
-export const SLIDE_STATES = {
-    EXPANDED: 'EXPANDED',
-    EXPANDING: 'EXPANDING',
-    COLLAPSED: 'COLLAPSED',
-    COLLAPSING: 'COLLAPSING'
-};
-Object.freeze(SLIDE_STATES);
+const MAX_TICKETS_INDEX = 6;
 
-const TableSection = memo(({isLoading, type, tickets, slideDuration, sectionName, sectionId}) => {
+const TableSection = memo(({isLoading, type, tickets, sectionName, sectionId}) => {
 
-    const filteredTickets = (tickets) ? tickets.filter(ticket => {
+    const filteredTickets = (tickets) ? tickets.slice(0, MAX_TICKETS_INDEX).filter(ticket => {
        return (type == ticketsTypes.NOT_CLOSED) ? ticket.status.name !== "Closed" : ticket.status.name === "Closed";
     }) : null;
 
-    const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: slideDuration});
+    const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (<>
         <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>{sectionName}</H3ToggleStyled>
         <div  css={css``} id={sectionId}  ref={expandableRef}>
             {(!isLoading && filteredTickets) &&
-            <TicketsTable isAgo={true} tickets={filteredTickets}/>
+            <TicketsTable setCurrentPage={()=> {}} page={1} pages={1} isPagination={false} isAgo={true} tickets={filteredTickets}/>
             }
         </div>
     </>);
@@ -43,13 +37,6 @@ TableSection.propTypes = {
     sectionId: PropTypes.string
 };
 
-const H3ToggleStyled = styled.h3`
-    padding: 6px 0 6px 20px;
-    background: ${({isOpen}) => `url(${(isOpen === SLIDE_STATES.COLLAPSED || isOpen === SLIDE_STATES.COLLAPSING) ? PlusImage : MinusImage}) no-repeat left center`};
-    &:hover {
-      cursor: pointer;
-      color: #90af4c;
-    }
-`;
 
-export { TableSection, H3ToggleStyled };
+
+export { TableSection };

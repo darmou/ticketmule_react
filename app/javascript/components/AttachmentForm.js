@@ -5,12 +5,8 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import useTicketmule from "../hooks/useTicketMule";
 import { getAttachmentFileSize } from "../utils/displayUtils";
-import {
-    SecondaryButtonStyled,
-    ErrorNotificationStyled,
-    TIMEOUT,
-    SuccessNotificationStyled
-} from "./Login";
+import SecondaryButton from "./ComponentLibrary/SecondaryButton";
+import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { queryCache, useMutation } from "react-query";
 
 
@@ -84,8 +80,8 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
             </StyledEnclosingDiv>
 
             <p>
-                <SecondaryButtonStyled className="button" id="attachment_submit" name="commit" type="submit"
-                                       value="Add Attachment"/>
+                <SecondaryButton className="button" id="attachment_submit" name="commit" type="submit"
+                >Add Attachment</SecondaryButton>
                 <Link to={'#'} onClick={toggleForm}>Cancel</Link>
             </p>
         </form>

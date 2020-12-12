@@ -3,12 +3,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import {
-    SecondaryButtonStyled,
-    ErrorNotificationStyled,
-    TIMEOUT,
-    SuccessNotificationStyled
-} from "./Login";
+import SecondaryButton from "./ComponentLibrary/SecondaryButton";
+
+import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 
 
 export const CommentForm = React.forwardRef((props, ref) => {
@@ -60,8 +57,8 @@ export const CommentForm = React.forwardRef((props, ref) => {
                 <label htmlFor="close_ticket">Close ticket with this comment</label>
             </p>
             <p>
-                <SecondaryButtonStyled className="button" id="comment_submit" name="commit" type="submit"
-                       value="Add Comment"/>
+                <SecondaryButton className="button" id="comment_submit" name="commit" type="submit"
+                       >Add Comment</SecondaryButton>
                 <Link to={'#'} onClick={toggleForm}>Cancel</Link>
             </p>
         </form>

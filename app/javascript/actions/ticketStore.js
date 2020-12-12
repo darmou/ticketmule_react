@@ -19,9 +19,22 @@ const TicketStore = {
         }
         return state;
     },
-    setTickets: function ({state, tickets}) {
+    setTicketPage: function ({state, page}) {
         return produce(state, draftState => {
-            draftState.tickets = tickets;
+            draftState.ticketPageInfo.currentPage = page;
+        });
+    },
+    setPerPage: function ({state, perPage}) {
+        return produce(state, draftState => {
+            draftState.ticketPageInfo.perPage = perPage;
+        });
+    },
+    setTicketsData: function ({state, ticketsData}) {
+        return produce(state, draftState => {
+            draftState.ticketPageInfo.currentPage = ticketsData['pagy']['page'];
+            draftState.ticketPageInfo.resourceCount = ticketsData['pagy']['count'];
+            draftState.ticketPageInfo.lastPage = ticketsData['pagy']['last'];
+            draftState.tickets = ticketsData['data'];
         });
     },
     setOptions: function ({state, options}) {
@@ -40,26 +53,7 @@ const TicketStore = {
             draftState.tickets.splice(index, 1);
         });
     },
-    resetIsLoggingOut: function ({state}) {
-        return produce(state, draftState => {
-            draftState.isLoggingOut = false;
-        });
-    },
-    setUser: function ({state, user}) {
-        if (user) {
-            sessionStorage.setItem("authentication_token", user.authentication_token);
-            sessionStorage.setItem("email", user.email);
-            sessionStorage.setItem("username", user.username);
-        } else {
-            sessionStorage.removeItem("authentication_token");
-            sessionStorage.removeItem("email");
-            sessionStorage.removeItem("username");
-        }
-        return produce(state, draftState => {
-            draftState.isLoggingOut = (user == null) ? true : false;
-            draftState.user = user;
-        });
-    }
+
 };
 
 export default TicketStore;

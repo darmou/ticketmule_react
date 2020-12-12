@@ -1,5 +1,8 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import { RESOURCE_TYPES } from "./types";
+
+export const SLIDE_DURATION = 800;
 
 export const renderTableHeader = (header_items) => {
     const header = header_items.map(header_item =>
@@ -17,10 +20,37 @@ export const getAttachmentFileSize = (byteFileSize) => {
     return (byteFileSize *  0.000977).toFixed(1);
 };
 
+export const capitalizeEachWord = (str) => {
+    return str.replace(/\w\S*/g, txt => {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+
+export const stringToBoolean = (string) => {
+    switch(string.toLowerCase().trim()){
+        case "true": case "yes": case "1": return true;
+        case "false": case "no": case "0": case null: return false;
+        default: return Boolean(string);
+    }
+};
+
 export const msgFlash = keyframes`
   from {opacity :1;}
   to {opacity :0;}
 `;
+
+export const personDateFormat = "DD MMM YYYY hh:mm A";
+
+export const getResourcePageInfo = (resourceType, ticketPageInfo, contactPageInfo, userPageInfo) => {
+    switch (resourceType) {
+        case RESOURCE_TYPES.TICKET:
+            return ticketPageInfo;
+        case RESOURCE_TYPES.CONTACT:
+            return contactPageInfo;
+        case RESOURCE_TYPES.USER:
+            return userPageInfo;
+    }
+};
 
 export const renderList = (list_items, style) => {
     const list = list_items.map(list_item =>

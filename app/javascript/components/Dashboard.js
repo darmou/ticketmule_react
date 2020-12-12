@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import TicketBoard from "./TicketBoard";
+import TicketBoard from "./Tickets/TicketBoard";
 import React from "react";
 
 const Dashboard = () => {

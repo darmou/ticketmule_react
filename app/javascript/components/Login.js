@@ -2,15 +2,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import ButtonGradient from "../images/button-gradient.png";
 import useTicketmule from "../hooks/useTicketMule";
-import { msgFlash } from "../utils/displayUtils";
 import { TicketContext } from "../packs/application";
-import TicketStore from "../actions/ticketStore";
 import { useMutation } from "react-query";
+import UserStore from "../actions/userStore";
+import SecondaryButton from "./ComponentLibrary/SecondaryButton";
+import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 
 const MIN_PASSWORD_LEN = 7;
-export const TIMEOUT = 2000;
 const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
 Object.freeze(formTypeEnum);
 
@@ -28,7 +27,7 @@ const Login = () =>  {
     React.useEffect(() => {
         if (state.isLoggingOut && flashMsg == null) {
             setFlashMsg(<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
-            dispatch({action_fn: TicketStore.resetIsLoggingOut } );
+            dispatch({action_fn: UserStore.resetIsLoggingOut } );
         }
 
         if (flashMsg) {
@@ -36,7 +35,7 @@ const Login = () =>  {
                 setFlashMsg(null);
             }, TIMEOUT);
         }
-    }, [flashMsg]);
+    }, [flashMsg, setFlashMsg, TIMEOUT]);
 
 
     const onSubmit = async (data) => {
@@ -45,7 +44,7 @@ const Login = () =>  {
             const response = await login(data);
 
             if (response != null) {
-                dispatch({action_fn: TicketStore.setUser, user: response});
+                dispatch({action_fn: UserStore.setUser, user: response});
             }
         } catch (error) {
             const msg = (error.response.status === 401 ) ? 'Incorrect login details' : 'Error occurred';
@@ -100,8 +99,8 @@ const Login = () =>  {
                         <label htmlFor="user_session_remember_me">Remember me</label>
                     </dd>
                     <dd>
-                        <SecondaryButtonStyled disabled={isLoading} name="commit" type="submit"
-                               value="Sign in"/>&nbsp;&nbsp;
+                        <SecondaryButton disabled={isLoading} name="commit" type="submit"
+                        >Sign In</SecondaryButton>&nbsp;&nbsp;
                         <Link to="/password_resets/new">
                             Forgot your password?
                         </Link>
@@ -119,57 +118,7 @@ const ValidationDiv = styled.div`
     background-color: #F4CCC3;
 `;
 
-export const NotificationStyled = styled.div`
-  text-align: left;
-  padding: 5px 10px 5px;
 
-  animation:${msgFlash} 0.5s 1;
-  animation-fill-mode: forwards;
-
-  animation-delay:2s;
-  -webkit-animation-delay:1s; /* Safari and Chrome */
-  -webkit-animation-fill-mode: forwards;
-`;
-
-export const SuccessNotificationStyled = styled(NotificationStyled)`
-  background-color: #efe;
-  color: #585;
-`;
-
-export const ErrorNotificationStyled = styled(NotificationStyled)`
-    color: #D8000C;
-    background-color: #FFBABA;
-`;
-
-export const SecondaryButtonStyled = styled.input`
-    margin: 3px 0;
-    padding: 2px 12px 2px !important;
-    width: auto;
-    color: #839F45;
-    font-size: 12px;
-    font-family: verdana,sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    -moz-border-radius: 14px;
-    -webkit-border-radius: 14px;
-    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    background: #fff url(${ButtonGradient}) repeat-x 0 0 !important;
-    border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
-    border-style: solid;
-    border-width: 1px;
-    text-decoration: none;
-    text-shadow: 0 1px 1px rgba(255,255,255,0.65);
-    outline: none;
-    overflow: visible;
-    display: inline;
-    line-height: 14px;
-    
-    &:hover {
-      background-color: #f4f4f4;
-      color: #666;
-    }
-`;
 
 const LoginStyled = styled.div`
 margin: 20px auto;

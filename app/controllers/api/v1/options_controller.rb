@@ -1,20 +1,56 @@
 class Api::V1::OptionsController < ApplicationController
+  skip_before_action :verify_authenticity_token # Revert later once we have csrf
   respond_to :json
 
   def index
-    @contact_select = Contact.where(disabled_at: nil).select('id, first_name', 'last_name')
-    @group_select = Group.where(disabled_at: nil).select('id, name')
-    @status_select = Status.where(disabled_at: nil).select('id, name')
-    @priority_select = Priority.where(disabled_at: nil).select('id, name')
-    @time_types = TimeType.where(disabled_at: nil).select('id, name')
-    @owner_select = User.where(disabled_at: nil).select('id, username')
+    if (params.include?(:fetchPeople) && params[:fetchPeople] == "true")
+      @contact_select = Contact.where(disabled_at: nil).select('id, first_name', 'last_name')
+      @owner_select = User.where(disabled_at: nil).select('id, username')
+    end
+    @group_select = Group.all.select('id, name', 'disabled_at')
+    @status_select = Status.all.select('id, name', 'disabled_at')
+    @priority_select = Priority.all.select('id, name', 'disabled_at')
+    @time_types = TimeType.all.select('id, name', 'disabled_at')
+
     ret = Hash.new
-    ret[:contacts] = @contact_select
+    if (params.include?(:fetchPeople) && params[:fetchPeople] == "true")
+      ret[:contacts] = @contact_select
+      ret[:owners] = @owner_select
+    end
     ret[:groups] = @group_select
     ret[:statuses] = @status_select
     ret[:priorities] = @priority_select
-    ret[:owners] = @owner_select
     ret[:time_types] = @time_types
     json_response(ret, :ok)
+  end
+
+  def toggle_enable
+    case option_params[:type]
+    when "group"
+      option = Group.find(params[:id])
+    when "status"
+      option = Status.find(params[:id])
+    when "time_type"
+      option = TimeType.find(params[:id])
+    when "priority"
+      option = Priority.find(params[:id])
+    else
+      json_response({ error: "You sent type #{option_params[:type]} -- I have no idea what to do with that."}, :bad_request)
+    end
+
+    if option.enabled? then
+      option.disabled_at = Time.now
+    else
+      option.disabled_at = nil
+    end
+    option.save!
+    json_response(OptionSerializer.new(option).serializable_hash[:data][:attributes], :ok)
+  end
+
+  private
+
+  def option_params
+    # whitelist option params
+    params.require(:option).permit(:type)
   end
 end

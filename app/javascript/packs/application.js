@@ -23,20 +23,37 @@ import App from "../components/App";
 import { BrowserRouter } from "react-router-dom";
 import "idempotent-babel-polyfill";
 import { CookiesProvider } from "react-cookie";
-import functionReducer from "function-reducer";
+import functionReducer, { logReducer } from "function-reducer";
 
-//We can remove this once we dont' need debugging
-const logReducer = (functionReducer, state, action) => {
-    const {action_fn, ...params} = action;
-    console.log(`${new Date().toISOString()} | name: ${action_fn?.name}, params: ${JSON.stringify(params)}`);
-    return functionReducer(state, action);
-};
-
-export const TicketContext = createContext(null);
+export const TicketContext = createContext({});
 export const TicketContextProvider = props => {
     const initialState = {
         tickets: null,
+        ticketPageInfo: {
+            currentPage: 1,
+            resourceCount: null,
+            lastPage: null,
+            perPage: 10
+        },
+        contactPageInfo: {
+            currentPage: 1,
+            resourceCount: null,
+            lastPage: null,
+            letterSelected: null,
+            perPage: 10
+        },
+        userPageInfo: {
+            currentPage: 1,
+            resourceCount: null,
+            lastPage: null,
+            letterSelected: null,
+            perPage: 10
+        },
+        contacts: null,
+        contact: null,
         ticket: null,
+        aUser: null,
+        users: null,
         user: null,
         options: null,
         isLoggingOut: null,

@@ -1,0 +1,76 @@
+class Api::V1::UsersController < ApplicationController
+  include Devise::Controllers::Helpers
+  before_action :set_contact, only: [:show, :update, :destroy]
+  #skip_before_action :verify_authenticity_token # Revert later once we have csrf
+
+  # GET /contacts
+  def index
+    if params[:letter]
+      last_name = User.arel_table[:last_name]
+      users = User.where(last_name.matches("#{params[:letter]}%"))
+    else
+      users = User.all
+    end
+    @pagy, @users = pagy(users)
+    contact_records_with_associations =
+        UserSerializer.new(@users).hash_for_collection[:data].map { | user |
+          user[:attributes]
+        }
+
+    json_response({ data: contact_records_with_associations, pagy: pagy_metadata(@pagy) })
+  end
+
+  # POST /contacts
+  def create
+    @user = User.create!(contact_params)
+    json_response(@user, :created)
+  end
+
+  def toggle_enable
+    @user = User.find(params[:id])
+    if @user.enabled? then
+      @user.disabled_at = Time.now
+    else
+      @user.disabled_at = nil
+    end
+    @user.save!
+    json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+  end
+
+  # GET /contacts/:id
+  def show
+    begin
+      @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      logger.error(":::Attempt to access invalid user_id => #{params[:id]}")
+      head :not_found
+    end
+    respond_to do | format |
+      format.json { json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes]) }
+    end
+
+  end
+
+  # PUT /contacts/:id
+  def update
+    @user.update(contact_params)
+    json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+  end
+
+  # DELETE /contacts/:id
+  def destroy
+    @user.destroy
+    json_response({}, :ok)
+  end
+
+  private
+
+  def contact_params
+    # whitelist contact params
+    params.require(:user).permit!
+  end
+
+  def set_contact
+    @user = User.find(params[:id])
+  end
+end

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {RESOURCE_TYPES} from "./types";
 
 export const SendMethod = { GET: 'GET', POST: 'POST', PATCH: 'PATCH', PUT: 'PUT', DELETE: 'DELETE' };
 Object.freeze(SendMethod);
@@ -13,6 +14,29 @@ const createHeaders = (email,token, isAttachment) => {
     }
 
     return myHeaders;
+};
+
+export const getPlural = (type) => {
+    switch (type) {
+        case "priority":
+            return "priorities";
+        case "status":
+            return "statuses";
+        default:
+            return `${type}s`;
+    }
+}
+
+export const getId = (appState, type) => {
+    const { ticket, contact, aUser } = appState;
+    switch (type) {
+        case RESOURCE_TYPES.TICKET:
+            return ticket.id;
+        case RESOURCE_TYPES.CONTACT:
+            return contact.id;
+        case RESOURCE_TYPES.USER:
+            return aUser.id;
+    }
 };
 
 export const doNetworkRequest = async (url, method, email = null, token = null, data = null,

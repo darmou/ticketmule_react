@@ -11,16 +11,14 @@ class Api::V1::TicketsController < ApplicationController
         TicketSerializer.new(@tickets, { params: { :ticketlist => true } }).hash_for_collection[:data].map { | ticket |
       ticket[:attributes]
     }
-    # When we need pagination lets use the below
-    #render json: { data: ticket_records_with_associations,
-    #               pagy: pagy_metadata(@pagy) }
-    paginate json: ticket_records_with_associations
+    json_response({ data: ticket_records_with_associations,
+                   pagy: pagy_metadata(@pagy) })
   end
 
   # POST /tickets
   def create
     @ticket = Ticket.create!(ticket_params)
-    json_response(@ticket, :created)
+    json_response(TicketSerializer.new(@ticket, { params: { :ticketlist => false, :user_id => @user.id } }).serializable_hash[:data][:attributes], :created)
   end
 
   # GET /tickets/:id
