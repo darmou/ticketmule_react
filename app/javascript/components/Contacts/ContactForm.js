@@ -5,6 +5,7 @@ import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { StyledForm, StyledLabel, StyledInput, Row } from "../ComponentLibrary/TableStyles";
+import { onSubmitForm } from "../../utils/displayUtils";
 
 
 const PaddedTextarea = styled.textarea`
@@ -14,34 +15,12 @@ const PaddedTextarea = styled.textarea`
 const ContactForm = ({addOrUpdate, formAction, slug, contact}) => {
     const { register, handleSubmit } = useForm();
 
-    const cleanData = (data) => {
-        Object.keys(data).map(key => {
-           if (key.endsWith("_id") || key.endsWith("_by")) {
-               data[key] = (data[key]) ? parseInt(data[key]) : null;
-           }
-        });
-        return data;
-    };
-
     const onSubmit = async (data) => {
-        data = cleanData(data);
-        try {
-            const toSend = {
-                contact: data
-            };
-            
-            if (formAction != null) {
-                await formAction(JSON.stringify(toSend));
-            }
-
-            addOrUpdate({...contact, ...data});
-         } catch (error) {
-            console.error(error);
-         }
+        await onSubmitForm(data, "contact", formAction, addOrUpdate, contact);
     };
 
 
-    return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit)}>
+    return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}>
         <Row>
             <StyledLabel>First name:</StyledLabel>
             <StyledInput name="first_name" ref={register} defaultValue={(contact) ? contact.first_name : ""} type="text"/>

@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import useGetContact from "../../hooks/useGetContact";
 import ContactTable from "./ContactTable";
 import Controls from "../Controls";
@@ -11,7 +10,7 @@ const Contact = React.memo(() => {
     const { slug } = useParams();
     const contact = useGetContact(slug);
 
-    return(<AResourceStyled>
+    return(<>
         {(contact) &&
             <>
                 <Controls id={slug}
@@ -23,7 +22,7 @@ const Contact = React.memo(() => {
             </>
         }
 
-    </AResourceStyled>);
+    </>);
 });
 
 export default Contact;

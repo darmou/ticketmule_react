@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import useGetUser from "../../hooks/useGetUser";
 import UserTable from "./UserTable";
 import { RESOURCE_TYPES } from "../../utils/types";
@@ -11,7 +10,7 @@ const User = React.memo(() => {
     const { slug } = useParams();
     const aUser = useGetUser(slug);
 
-    return(<AResourceStyled>
+    return(<>
         {(aUser) &&
             <>
                 <Controls id={slug}
@@ -22,7 +21,7 @@ const User = React.memo(() => {
             </>
         }
 
-    </AResourceStyled>);
+    </>);
 });
 
 export default User;

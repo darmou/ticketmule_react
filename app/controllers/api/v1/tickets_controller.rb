@@ -1,7 +1,6 @@
 class Api::V1::TicketsController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_ticket, only: [:show, :update, :destroy]
-  skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   # GET /tickets
   def index

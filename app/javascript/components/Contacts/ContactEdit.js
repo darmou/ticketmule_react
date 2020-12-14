@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import {useNavigate, useParams} from "react-router-dom";
 import ContactForm from "./ContactForm";
 import {queryCache, useMutation} from "react-query";
@@ -33,14 +32,14 @@ const ContactEdit = () => {
         dispatch({action_fn: ContactStore.setContact, contact});
     };
 
-    return (<AResourceStyled>
+    return (<>
         {(contact) &&
             <>
         <h2>Editing contact {contact.full_name}</h2>
             <ContactForm addOrUpdate={editContact} user={user} formAction={editTheContact} slug={slug} contact={contact}/>
             </>
         }
-    </AResourceStyled>);
+    </>);
 };
 
 export default ContactEdit;

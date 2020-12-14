@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { PropTypes } from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import useTicketmule from "../hooks/useTicketMule";
@@ -13,10 +14,9 @@ const MIN_PASSWORD_LEN = 7;
 const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
 Object.freeze(formTypeEnum);
 
-const Login = () =>  {
+const Login = ({flashMsg, setFlashMsg}) =>  {
     const ticketMule = useTicketmule();
     const { register, handleSubmit, errors } = useForm();
-    const [ flashMsg, setFlashMsg ] = React.useState(null);
     const { state, dispatch } = React.useContext(TicketContext);
     let isLoading = false;
 
@@ -111,6 +111,12 @@ const Login = () =>  {
     </LoginStyled>);
 
 };
+
+Login.propTypes = {
+    flashMsg: PropTypes.object,
+    setFlashMsg: PropTypes.func
+};
+
 const ValidationDiv = styled.div`
     margin-top: 3px;
     margin-bottom: 3px;

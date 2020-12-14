@@ -23,7 +23,11 @@ Rails.application.routes.draw do
         resources :alerts, only: [:create, :destroy]
       end
 
-      resources :users
+      resources :users, only: [:index, :show, :update] do
+        member do
+          post :toggle_enable
+        end
+      end
       resources :contacts do
         member do
           post :toggle_enable

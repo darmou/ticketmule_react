@@ -1,5 +1,4 @@
 import React from "react";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { useParams} from "react-router-dom";
 import useGetTicket from "../../hooks/useGetTicket";
 import TicketForm from "./TicketForm";
@@ -30,11 +29,11 @@ const TicketEdit = ({context}) => {
         dispatch({action_fn: TicketStore.update, aTicket: ticket});
     };
 
-    return (<AResourceStyled>
+    return (<>
         <h2>Editing ticket #{slug}</h2>
         <TicketForm addOrUpdate={editTicket} user={user} formAction={editTheTicket} slug={slug} ticket={ticket}/>
 
-    </AResourceStyled>);
+    </>);
 };
 
 TicketEdit.propTypes = {

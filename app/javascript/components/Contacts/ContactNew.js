@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import { PropTypes } from "prop-types";
@@ -31,10 +30,10 @@ const ContactNew = () => {
         dispatch({action_fn: ContactStore.setContact, contact});
     };
 
-    return (<AResourceStyled>
+    return (<>
         <h2>New contact</h2>
         <ContactForm addOrUpdate={addTheContact} user={user} contact={null}/>
-    </AResourceStyled>);
+    </>);
 };
 
 ContactNew.propTypes = {

@@ -1,7 +1,6 @@
 class Api::V1::CommentsController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_comment, only: [:show, :destroy]
-  skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   def create
     @ticket = Ticket.find(params[:ticket_id])

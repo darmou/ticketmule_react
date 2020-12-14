@@ -35,7 +35,7 @@ const TicketControls = ({loggedIn}) => {
         {buttons}
         <RightContainerStyled>
             <h3>Jump to Ticket</h3>
-            <form onSubmit={handleSubmit(onSubmit.bind(this))}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <p>
                     <label htmlFor="jumpId"><em>Enter a ticket number:</em></label><br/>
                     <FieldStyled

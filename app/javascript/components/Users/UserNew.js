@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import { PropTypes } from "prop-types";
@@ -31,10 +30,10 @@ const UserNew = () => {
         dispatch({action_fn: UserStore.setUser, user});
     };
 
-    return (<AResourceStyled>
+    return (<>
         <h2>New user</h2>
         <UserForm addOrUpdate={addTheUser} user={user} aUser={null}/>
-    </AResourceStyled>);
+    </>);
 };
 
 UserNew.propTypes = {

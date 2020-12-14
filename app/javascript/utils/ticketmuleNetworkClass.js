@@ -10,16 +10,14 @@ class TicketmuleNetwork {
         // wait for the fetch to finish then dispatch the result
         if (this.user) {
             const pdf = (isPdf) ? '.pdf' : '';
-            return await doNetworkRequest(`${this.prefix}/tickets/${id}${pdf}`, SendMethod.GET, this.user.email,
-                this.user.authentication_token);
+            return await doNetworkRequest(`${this.prefix}/tickets/${id}${pdf}`, SendMethod.GET, this.user);
         }
     }
 
     async fetchResource(id, type) {
         // wait for the fetch to finish then dispatch the result
         if (this.user) {
-            return await doNetworkRequest(`${this.prefix}/${type}/${id}`, SendMethod.GET, this.user.email,
-                this.user.authentication_token);
+            return await doNetworkRequest(`${this.prefix}/${type}/${id}`, SendMethod.GET, this.user);
         }
     }
 
@@ -27,9 +25,7 @@ class TicketmuleNetwork {
         if (appState.user) {
             const id = getId(appState, type);
 
-            return await doNetworkRequest(`/api/v1/${type}s/${id}`,
-                SendMethod.PATCH, appState.user.email, appState.user.authentication_token,
-                data);
+            return await doNetworkRequest(`/api/v1/${type}s/${id}`, SendMethod.PATCH, appState.user, data);
         }
     }
 
@@ -37,7 +33,7 @@ class TicketmuleNetwork {
         const id = getId(appState, type);
         if (appState.user && id != null) {
             return await doNetworkRequest(`/api/v1/${type}s/${id}`,
-                SendMethod.DELETE, appState.user.email, appState.user.authentication_token);
+                SendMethod.DELETE, appState.user);
         }
     }
 
@@ -45,31 +41,29 @@ class TicketmuleNetwork {
         if (this.user) {
             // wait for the fetch to finish then dispatch the result
             const letterFilter = (letterSelected == null) ? "" : `&letter=${letterSelected}`;
-            return await doNetworkRequest(`${this.prefix}/${type}s/?page=${page}&perPage=${perPage}${letterFilter}`, SendMethod.GET, this.user.email,
-                this.user.authentication_token);
+            return await doNetworkRequest(`${this.prefix}/${type}s/?page=${page}&perPage=${perPage}${letterFilter}`,
+                SendMethod.GET, this.user);
         };
     }
 
     async addResource(appState, type, data) {
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/${type}/`,
-                SendMethod.POST, appState.user.email, appState.user.authentication_token,
-                data);
+                SendMethod.POST, appState.user, data);
         }
     }
 
     async toggleEnableContact(appState, contactId) {
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/contacts/${contactId}/toggle_enable`,
-                SendMethod.POST, appState.user.email, appState.user.authentication_token,
-                {});
+                SendMethod.POST, appState.user, {});
         }
     }
 
     async toggleEnableOption(appState, type, optionId) {
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/options/${optionId}/toggle_enable`,
-                SendMethod.POST, appState.user.email, appState.user.authentication_token,
+                SendMethod.POST, appState.user,
                 { option: { type } });
         }
     }
@@ -78,8 +72,14 @@ class TicketmuleNetwork {
         const plural = getPlural(type);
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/${plural}/`,
-                SendMethod.POST, appState.user.email, appState.user.authentication_token,
-                { [type] : option });
+                SendMethod.POST, appState.user, { [type] : option });
+        }
+    }
+
+    async addUser(appState, user) {
+        if (appState.user) {
+            return await doNetworkRequest(`/api/v1/users/`,
+                SendMethod.POST, appState.user, { user });
         }
     }
 
@@ -87,31 +87,27 @@ class TicketmuleNetwork {
         if (this.user) {
             // wait for the fetch to finish then dispatch the result
             const fetchPeopleQuery = (shouldFetchPeople) ? '?fetchPeople=true' : '';
-            return await doNetworkRequest(`${this.prefix}/options${fetchPeopleQuery}`, SendMethod.GET, this.user.email,
-                this.user.authentication_token);
+            return await doNetworkRequest(`${this.prefix}/options${fetchPeopleQuery}`, SendMethod.GET, this.user);
         }
     }
 
     async deleteRelatedTicketRecord(app_state, type, id) {
         if (app_state.user && id != null && app_state.ticket.id != null) {
             return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/${type}/${id}`,
-                SendMethod.DELETE, app_state.user.email,
-                app_state.user.authentication_token);
+                SendMethod.DELETE, app_state.user);
         }
     }
 
     async addRelatedTicketRecord(appState, type, data) {
         if (appState.user) {
             return await doNetworkRequest(`/api/v1/tickets/${appState.ticket.id}/${type}`,
-                SendMethod.POST, appState.user.email, appState.user.authentication_token,
-                data, type === "attachments");
+                SendMethod.POST, appState.user, data, type === "attachments");
         }
     }
 
     async login({username, password}) {
-        return await doNetworkRequest(`/api/v1/users/sign_in`,
-            SendMethod.POST, null, null,
-            `{"user":{"username":"${username}","password":"${password}"}}`);
+        return await doNetworkRequest(`/api/v1/users/sign_in`, SendMethod.POST,
+            null, `{"user":{"username":"${username}","password":"${password}"}}`);
     }
 
     async logout() {

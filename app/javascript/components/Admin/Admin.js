@@ -2,16 +2,14 @@ import React from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { stringToBoolean } from "../../utils/displayUtils";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import TabBG from "../../images/tab-bg.jpg";
 import useGetOptions from "../../hooks/useGetOptions";
 import { PropTypes } from "prop-types";
-import AdminOptions from "./AdminOptions";
 
 const TabsUL = styled.ul`
     height: 30px;
     border-bottom: 1px solid #ccc;
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 0;
     margin-bottom: 0px;
 `;
@@ -53,13 +51,12 @@ const TabPane = styled.div`
 `;
 
 // eslint-disable-next-line react/display-name
-const Admin = React.memo(({flashMsg}) => {
+const Admin = React.memo(() => {
     const location = useLocation();
 
     useGetOptions(false);
 
-    return(<AResourceStyled>
-        {flashMsg}
+    return(<>
         <h2>Admin</h2>
 
         <TabsUL>
@@ -77,7 +74,7 @@ const Admin = React.memo(({flashMsg}) => {
         <TabPane>
            <Outlet/>
         </TabPane>
-    </AResourceStyled>);
+    </>);
 });
 
 Admin.propTypes = {

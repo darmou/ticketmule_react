@@ -1,7 +1,6 @@
 class Api::V1::AttachmentsController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_attachment, only: [:show, :destroy]
-  skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   def create
     @ticket = Ticket.find(params[:ticket_id])

@@ -4,13 +4,13 @@ import {RESOURCE_TYPES} from "./types";
 export const SendMethod = { GET: 'GET', POST: 'POST', PATCH: 'PATCH', PUT: 'PUT', DELETE: 'DELETE' };
 Object.freeze(SendMethod);
 
-const createHeaders = (email,token, isAttachment) => {
+const createHeaders = (user, isAttachment) => {
     const myHeaders = {};
     myHeaders['Accept'] = 'application/json';
     myHeaders['Content-Type'] = (isAttachment) ? 'multipart/form-data' :'application/json';
-    if (email && token) {
-        myHeaders['X-User-Email'] = email;
-        myHeaders['X-User-Token'] = token;
+    if (user != null) {
+        myHeaders['X-User-Email'] = user.email;
+        myHeaders['X-User-Token'] = user.authentication_token;
     }
 
     return myHeaders;
@@ -39,9 +39,9 @@ export const getId = (appState, type) => {
     }
 };
 
-export const doNetworkRequest = async (url, method, email = null, token = null, data = null,
+export const doNetworkRequest = async (url, method, user, data = null,
                                        isAttachment = false) => {
-    const myHeaders = createHeaders(email, token, isAttachment);
+    const myHeaders = createHeaders(user, isAttachment);
     const requestConfig = { method: method,
         headers: myHeaders,
         url,

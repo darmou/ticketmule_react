@@ -1,6 +1,5 @@
 class Api::V1::AlertsController < ApplicationController
   include Devise::Controllers::Helpers
-  skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   def create
     @ticket = Ticket.find(params[:ticket_id])

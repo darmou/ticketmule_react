@@ -5,7 +5,6 @@ import useGetTickets from "../../hooks/useGetTickets";
 import { TicketContext } from "../../packs/application";
 import usePrevious from "../../hooks/usePrevious";
 import TicketStore from "../../actions/ticketStore";
-import ResourceStyled from "../ComponentLibrary/ResourceStyled";
 
 const TicketsPerPage = styled.div`
     float: right;
@@ -46,13 +45,13 @@ const Tickets =  React.memo(() => {
                 {separator}</span>;
     });
 
-    return (<ResourceStyled>
+    return (<>
         <TicketsPerPage>Tickets per page: {perPages}</TicketsPerPage>
         <h2>Tickets</h2>
         { (filteredTickets && !isLoading ) &&
             <TicketsTable isPagination={true} isAgo={false} tickets={filteredTickets}/>
         }
-    </ResourceStyled>);
+    </>);
 });
 
 export default Tickets;

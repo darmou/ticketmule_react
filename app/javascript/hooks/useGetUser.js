@@ -17,7 +17,7 @@ const useGetUser = (id) => {
 
     React.useEffect(() => {
         if (data && !isLoading && (!aUser || aUser.id !== parseInt(id))) {
-            dispatch({action_fn: UserStore.setAUser, contact: data});
+            dispatch({action_fn: UserStore.setAUser, user: data});
         }
     }, [dispatch, data, aUser]);
 

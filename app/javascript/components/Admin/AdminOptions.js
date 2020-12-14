@@ -11,15 +11,14 @@ import { useForm } from "react-hook-form";
 import { ErrorNotificationStyled, SuccessNotificationStyled } from "../ComponentLibrary/FlashMessages";
 import { PropTypes } from "prop-types";
 import { capitalizeEachWord } from "../../utils/displayUtils";
+import { Error } from "../Resources/FormResouces";
 import { getPlural } from "../../utils/network";
+import DisableIcon from "../../images/disable.png";
+import EnableIcon from "../../images/accept.png";
 
 const FieldContainer = styled.div`
     display: flex;
     align-items: center;
-`;
-
-const Error = styled.div`
-    color: red;
 `;
 
 // eslint-disable-next-line react/display-name
@@ -36,7 +35,7 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
         {
             onSuccess: async (option) => {
                 const msg = (option.disabled_at) ? 'disabled' : 'enabled';
-                setFlashMsg(<SuccessNotificationStyled> {captial} {option.name} was successfully {msg}! </SuccessNotificationStyled>);
+                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {captial} {option.name} was successfully {msg}! </SuccessNotificationStyled>);
                 await queryCache.invalidateQueries("options");
                 dispatch({action_fn: OptionsStore.updateOption, type, anOption: option});
                 // Query Invalidations
@@ -49,13 +48,13 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
 
         {
             onSuccess: async (option) => {
-                setFlashMsg(<SuccessNotificationStyled> {captial} {option.name} successfully added! </SuccessNotificationStyled>);
+                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {captial} {option.name} successfully added! </SuccessNotificationStyled>);
                 await queryCache.invalidateQueries("options");
                 dispatch({action_fn: OptionsStore.addOption, type, anOption: option});
                 // Query Invalidations
             },
             onError: async (result) => {
-                setFlashMsg(<ErrorNotificationStyled> {result.response.data.message} </ErrorNotificationStyled>);
+                setFlashMsg(<ErrorNotificationStyled><img src={`${DisableIcon}`} /> {result.response.data.message} </ErrorNotificationStyled>);
             }
         }
     );
@@ -83,14 +82,15 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
     return (<div>
         {(state.options && Object.prototype.hasOwnProperty.call(state.options, plural)) &&
         <>
-            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={true} toggleDisabled={toggleOption}
-                          />
-            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={false} toggleDisabled={toggleOption}
-                          />
+            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={true}
+                          toggleDisabled={toggleOption}/>
+            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={false}
+                          toggleDisabled={toggleOption}/>
 
-            <form onSubmit={handleSubmit(onSubmit.bind(this))}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <FieldContainer>
-                    <FieldStyled width={225} type="text" name="addOption" ref={register({required: true})}></FieldStyled>
+                    <FieldStyled width={225} type="text" name="addOption"
+                                 ref={register({required: true})}></FieldStyled>
                     <SecondaryButton type="submit">
                         Add {captial}
                     </SecondaryButton>

@@ -1,7 +1,5 @@
 import React from "react";
 import styled, { css } from "styled-components";
-
-import ResourceWrapperStyled from "../ComponentLibrary/ResourceWrapperStyled";
 import { renderList } from "../../utils/displayUtils";
 import { ticketsTypes } from "../../actions/ticketStore";
 import moment from "moment";
@@ -68,9 +66,8 @@ const TicketBoard = () => {
     const { toggle, setCollapsibleElement, slideToggleState } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (
-       <ResourceWrapperStyled>
-            <h2>Dashboard</h2>
-
+       <>
+           <h2>Dashboard</h2>
            <TableSection pageisLoading={isLoading} tickets={tickets} type={ticketsTypes.NOT_CLOSED}  headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
            <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.CLOSED}  headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
@@ -87,8 +84,7 @@ const TicketBoard = () => {
                    </TimelineStyled>
                </TimelineWrapperStyled>
            </>
-
-       </ResourceWrapperStyled>
+       </>
     );
 };
 

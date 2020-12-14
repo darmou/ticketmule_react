@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Routes,
-    Route, useNavigate
+    Route, useNavigate, useLocation
 } from "react-router-dom";
 import styled from "styled-components";
 import Login from "./Login";
@@ -24,10 +24,12 @@ import UserStore from "../actions/userStore";
 import AdminOptions from "./Admin/AdminOptions";
 import AdminUsers from "./Admin/AdminUsers";
 import { TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import AResourceStyled from "./ComponentLibrary/AResourceStyled";
 
 function BaseApp ({context}) {
     const navigate = useNavigate();
     const [ flashMsg, setFlashMsg ] = React.useState(null);
+    const location = useLocation();
 
     React.useEffect(() => {
         if (!context || !context.state.user) {
@@ -57,25 +59,28 @@ function BaseApp ({context}) {
 
         <ContentStyled>
             <Header/>
-            <Routes>
-                <Route path='/tickets' element={<TicketDash/>}>
-                    <Route path='/' element={<Tickets/>} />
-                    <Route path='/new' element={<TicketNew context={context}/>} />
-                    <Route path=':slug' element={<Ticket/>} />
-                    <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
-                </Route>
-                <Route path='/contacts/*' element={<ContactRoutes/>}/>
-                <Route path='/users/*' element={<UserRoutes/>}/>
-                <Route path='/admin' element={<Admin flashMsg={flashMsg}/>}>
-                    <Route path='/' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
-                    <Route path='/groups' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
-                    <Route path='/statuses' element={<AdminOptions type="status" setFlashMsg={setFlashMsg}/>}/>
-                    <Route path='/priorities' element={<AdminOptions type="priority" setFlashMsg={setFlashMsg}/>}/>
-                    <Route path='/time_types' element={<AdminOptions type="time_type" setFlashMsg={setFlashMsg}/>}/>
-                    <Route path='/users' element={<AdminUsers/>}/>
-                </Route>
-                <Route path='/' element={<Dash />}/>
-            </Routes>
+            <AResourceStyled>
+                {(location.pathname === "/") ? null : flashMsg}
+                <Routes>
+                    <Route path='/tickets' element={<TicketDash/>}>
+                        <Route path='/' element={<Tickets/>} />
+                        <Route path='/new' element={<TicketNew context={context}/>} />
+                        <Route path=':slug' element={<Ticket/>} />
+                        <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
+                    </Route>
+                    <Route path='/contacts/*' element={<ContactRoutes/>}/>
+                    <Route path='/users/*' element={<UserRoutes setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/admin' element={<Admin/>}>
+                        <Route path='/' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/groups' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/statuses' element={<AdminOptions type="status" setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/priorities' element={<AdminOptions type="priority" setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/time_types' element={<AdminOptions type="time_type" setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/users' element={<AdminUsers setFlashMsg={setFlashMsg}/>}/>
+                    </Route>
+                    <Route path='/' element={<Dash flashMsg={flashMsg} setFlashMsg={setFlashMsg}/>}/>
+                </Routes>
+            </AResourceStyled>
             <RightColumnStyled>
                 <TicketControls loggedIn={context && context.state.user != null}/>
             </RightColumnStyled>

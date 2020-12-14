@@ -1,7 +1,6 @@
 class Api::V1::ContactsController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_contact, only: [:show, :update, :destroy]
-  skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   # GET /contacts
   def index

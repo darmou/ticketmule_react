@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { TicketContext } from "../../packs/application";
-import ResourceStyled from "../ComponentLibrary/ResourceStyled";
 import useGetPeople from "../../hooks/useGetPeople";
 import ContactsTable from "../Contacts/ContactsTable";
 import LetterButtons from "../People/LetterButtons";
@@ -12,14 +11,14 @@ const Contacts =  React.memo(() => {
     const { state } = useContext(TicketContext);
     const { contactPageInfo  } = state;
 
-    return (<ResourceStyled>
+    return (<>
         <h2>Contacts</h2>
-        <LetterButtons resourcePageInfo={contactPageInfo} />
+        <LetterButtons resourcePageInfo={contactPageInfo} resourceType={RESOURCE_TYPES.CONTACT}/>
 
         { (contacts && !isLoading ) &&
          <ContactsTable contacts={contacts}/>
         }
-    </ResourceStyled>);
+    </>);
 });
 
 export default Contacts;

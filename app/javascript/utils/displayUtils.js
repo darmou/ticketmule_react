@@ -20,6 +20,33 @@ export const getAttachmentFileSize = (byteFileSize) => {
     return (byteFileSize *  0.000977).toFixed(1);
 };
 
+
+const cleanData = (data) => {
+    Object.keys(data).map(key => {
+        if (key.endsWith("_id") || key.endsWith("_by")) {
+            data[key] = (data[key]) ? parseInt(data[key]) : null;
+        }
+    });
+    return data;
+};
+
+export const onSubmitForm = async (data, type, formAction, addOrUpdate, aResource) => {
+    data = cleanData(data);
+    try {
+        const toSend = {
+            [type]: data
+        };
+
+        if (formAction != null) {
+            await formAction(JSON.stringify(toSend));
+        }
+
+        addOrUpdate({...aResource, ...data});
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 export const capitalizeEachWord = (str) => {
     return str.replace(/\w\S*/g, txt => {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();

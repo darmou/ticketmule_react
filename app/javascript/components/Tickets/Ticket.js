@@ -10,7 +10,6 @@ import Controls from "../Controls";
 import { CommentForm } from "../CommentForm";
 import AttachmentList from "../AttachmentList";
 import CommentList from "../CommentList";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { TicketContext } from "../../packs/application";
 import { AttachmentForm } from "../AttachmentForm";
 import { queryCache, useMutation } from "react-query";
@@ -42,7 +41,7 @@ const Ticket = React.memo(() => {
         }
     );
 
-    return(<AResourceStyled>
+    return(<>
         <h2>Ticket #{slug}</h2>
 
         {(state.ticket) &&
@@ -67,7 +66,7 @@ const Ticket = React.memo(() => {
             <CommentList state={state} comments={ticket.comments}/>
         }
 
-    </AResourceStyled>);
+    </>);
 });
 
 Ticket.propTypes = {

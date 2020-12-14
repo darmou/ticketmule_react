@@ -2,9 +2,6 @@ import styled from "styled-components";
 import ResourceStyled from "./ResourceStyled";
 
 export const AResourceStyled = styled(ResourceStyled)`
-    h2 { 
-        float: left;
-    }
     
     table {
         border-top: 1px solid #ececec;

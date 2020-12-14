@@ -1,9 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   include Devise::Controllers::Helpers
   before_action :set_contact, only: [:show, :update, :destroy]
-  #skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
-  # GET /contacts
+  # GET /users
   def index
     if params[:letter]
       last_name = User.arel_table[:last_name]
@@ -20,9 +19,9 @@ class Api::V1::UsersController < ApplicationController
     json_response({ data: contact_records_with_associations, pagy: pagy_metadata(@pagy) })
   end
 
-  # POST /contacts
+  # POST /users
   def create
-    @user = User.create!(contact_params)
+    @user = User.create!(user_params)
     json_response(@user, :created)
   end
 
@@ -37,7 +36,7 @@ class Api::V1::UsersController < ApplicationController
     json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
   end
 
-  # GET /contacts/:id
+  # GET /users/:id
   def show
     begin
       @user = User.find(params[:id])
@@ -48,16 +47,20 @@ class Api::V1::UsersController < ApplicationController
     respond_to do | format |
       format.json { json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes]) }
     end
-
   end
 
-  # PUT /contacts/:id
+  # PUT /users/:id
   def update
-    @user.update(contact_params)
-    json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+    if @user.update(user_params)
+        json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+    else
+      warden.custom_failure!
+      message_key = @user.errors.keys().first
+      json_response({ "message": "#{message_key.capitalize} #{user.errors[message_key].first}" }, :unprocessable_entity)
+    end
   end
 
-  # DELETE /contacts/:id
+  # DELETE /users/:id
   def destroy
     @user.destroy
     json_response({}, :ok)
@@ -65,8 +68,8 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
-  def contact_params
-    # whitelist contact params
+  def user_params
+    # whitelist user params
     params.require(:user).permit!
   end
 

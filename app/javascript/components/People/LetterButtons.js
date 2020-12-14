@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import ContactStore from "../../actions/contactStore";
+import UserStore from "../../actions/userStore";
 import PageButton from "../ComponentLibrary/PageButton";
 import styled from "styled-components";
 import { PropTypes } from "prop-types";
 import { TicketContext } from "../../packs/application";
+import { RESOURCE_TYPES } from "../../utils/types";
 
 const LetterButtonsWrapper = styled.div`
     display: flex;
@@ -24,8 +26,15 @@ const LetterButtons = ({resourcePageInfo, resourceType}) => {
         if (letter === '*') {
             letter = null;
         }
-        //const setContactLetterSelected = resourceType === REOURCE_TYPES.Ticket()
-        dispatch({action_fn: ContactStore.setContactLetterSelected, letter: letter});
+
+        switch (resourceType) {
+            case RESOURCE_TYPES.CONTACT:
+                dispatch({action_fn: ContactStore.setContactLetterSelected, letter});
+                break;
+            case RESOURCE_TYPES.USER:
+                dispatch({action_fn: UserStore.setUserLetterSelected, letter});
+                break;
+        }
     };
 
     const letters = ['*', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',

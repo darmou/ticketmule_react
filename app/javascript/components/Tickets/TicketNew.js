@@ -1,6 +1,5 @@
 import React from "react";
 import TicketForm from "./TicketForm";
-import AResourceStyled from "../ComponentLibrary/AResourceStyled";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import TicketStore from "../../actions/ticketStore";
@@ -30,10 +29,10 @@ const TicketNew = ({context}) => {
         dispatch({action_fn: TicketStore.setTicket, ticket});
     };
 
-    return (<AResourceStyled>
+    return (<>
         <h2>New ticket</h2>
         <TicketForm addOrUpdate={addTheTicket} user={user} ticket={null}/>
-    </AResourceStyled>);
+    </>);
 };
 
 TicketNew.propTypes = {
