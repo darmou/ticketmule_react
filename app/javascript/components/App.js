@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Routes,
-    Route, useNavigate, useLocation
+    Route, useNavigate
 } from "react-router-dom";
 import styled from "styled-components";
 import Login from "./Login";
@@ -24,35 +24,35 @@ import UserStore from "../actions/userStore";
 import AdminOptions from "./Admin/AdminOptions";
 import AdminUsers from "./Admin/AdminUsers";
 import { TIMEOUT } from "./ComponentLibrary/FlashMessages";
-import AResourceStyled from "./ComponentLibrary/AResourceStyled";
+import { AResourceStyled } from "./ComponentLibrary/Resources";
 
 function BaseApp ({context}) {
     const navigate = useNavigate();
-    const [ flashMsg, setFlashMsg ] = React.useState(null);
-    const location = useLocation();
+    const { state, dispatch } = context;
+    const { user, flashMsg } = state;
 
     React.useEffect(() => {
-        if (!context || !context.state.user) {
+        if (!user) {
             if (sessionStorage.getItem("authentication_token")) {
-                const user = {
+                const theUser = {
                     email: sessionStorage.getItem("email"),
                     authentication_token: sessionStorage.getItem("authentication_token"),
                     username: sessionStorage.getItem("username"),
                     id: sessionStorage.getItem("id")
                 };
-                context.dispatch({action_fn: UserStore.setUser, user});
+                dispatch({action_fn: UserStore.setUser, user: theUser});
             } else { // Woops no user available navigate to login page
                 navigate("/");
             }
         }
         if (flashMsg) {
             setTimeout(() => {
-                setFlashMsg(null);
+                dispatch({action_fn: TicketStore.setFlashMsg, flashMsg: null});
             }, TIMEOUT);
         }
-    }, [TicketStore, flashMsg, setFlashMsg, TIMEOUT]);
+    }, [TicketStore, user, flashMsg, dispatch, TIMEOUT]);
 
-    const Dash = (context && context.state.user != null)
+    const Dash = (user != null)
         ? Dashboard : Login;
 
     return (<AppStyled>
@@ -60,7 +60,7 @@ function BaseApp ({context}) {
         <ContentStyled>
             <Header/>
             <AResourceStyled>
-                {(location.pathname === "/") ? null : flashMsg}
+                {(user == null) ? null : flashMsg}
                 <Routes>
                     <Route path='/tickets' element={<TicketDash/>}>
                         <Route path='/' element={<Tickets/>} />
@@ -69,20 +69,20 @@ function BaseApp ({context}) {
                         <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
                     </Route>
                     <Route path='/contacts/*' element={<ContactRoutes/>}/>
-                    <Route path='/users/*' element={<UserRoutes setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/users/*' element={<UserRoutes/>}/>
                     <Route path='/admin' element={<Admin/>}>
-                        <Route path='/' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
-                        <Route path='/groups' element={<AdminOptions type="group" setFlashMsg={setFlashMsg}/>}/>
-                        <Route path='/statuses' element={<AdminOptions type="status" setFlashMsg={setFlashMsg}/>}/>
-                        <Route path='/priorities' element={<AdminOptions type="priority" setFlashMsg={setFlashMsg}/>}/>
-                        <Route path='/time_types' element={<AdminOptions type="time_type" setFlashMsg={setFlashMsg}/>}/>
-                        <Route path='/users' element={<AdminUsers setFlashMsg={setFlashMsg}/>}/>
+                        <Route path='/' element={<AdminOptions type="group"/>}/>
+                        <Route path='/groups' element={<AdminOptions type="group"/>}/>
+                        <Route path='/statuses' element={<AdminOptions type="status"/>}/>
+                        <Route path='/priorities' element={<AdminOptions type="priority"/>}/>
+                        <Route path='/time_types' element={<AdminOptions type="time_type"/>}/>
+                        <Route path='/users' element={<AdminUsers/>}/>
                     </Route>
-                    <Route path='/' element={<Dash flashMsg={flashMsg} setFlashMsg={setFlashMsg}/>}/>
+                    <Route path='/' element={<Dash/>}/>
                 </Routes>
             </AResourceStyled>
             <RightColumnStyled>
-                <TicketControls loggedIn={context && context.state.user != null}/>
+                <TicketControls loggedIn={user != null}/>
             </RightColumnStyled>
         </ContentStyled>
     </AppStyled>);

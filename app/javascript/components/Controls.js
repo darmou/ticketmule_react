@@ -15,33 +15,27 @@ import EnableContactIcon from "../images/accept.png";
 import DisableContactIcon from "../images/disable.png";
 import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
+import { deleteAlert } from "../utils/displayUtils";
 import TicketStore from "../actions/ticketStore";
 import ContactStore from "../actions/contactStore";
 import { RESOURCE_TYPES } from "../utils/types";
 import { TicketContext } from "../packs/application";
 import UserStore from "../actions/userStore";
+import useDeleteAlert from "../hooks/useDeleteAlert";
+import { createStandardSuccessMessage } from "./ComponentLibrary/FlashMessages";
 
 
 /*
-Edit | Pdf | Add Alert | Add Comment | Add Attachment | Delete | BackTicket #435
+Edit | Pdf | Add Alert | Add ResourceItem | Add Attachment | Delete | BackTicket #435
 
  */
-const Controls = ({alert, setShowCommentForm, resource, resourceType, setShowAttachmentForm}) => {
+const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachmentForm}) => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
-
+    const { alert } = resource;
     const navigate = useNavigate();
+    const { deleteTheAlert } = useDeleteAlert();
     const ticketMule = new TicketmuleNetwork(user);
-
-    const [deleteTheAlert] = useMutation(
-        ticketMule.deleteRelatedTicketRecord.bind(this, state, "alerts"),
-        {
-            onSuccess: async () => {
-                // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
-            },
-        }
-    );
 
     const [toggleEnableContact] = useMutation(
         ticketMule.toggleEnableContact.bind(this, state),
@@ -53,7 +47,6 @@ const Controls = ({alert, setShowCommentForm, resource, resourceType, setShowAtt
             },
         }
     );
-
 
     const [deleteTheTicket] = useMutation(
         ticketMule.deleteResource.bind(this, state, RESOURCE_TYPES.TICKET),
@@ -79,6 +72,9 @@ const Controls = ({alert, setShowCommentForm, resource, resourceType, setShowAtt
         ticketMule.addRelatedTicketRecord.bind(this, state, "alerts"),
         {
             onSuccess: async () => {
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage("Your alert was added and you will now receive an email any time this ticket is updated!")});
                 // Query Invalidations
                 await queryCache.invalidateQueries('ticket');
             },
@@ -92,14 +88,9 @@ const Controls = ({alert, setShowCommentForm, resource, resourceType, setShowAtt
         }
     };
 
-    const removeAlert = async () => {
-        if (window.confirm(`Really remove alert for ticket #${resource.id}?`)) {
-            //useMutation to delete this alert
-            await deleteTheAlert(alert.id);
-        }
+    const removeAlert = async (alert) => {
+        await deleteAlert(alert, deleteTheAlert);
     };
-
-
 
     const toggleContact = async () => {
         const operation = (resource.is_enabled) ? 'disable' : 'enable';
@@ -154,7 +145,7 @@ const Controls = ({alert, setShowCommentForm, resource, resourceType, setShowAtt
                 return {
                     "Edit": {link: `/tickets/${state.ticket.id}/edit`, icon: EditTicketIcon},
                     "Pdf": {link: () => getPdf(state.ticket.id), icon: PDFIcon},
-                    [alertKey]: {link: () => (alert != null) ? removeAlert() : addAlert(), icon: AddAlertIcon},
+                    [alertKey]: {link: () => (alert != null) ? removeAlert(alert) : addAlert(), icon: AddAlertIcon},
                     "Add Comment": {link: () => setShowCommentForm(), icon: AddCommentIcon},
                     "Add Attachment": {link: () => setShowAttachmentForm(), icon: AddAttachmentIcon},
                     "Delete": {link: () => deleteTicket(), icon: DeleteIcon},
@@ -219,7 +210,6 @@ const ControlsStyled = styled.div`
 Controls.propTypes = {
     resourceType: PropTypes.string,
     resource: PropTypes.object,
-    alert: PropTypes.object,
     setShowCommentForm: PropTypes.func,
     setShowAttachmentForm: PropTypes.func
 };

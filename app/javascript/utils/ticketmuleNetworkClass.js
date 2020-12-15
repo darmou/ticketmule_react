@@ -91,9 +91,14 @@ class TicketmuleNetwork {
         }
     }
 
-    async deleteRelatedTicketRecord(app_state, type, id) {
-        if (app_state.user && id != null && app_state.ticket.id != null) {
-            return await doNetworkRequest(`/api/v1/tickets/${app_state.ticket.id}/${type}/${id}`,
+    async deleteRelatedTicketRecord(app_state, type, id, alert = null) {
+        const aTicketId =  (alert == null) ? app_state.ticket.id : alert.ticket_id;
+        if (id == null && alert) {
+            id = alert.id;
+        }
+
+        if (app_state.user && id != null && aTicketId != null) {
+            return await doNetworkRequest(`/api/v1/tickets/${aTicketId}/${type}/${id}`,
                 SendMethod.DELETE, app_state.user);
         }
     }

@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   include Devise::Controllers::Helpers
-  before_action :set_contact, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
   def index
@@ -12,7 +12,7 @@ class Api::V1::UsersController < ApplicationController
     end
     @pagy, @users = pagy(users)
     contact_records_with_associations =
-        UserSerializer.new(@users).hash_for_collection[:data].map { | user |
+        UserSerializer.new(@users, { params: { :userlist => true } }).hash_for_collection[:data].map { | user |
           user[:attributes]
         }
 
@@ -26,33 +26,26 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def toggle_enable
-    @user = User.find(params[:id])
     if @user.enabled? then
       @user.disabled_at = Time.now
     else
       @user.disabled_at = nil
     end
     @user.save!
-    json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+    json_response(UserSerializer.new(@user, { params: { :userlist => false } }).serializable_hash[:data][:attributes], :ok)
   end
 
   # GET /users/:id
   def show
-    begin
-      @user = User.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      logger.error(":::Attempt to access invalid user_id => #{params[:id]}")
-      head :not_found
-    end
     respond_to do | format |
-      format.json { json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes]) }
+      format.json { json_response(UserSerializer.new(@user, { params: { :userlist => false } }).serializable_hash[:data][:attributes]) }
     end
   end
 
   # PUT /users/:id
   def update
     if @user.update(user_params)
-        json_response(UserSerializer.new(@user).serializable_hash[:data][:attributes], :ok)
+        json_response(UserSerializer.new(@user, { params: { :userlist => false } }).serializable_hash[:data][:attributes], :ok)
     else
       warden.custom_failure!
       message_key = @user.errors.keys().first
@@ -73,7 +66,12 @@ class Api::V1::UsersController < ApplicationController
     params.require(:user).permit!
   end
 
-  def set_contact
-    @user = User.find(params[:id])
+  def set_user
+    begin
+      @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      logger.error(":::Attempt to access invalid user_id => #{params[:id]}")
+      head :not_found
+    end
   end
 end

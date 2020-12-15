@@ -29,6 +29,7 @@ export const TicketContext = createContext({});
 export const TicketContextProvider = props => {
     const initialState = {
         tickets: null,
+        flashMsg: null,
         ticketPageInfo: {
             currentPage: 1,
             resourceCount: null,

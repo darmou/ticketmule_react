@@ -5,11 +5,13 @@ import { SLIDE_DURATION } from "../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import styled from "styled-components";
 import Interweave from "interweave";
-import TrashIcon from "../images/trash.png";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useMutation, queryCache } from "react-query";
 import useTicketmule from "../hooks/useTicketMule";
+import { ResourceItem } from "./ComponentLibrary/Resources";
+import { DeleteLink } from "./ComponentLibrary/StyledLinks";
+import { Timestamp } from "./ComponentLibrary/TimeFormating";
 
 const CommentSquare = styled.span`
     padding: 3px 2px;
@@ -22,43 +24,6 @@ const CommentSquare = styled.span`
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
 
-`;
-
-const Comment = styled.div`
-    margin-top: 2px;
-    margin-bottom: 10px;
-    a:first-of-type {
-        padding: 3px 4px 3px 6px;
-        font-weight: 700;
-        
-    }
-    &:hover {
-     > span:first-of-type {
-        background: #90af4c;
-        border: 1px solid #90af4c;
-      }
-      
-      a {
-        display: initial;
-      }
-
-    }
-`;
-
-export const Timestamp = styled.span`
-    font-style: italic;
-`;
-
-export const DeleteLink = styled(Link)`
-    margin: 0 0 0 6px;
-    padding: 3px 4px 3px 20px;
-    background: #fee url(${TrashIcon}) no-repeat 2px center;
-    color: #c00 !important;
-    font-weight: normal;
-    border: 1px solid #fee;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    display: none;
 `;
 
 const CommentList = React.memo(({comments, state}) => {
@@ -86,7 +51,7 @@ const CommentList = React.memo(({comments, state}) => {
 
     const commentList = comments.map(comment => {
        return (
-           <Comment key={`comment_id_${comment.id}`}>
+           <ResourceItem key={`comment_id_${comment.id}`}>
 
                <CommentSquare>#{comment.id}</CommentSquare>
                <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
@@ -95,7 +60,7 @@ const CommentList = React.memo(({comments, state}) => {
                <p>
                    <Interweave content={comment.comment}/>
                </p>
-           </Comment>
+           </ResourceItem>
        );
     });
 

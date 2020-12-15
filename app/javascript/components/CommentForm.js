@@ -1,16 +1,22 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
+import TicketStore from "../actions/ticketStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
+import {
+    TIMEOUT,
+    createStandardSuccessMessage, createStandardErrorMessage
+} from "./ComponentLibrary/FlashMessages";
+import { TicketContext } from "../packs/application";
 
-import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 
-
+// eslint-disable-next-line react/display-name
 export const CommentForm = React.forwardRef((props, ref) => {
     const { toggleForm, addTheComment } = props;
-    const [ flashMsg, setFlashMsg ] = React.useState(null);
+    const { dispatch, state } = useContext(TicketContext);
+    const { flashMsg } = state;
     const { register, handleSubmit, clearErrors, errors, reset } = useForm();
 
     const onSubmit = async data => {
@@ -18,29 +24,37 @@ export const CommentForm = React.forwardRef((props, ref) => {
         try {
             await addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
             reset();
-            setFlashMsg(<SuccessNotificationStyled> Comment added! </SuccessNotificationStyled>);
+            dispatch({
+                action_fn: TicketStore.setFlashMsg,
+                flashMsg: createStandardSuccessMessage("Comment added!")});
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
 
         } catch (error) {
             const msg = (error.response.status === 403 ) ? 'Bad Request' : 'Error occurred';
             if (flashMsg == null) {
-                setFlashMsg(<ErrorNotificationStyled> {msg} </ErrorNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardErrorMessage(msg)});
             }
         }
-
     };
 
     React.useEffect(() => {
         if (errors.comment && flashMsg == null) {
-            setFlashMsg(<ErrorNotificationStyled> Comment field is required </ErrorNotificationStyled>);
+            dispatch({
+                action_fn: TicketStore.setFlashMsg,
+                flashMsg: createStandardErrorMessage("Comment field is required")});
             clearErrors("comment");
         }
+
         if (flashMsg) {
             setTimeout(() => {
-                setFlashMsg(null);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: null});
             }, TIMEOUT);
         }
-    }, [errors, flashMsg, clearErrors, setFlashMsg]);
+    }, [errors, flashMsg, clearErrors, dispatch]);
 
     return (<StyledCommentForm style={{display:'none'}} ref={ref} id="add-comment">
 

@@ -8,13 +8,14 @@ import { TicketContext } from "../../packs/application";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import FieldStyled from "../ComponentLibrary/FieldStyled";
 import { useForm } from "react-hook-form";
-import { ErrorNotificationStyled, SuccessNotificationStyled } from "../ComponentLibrary/FlashMessages";
+import { createStandardSuccessMessage, createStandardErrorMessage } from "../ComponentLibrary/FlashMessages";
 import { PropTypes } from "prop-types";
 import { capitalizeEachWord } from "../../utils/displayUtils";
 import { Error } from "../Resources/FormResouces";
 import { getPlural } from "../../utils/network";
 import DisableIcon from "../../images/disable.png";
 import EnableIcon from "../../images/accept.png";
+import TicketStore from "../../actions/ticketStore";
 
 const FieldContainer = styled.div`
     display: flex;
@@ -22,7 +23,7 @@ const FieldContainer = styled.div`
 `;
 
 // eslint-disable-next-line react/display-name
-const AdminOptions = React.memo(({setFlashMsg, type}) => {
+const AdminOptions = React.memo(({type}) => {
     const { register, handleSubmit, errors, reset } = useForm();
     const { state, dispatch } = useContext(TicketContext);
     const plural = getPlural(type);
@@ -35,7 +36,10 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
         {
             onSuccess: async (option) => {
                 const msg = (option.disabled_at) ? 'disabled' : 'enabled';
-                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {captial} {option.name} was successfully {msg}! </SuccessNotificationStyled>);
+                dispatch({
+                        action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage(`${captial} ${option.name} was successfully ${msg}!`)});
+
                 await queryCache.invalidateQueries("options");
                 dispatch({action_fn: OptionsStore.updateOption, type, anOption: option});
                 // Query Invalidations
@@ -48,13 +52,18 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
 
         {
             onSuccess: async (option) => {
-                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {captial} {option.name} successfully added! </SuccessNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage(`${captial} ${option.name} successfully added!`)});
+
                 await queryCache.invalidateQueries("options");
                 dispatch({action_fn: OptionsStore.addOption, type, anOption: option});
                 // Query Invalidations
             },
             onError: async (result) => {
-                setFlashMsg(<ErrorNotificationStyled><img src={`${DisableIcon}`} /> {result.response.data.message} </ErrorNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardErrorMessage(result.response.data.message)});
             }
         }
     );
@@ -104,7 +113,6 @@ const AdminOptions = React.memo(({setFlashMsg, type}) => {
 });
 
 AdminOptions.propTypes = {
-    setFlashMsg: PropTypes.func,
     type: PropTypes.string
 };
 

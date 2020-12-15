@@ -25,9 +25,9 @@ const UserNew = () => {
         }
     );
 
-    const addUser = (user) => {
+    const addUser = (aUser) => {
         //We want to just set the current user as we do not know what page we are on
-        dispatch({action_fn: UserStore.setUser, user});
+        dispatch({action_fn: UserStore.setAUser, aUser});
     };
 
     return (<>

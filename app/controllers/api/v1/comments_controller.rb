@@ -17,7 +17,7 @@ class Api::V1::CommentsController < ApplicationController
     respond_to do |format|
       format.json {
         if (@comment.comment.blank?)
-          json_response("Comment must not be empty!", :bad_request)
+          json_response("ResourceItem must not be empty!", :bad_request)
         end
         if @comment.save
           json_response(@comment, :created)

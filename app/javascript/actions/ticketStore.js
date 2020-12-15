@@ -24,6 +24,11 @@ const TicketStore = {
             draftState.ticketPageInfo.currentPage = page;
         });
     },
+    setFlashMsg: function ({state, flashMsg}) {
+        return produce(state, draftState => {
+            draftState.flashMsg = flashMsg;
+        });
+    },
     setPerPage: function ({state, perPage}) {
         return produce(state, draftState => {
             draftState.ticketPageInfo.perPage = perPage;

@@ -12,16 +12,13 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   respond_to :json
   def create
-
     user = User.new(user_params)
     if user.save
-      #render :json=> user.as_json(:auth_token=>user.authentication_token, :email=>user.email), :status=>201
       json_response(UserSerializer.new(user).serializable_hash[:data][:attributes], :created)
     else
       warden.custom_failure!
       message_key = user.errors.keys().first
       json_response({ "message": "#{message_key.capitalize} #{user.errors[message_key].first}" }, :unprocessable_entity)
-      #render :json=> { "message": "#{message_key.capitalize} #{user.errors[message_key].first}" }, :status=>422
     end
   end
 

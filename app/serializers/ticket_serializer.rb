@@ -43,9 +43,9 @@ class TicketSerializer
   attribute :alert, if: Proc.new { | record, params |
     not params[:ticketlist]
   } do | object, params |
-    alerts = AlertSerializer.new(object.alerts).serializable_hash[:data].filter { | alert |
-      alert[:attributes][:user_id] == params[:user_id]
+    filtered_alerts = object.alerts.select { | alert |
+      alert.user_id == params[:user_id]
     }
-    alerts.length > 0 ? alerts[0] : nil
+    filtered_alerts.length > 0 ? AlertSerializer.new(filtered_alerts.first).serializable_hash[:data][:attributes] : nil
   end
 end

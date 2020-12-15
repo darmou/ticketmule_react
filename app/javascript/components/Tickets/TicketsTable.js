@@ -9,6 +9,7 @@ import { RESOURCE_TYPES } from "../../utils/types";
 
 const MAX_TICKET_LENGTH = 37;
 
+// eslint-disable-next-line react/display-name
 const TicketsTable = React.memo(({tickets, isAgo, isPagination}) => {
     const prevTickets = usePrevious(tickets);
     const ticketsRef = React.useRef();

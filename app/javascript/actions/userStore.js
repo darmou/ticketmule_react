@@ -49,7 +49,7 @@ const UserStore = {
             sessionStorage.setItem("username", user.username);
             sessionStorage.setItem("id", user.id);
         } else {
-            sessionStorage.removeItem("authentication_token");
+           sessionStorage.removeItem("authentication_token");
             sessionStorage.removeItem("email");
             sessionStorage.removeItem("username");
             sessionStorage.removeItem("id");

@@ -77,8 +77,4 @@ const Admin = React.memo(() => {
     </>);
 });
 
-Admin.propTypes = {
-    flashMsg: PropTypes.object
-};
-
 export default Admin;

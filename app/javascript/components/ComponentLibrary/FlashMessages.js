@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { msgFlash } from "../../utils/displayUtils";
+import EnableIcon from "../../images/accept.png";
+import DisableIcon from "../../images/disable.png";
+import React from "react";
 
 export const TIMEOUT = 2000;
 
@@ -31,3 +34,16 @@ export const ErrorNotificationStyled = styled(NotificationStyled)`
     color: #D8000C;
     background-color: #FFBABA;
 `;
+
+
+export const createStandardSuccessMessage = (msg) => {
+    return (<SuccessNotificationStyled>
+        <img src={`${EnableIcon}`} /> {msg}
+    </SuccessNotificationStyled>);
+};
+
+export const createStandardErrorMessage = (msg) => {
+    return (<ErrorNotificationStyled>
+        <img src={`${DisableIcon}`} /> {msg}
+    </ErrorNotificationStyled>);
+};

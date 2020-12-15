@@ -1,17 +1,16 @@
 import React, { useContext } from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UserForm from "./UserForm";
-import { PropTypes } from "prop-types";
-import {queryCache, useMutation} from "react-query";
+import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import UserStore from "../../actions/userStore";
 import useGetUser from "../../hooks/useGetUser";
 import { TicketContext } from "../../packs/application";
 import { RESOURCE_TYPES } from "../../utils/types";
-import {SuccessNotificationStyled} from "../ComponentLibrary/FlashMessages";
-import EnableIcon from "../../images/accept.png";
+import { createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
+import TicketStore from "../../actions/ticketStore";
 
-const UserEdit = ({setFlashMsg}) => {
+const UserEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
     const { slug } = useParams();
@@ -23,7 +22,9 @@ const UserEdit = ({setFlashMsg}) => {
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.USER),
         {
             onSuccess: async (user) => {
-                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {user.username} was successfully edited! </SuccessNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage(`${user.username} was successfully edited!`)});
 
                 editUser(user);
                 // Query Invalidations
@@ -47,8 +48,5 @@ const UserEdit = ({setFlashMsg}) => {
     </>);
 };
 
-UserEdit.propTypes = {
-    setFlashMsg: PropTypes.func
-};
 
 export default UserEdit;

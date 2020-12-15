@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import useSliderToggle from "react-slide-toggle-hooks";
 import { SLIDE_DURATION } from "../../utils/displayUtils";
 import { SLIDE_STATES } from "../ComponentLibrary/H3ToggleStyled";
-import { PropTypes } from "prop-types";
 import TicketTable from "./TicketTable";
 import useGetTicket from "../../hooks/useGetTicket";
 import Controls from "../Controls";
@@ -46,7 +45,7 @@ const Ticket = React.memo(() => {
 
         {(state.ticket) &&
             <>
-                <Controls id={slug} alert={ticket?.alert || null}
+                <Controls id={slug}
                           setShowCommentForm={toggle}
                           resource={ticket}
                           resourceType={RESOURCE_TYPES.TICKET}
@@ -56,7 +55,7 @@ const Ticket = React.memo(() => {
         }
 
         <CommentForm ref={expandableRef} addTheComment={addTheComment} toggleForm={toggle} id={slug}/>
-        <AttachmentForm ref={attachmentToggle.expandableRef} addTheComment={addTheComment} state={state}
+        <AttachmentForm ref={attachmentToggle.expandableRef} addTheComment={addTheComment}
                         toggleForm={attachmentToggle.toggle} id={slug}/>
 
         { (ticket && true && ticket.attachments != null && ticket.attachments.length > 0) &&
@@ -68,10 +67,6 @@ const Ticket = React.memo(() => {
 
     </>);
 });
-
-Ticket.propTypes = {
-    context: PropTypes.object
-};
 
 export default Ticket;
 

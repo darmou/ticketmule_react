@@ -1,11 +1,8 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { queryCache, useMutation } from "react-query";
-import { PropTypes } from "prop-types";
 import styled from "styled-components";
-import { ErrorNotificationStyled, SuccessNotificationStyled } from "../ComponentLibrary/FlashMessages";
-import EnableIcon from "../../images/accept.png";
-import DisableIcon from "../../images/disable.png";
+import { createStandardErrorMessage, createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
 import useTicketmule from "../../hooks/useTicketMule";
 import { TicketContext } from "../../packs/application";
 import TicketStore from "../../actions/ticketStore";
@@ -13,7 +10,6 @@ import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { MIN_PASSWORD_LENGTH, timeZones } from "../Users/UserForm";
 import { Error } from "../Resources/FormResouces";
 import { useNavigate } from "react-router-dom";
-import {Row} from "../ComponentLibrary/TableStyles";
 
 const Label = styled.div`
     display: block;
@@ -41,7 +37,7 @@ const FormRow = styled.div`
 `;
 
 // eslint-disable-next-line react/display-name
-const AdminUsers = React.memo(({setFlashMsg}) => {
+const AdminUsers = React.memo(() => {
     const { register, handleSubmit, reset, errors, getValues, clearErrors } = useForm();
     const ticketMule = useTicketmule();
     const { state, dispatch } = useContext(TicketContext);
@@ -52,15 +48,19 @@ const AdminUsers = React.memo(({setFlashMsg}) => {
 
         {
             onSuccess: async (user) => {
-                setFlashMsg(<SuccessNotificationStyled><img src={`${EnableIcon}`} /> {user.username} was successfully created! </SuccessNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage(`${user.username} was successfully created!`)});
+
                 reset();
                 await queryCache.invalidateQueries("users");
                 dispatch({action_fn: TicketStore.addUser, aUser: user});
                 navigate('/admin/');
             },
             onError: async (result) => {
-                debugger;
-                setFlashMsg(<ErrorNotificationStyled><img src={`${DisableIcon}`} /> {result.response.data.message} </ErrorNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardErrorMessage(result.response.data.message)});
             }
         }
     );
@@ -170,9 +170,5 @@ const AdminUsers = React.memo(({setFlashMsg}) => {
         </StyledForm>
     );
 });
-
-AdminUsers.propTypes = {
-    setFlashMsg: PropTypes.func
-};
 
 export default AdminUsers;

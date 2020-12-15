@@ -14,7 +14,8 @@ import WordDocumentIcon from "../images/document-word.png";
 import ImageDocumentIcon from "../images/document-image.png";
 import { useMutation, queryCache } from "react-query";
 import useTicketmule from "../hooks/useTicketMule";
-import { Timestamp, DeleteLink } from "./CommentList";
+import { Timestamp } from "./ComponentLibrary/TimeFormating";
+import { DeleteLink } from "./ComponentLibrary/StyledLinks";
 import { getAttachmentFileSize } from "../utils/displayUtils";
 
 const DOC_TYPES = {

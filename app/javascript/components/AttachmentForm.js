@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
@@ -6,14 +6,17 @@ import { useForm } from "react-hook-form";
 import useTicketmule from "../hooks/useTicketMule";
 import { getAttachmentFileSize } from "../utils/displayUtils";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { queryCache, useMutation } from "react-query";
+import { TicketContext } from "../packs/application";
+import TicketStore from "../actions/ticketStore";
 
 
 export const AttachmentForm = React.forwardRef((props, ref) => {
     const ticketMule = useTicketmule();
-    const { toggleForm, addTheComment, state } = props;
-    const [ flashMsg, setFlashMsg ] = React.useState(null);
+    const { toggleForm, addTheComment } = props;
+    const { state, dispatch } = useContext(TicketContext);
+    const { flashMsg } = state;
     const { register, handleSubmit, clearErrors, errors, reset } = useForm();
     const [addTheAttachment] = useMutation(
         ticketMule.addRelatedTicketRecord.bind(this, state, "attachments"),
@@ -40,31 +43,38 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
                 close_ticket: false
             };
             addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
-
             reset();
-            setFlashMsg(<SuccessNotificationStyled> Attachment added! </SuccessNotificationStyled>);
+            dispatch({
+                action_fn: TicketStore.setFlashMsg,
+                flashMsg: createStandardSuccessMessage("Attachment added!" )});
+
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
 
         } catch (error) {
             const msg = (error.response.status === 403 ) ? 'Bad Request' : 'Error occurred';
             if (flashMsg == null) {
-                setFlashMsg(<ErrorNotificationStyled> {msg} </ErrorNotificationStyled>);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardErrorMessage(msg)});
             }
         }
-
     };
 
     React.useEffect(() => {
         if (errors.comment && flashMsg == null) {
-            setFlashMsg(<ErrorNotificationStyled> Attachment field is required </ErrorNotificationStyled>);
+            dispatch({
+                action_fn: TicketStore.setFlashMsg,
+                flashMsg: createStandardErrorMessage("Attachment field is required")});
             clearErrors("comment");
         }
         if (flashMsg) {
             setTimeout(() => {
-                setFlashMsg(null);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: null});
             }, TIMEOUT);
         }
-    }, [errors, flashMsg, clearErrors, setFlashMsg]);
+    }, [errors, flashMsg, clearErrors, dispatch]);
 
     return (<StyledAttachmentForm style={{display:'none'}} ref={ref} id="add-attachment">
 

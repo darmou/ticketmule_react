@@ -6,4 +6,12 @@ class UserSerializer
   attribute :full_name do | object |
     object.full_name
   end
+
+  attribute :alerts, if: Proc.new { |record, params|
+    not params[:userlist]
+  } do |object|
+    AlertSerializer.new(object.alerts).serializable_hash[:data].map { | alert |
+      alert[:attributes]
+    }
+  end
 end

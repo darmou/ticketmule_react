@@ -1,57 +1,66 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { PropTypes } from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import useTicketmule from "../hooks/useTicketMule";
 import { TicketContext } from "../packs/application";
 import { useMutation } from "react-query";
+import moment from "moment";
 import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import { SuccessNotificationStyled, ErrorNotificationStyled, TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import TicketStore from "../actions/ticketStore";
 
 const MIN_PASSWORD_LEN = 7;
 const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
 Object.freeze(formTypeEnum);
 
-const Login = ({flashMsg, setFlashMsg}) =>  {
+const Login = () =>  {
     const ticketMule = useTicketmule();
     const { register, handleSubmit, errors } = useForm();
     const { state, dispatch } = React.useContext(TicketContext);
+    const { flashMsg, isLoggingOut } = state;
     let isLoading = false;
 
     const [login] = useMutation(
-        ticketMule.login.bind(this), {},
+        ticketMule.login.bind(this), {
+            onSuccess: async (theUser) => {
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardSuccessMessage(`Welcome admin! You last signed in on ${moment(theUser.last_sign_in_at).format("DD MMM YYYY hh:mm A")} from ${theUser.last_sign_in_ip}`)});
+                dispatch({action_fn: UserStore.setUser, user: theUser});
+            },
+            onError: (error) => {
+                const msg = (error.response.status === 401 ) ? "Incorrect login details" : "Error occurred";
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: createStandardErrorMessage(msg)});
+            }
+
+        },
     );
 
     React.useEffect(() => {
-        if (state.isLoggingOut && flashMsg == null) {
-            setFlashMsg(<FlashStyled><SuccessNotificationStyled> Logged Out Successfully </SuccessNotificationStyled></FlashStyled>);
+        if (isLoggingOut && flashMsg == null) {
+            dispatch({
+                action_fn: TicketStore.setFlashMsg,
+                flashMsg: createStandardSuccessMessage("Logged Out Successfully")});
             dispatch({action_fn: UserStore.resetIsLoggingOut } );
         }
 
         if (flashMsg) {
             setTimeout(() => {
-                setFlashMsg(null);
+                dispatch({
+                    action_fn: TicketStore.setFlashMsg,
+                    flashMsg: null});
             }, TIMEOUT);
         }
-    }, [flashMsg, setFlashMsg, TIMEOUT]);
+    }, [isLoggingOut, flashMsg, dispatch, TIMEOUT]);
 
 
     const onSubmit = async (data) => {
         isLoading = true;
-        try {
-            const response = await login(data);
-
-            if (response != null) {
-                dispatch({action_fn: UserStore.setUser, user: response});
-            }
-        } catch (error) {
-            const msg = (error.response.status === 401 ) ? 'Incorrect login details' : 'Error occurred';
-            if (flashMsg == null) {
-                setFlashMsg(<FlashStyled><ErrorNotificationStyled> {msg} </ErrorNotificationStyled></FlashStyled>);
-            }
-        }
+        await login(data);
         isLoading = false;
     };
 
@@ -110,11 +119,6 @@ const Login = ({flashMsg, setFlashMsg}) =>  {
         </BoxStyled>
     </LoginStyled>);
 
-};
-
-Login.propTypes = {
-    flashMsg: PropTypes.object,
-    setFlashMsg: PropTypes.func
 };
 
 const ValidationDiv = styled.div`

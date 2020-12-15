@@ -29,7 +29,7 @@ class Api::V1::AlertsController < ApplicationController
 
     respond_to do |format|
       format.json {
-        json_response("The alert for ticket ##{ticket_id} was removed!", :ok)
+        json_response({:ticket_id => ticket_id}, :ok)
       }
     end
   end
