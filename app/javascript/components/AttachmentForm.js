@@ -91,7 +91,7 @@ export const AttachmentForm = React.forwardRef((props, ref) => {
 
             <p>
                 <SecondaryButton className="button" id="attachment_submit" name="commit" type="submit"
-                >Add Attachment</SecondaryButton>
+                >Add Attachment</SecondaryButton>&nbsp;&nbsp;
                 <Link to={'#'} onClick={toggleForm}>Cancel</Link>
             </p>
         </form>

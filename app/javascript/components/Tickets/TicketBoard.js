@@ -63,7 +63,7 @@ export const getTicketImage = (priorityId) => {
 
 const TicketBoard = () => {
     const { tickets, isLoading } = useGetTickets();
-    const { toggle, setCollapsibleElement, slideToggleState } = useSliderToggle({duration: SLIDE_DURATION});
+    const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (
        <>
@@ -73,7 +73,7 @@ const TicketBoard = () => {
 
            <>
                <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>
-               <TimelineWrapperStyled ref={setCollapsibleElement} css={css``} >
+               <TimelineWrapperStyled ref={expandableRef} css={css``} >
                    <TimelineStyled isLeft={true}>
                        {ticketTimeLineList(TICKET_TYPES.OPENED, null)}
                        <SpanTimelineLabel>Opened Tickets</SpanTimelineLabel>

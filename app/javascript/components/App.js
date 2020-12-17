@@ -29,9 +29,11 @@ import { AResourceStyled } from "./ComponentLibrary/Resources";
 import Forgot from "./Forgot";
 import ResetPassword from "./ResetPassword";
 
+const SESSION_TIMEOUT = 300000; //5 mins
+
 function BaseApp ({context}) {
     const navigate = useNavigate();
-    const [timeoutValue, setTimeoutValue] = React.useState(1000 * 5 * 1);
+    const [timeoutValue, setTimeoutValue] = React.useState(SESSION_TIMEOUT);
     const [isTimeout, setIsTimeout] = React.useState(false);
     const { state, dispatch } = context;
     const { user, flashMsg } = state;
