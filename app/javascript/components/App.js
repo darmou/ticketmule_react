@@ -3,6 +3,7 @@ import {
     Routes,
     Route, useNavigate
 } from "react-router-dom";
+import IdleTimer from "react-idle-timer";
 import styled from "styled-components";
 import Login from "./Login";
 import Header from "./Header";
@@ -25,11 +26,16 @@ import AdminOptions from "./Admin/AdminOptions";
 import AdminUsers from "./Admin/AdminUsers";
 import { TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { AResourceStyled } from "./ComponentLibrary/Resources";
+import Forgot from "./Forgot";
+import ResetPassword from "./ResetPassword";
 
 function BaseApp ({context}) {
     const navigate = useNavigate();
+    const [timeoutValue, setTimeoutValue] = React.useState(1000 * 5 * 1);
+    const [isTimeout, setIsTimeout] = React.useState(false);
     const { state, dispatch } = context;
     const { user, flashMsg } = state;
+    const idleTimer = React.useRef();
 
     React.useEffect(() => {
         if (!user) {
@@ -52,14 +58,38 @@ function BaseApp ({context}) {
         }
     }, [TicketStore, user, flashMsg, dispatch, TIMEOUT]);
 
+    const _onActionOrActive = () => {
+        setIsTimeout(false);
+    };
+
+    const _onIdle = () => {
+        if (isTimeout && user) {
+            dispatch({action_fn: UserStore.setUser, user: null});
+        } else {
+            if (idleTimer.current != null) {
+                idleTimer.current.reset();
+            }
+            setIsTimeout(true);
+        }
+    };
+
     const Dash = (user != null)
         ? Dashboard : Login;
 
-    return (<AppStyled>
+    const AppWrapper = (user == null) ? React.Fragment : AResourceStyled;
 
+    return (<AppStyled>
+        <IdleTimer
+            ref = {ref => idleTimer.current = ref }
+            element={document}
+            onActive={_onActionOrActive}
+            onIdle={_onIdle}
+            onAction={_onActionOrActive}
+            debounce={250}
+            timeout={timeoutValue} />
         <ContentStyled>
             <Header/>
-            <AResourceStyled>
+            <AppWrapper>
                 {(user == null) ? null : flashMsg}
                 <Routes>
                     <Route path='/tickets' element={<TicketDash/>}>
@@ -68,6 +98,8 @@ function BaseApp ({context}) {
                         <Route path=':slug' element={<Ticket/>} />
                         <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
                     </Route>
+                    <Route path='/forgot' element={<Forgot/>}/>
+                    <Route path='/reset' element={<ResetPassword/>}/>
                     <Route path='/contacts/*' element={<ContactRoutes/>}/>
                     <Route path='/users/*' element={<UserRoutes/>}/>
                     <Route path='/admin' element={<Admin/>}>
@@ -80,7 +112,7 @@ function BaseApp ({context}) {
                     </Route>
                     <Route path='/' element={<Dash/>}/>
                 </Routes>
-            </AResourceStyled>
+            </AppWrapper>
             <RightColumnStyled>
                 <TicketControls loggedIn={user != null}/>
             </RightColumnStyled>

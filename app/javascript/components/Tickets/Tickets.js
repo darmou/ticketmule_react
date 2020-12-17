@@ -1,42 +1,27 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import useGetTickets from "../../hooks/useGetTickets";
 import { TicketContext } from "../../packs/application";
-import usePrevious from "../../hooks/usePrevious";
 import TicketStore from "../../actions/ticketStore";
 
 const TicketsPerPage = styled.div`
     float: right;
 `;
 
+// eslint-disable-next-line react/display-name
 const Tickets =  React.memo(() => {
     const { tickets, isLoading } = useGetTickets();
-    const filteredTickets = (tickets) ? tickets.filter(ticket => ticket.status.name  !== "Closed") : null;
     const { state, dispatch } = useContext(TicketContext);
     const { ticketPageInfo  } = state;
-    const { perPage } = ticketPageInfo;
-
-    const _perPageRef = React.useRef();
-
-    if (_perPageRef.current == null) {
-        _perPageRef.current = perPage;
-    }
-    const prevPerPage = usePrevious(_perPageRef.current);
+    const { perPage, searchString } = ticketPageInfo;
+    const filteredTickets = (tickets) ? (searchString.includes("search[status_id]=2")) ? tickets : tickets.filter(ticket => ticket.status.name  !== "Closed") : null;
 
     const updatePageLength = (event, pageLen) => {
         event.preventDefault();
         event.stopPropagation();
-        //_perPageRef.current = pageLen;
         dispatch({action_fn: TicketStore.setPerPage, perPage: pageLen});
     };
-
-    React.useEffect(() => {
-        if (prevPerPage !== _perPageRef.current && _perPageRef.current != null) {
-            dispatch({action_fn: TicketStore.setPerPage, perPage: _perPageRef.current});
-        }
-
-    }, [_perPageRef.current, prevPerPage]);
 
     const perPages = [10, 20, 30].map((pageLen, idx, array) => {
         const separator = (idx < (array.length-1)) ? ', ' :'';

@@ -1,15 +1,14 @@
 import React from "react";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
-import { StyledForm, StyledLabel, StyledInput, Row } from "../ComponentLibrary/TableStyles";
+import { StyledForm, StyledLabel, Label, StyledRow, Row, MIN_PASSWORD_LEN } from "../ComponentLibrary/FormComponentsStyled";
 import { Error } from "../Resources/FormResouces";
 import { onSubmitForm } from "../../utils/displayUtils";
 
-export const MIN_PASSWORD_LENGTH = 8;
-
-export  const timeZones = [
+export const timeZones = [
     { value: "Hawaii", display: "(GMT-10:00) Hawaii" },
     { value: "Alaska", display: "(GMT-09:00) Alaska" },
     { value: "Pacific Time (US & Canada)", display: "(GMT-08:00) Pacific Time (US & Canada)" },
@@ -155,41 +154,65 @@ export  const timeZones = [
     { value: "Nuku'alofa", display: "(GMT+13:00) Nuku'alofa" }
 ];
 
-const UserForm = ({addOrUpdate, formAction, slug, aUser}) => {
+const StyledFormAdmin = styled.form`
+    input, select {
+        padding: 4px;
+        background: #fff;
+        border: 1px solid #ccc;
+        font: 12px Verdana,sans-serif;
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+    }
+`;
+
+const FormInput = styled.input`
+`;
+
+const UserStyledLabel = styled(StyledLabel)`;
+    width: 123px !important;
+`;
+
+
+const UserForm = ({addOrUpdate, formAction, slug, aUser, isAdminForm = false}) => {
     const { register, handleSubmit, errors, getValues, clearErrors } = useForm();
 
     const onSubmit = async (data) => {
         delete data["confirm_password"];
         delete data["confirm_email"];
-        if (data["password"].length === 0) {
+        if (!isAdminForm && data["password"].length === 0) {
             delete data["password"];
         }
         await onSubmitForm(data, "user", formAction, addOrUpdate, aUser);
     };
+    const Form = (isAdminForm) ? StyledFormAdmin : StyledForm;
+    const FormRow = (isAdminForm) ? StyledRow : Row;
+    const FormLabel = (isAdminForm) ? Label : UserStyledLabel;
 
-    return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}>
-        <Row>
-            <StyledLabel>Username:</StyledLabel>
-            <StyledInput name="username" ref={register({required: true})}
+    return(<Form acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}>
+        <FormRow>
+            <FormLabel>Username:</FormLabel>
+            <FormInput name="username" ref={register({required: true})}
+                         size="30"
                          defaultValue={(aUser) ? aUser.username : ""} type="text"/>
-            {(errors.username) && <Row><StyledLabel>&nbsp;</StyledLabel><Error>Username is required</Error></Row>}
-        </Row>
-        <Row>
-            <StyledLabel>First name:</StyledLabel>
-            <StyledInput name="first_name" ref={register({required: true})}
+            {(errors.username) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Username is required</Error></>}
+        </FormRow>
+        <FormRow>
+            <FormLabel>First name:</FormLabel>
+            <FormInput size="30" name="first_name" ref={register({required: true})}
                          defaultValue={(aUser) ? aUser.first_name : ""} type="text"/>
-            {(errors.first_name) && <Row><StyledLabel>&nbsp;</StyledLabel><Error>First name is required</Error></Row>}
-        </Row>
-        <Row>
-            <StyledLabel>Last name:</StyledLabel>
-            <StyledInput name="last_name" ref={register({required: true})}
+            {(errors.first_name) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>First name is required</Error></>}
+        </FormRow>
+        <FormRow>
+            <FormLabel>Last name:</FormLabel>
+            <FormInput size="30" name="last_name" ref={register({required: true})}
                          defaultValue={(aUser) ? aUser.last_name : ""} type="text"/>
-            {(errors.last_name) && <Row><StyledLabel>&nbsp;</StyledLabel><Error>Last name is required</Error></Row>}
-        </Row>
-        <Row>
-            <StyledLabel>Time zone:</StyledLabel>
+            {(errors.last_name) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Last name is required</Error></>}
+        </FormRow>
+        <FormRow>
+            <FormLabel>Time zone:</FormLabel>
             <select  name="time_zone" ref={register({required: true})}
-                     defaultValue={(aUser && aUser.time_zone) ? aUser.time_zone : null}
+                     defaultValue={(isAdminForm) ? "Central Time (US & Canada)" : (aUser && aUser.time_zone) ? aUser.time_zone : null}
             >
                 <option  value=""/>
                 { timeZones.map(timeZone => {
@@ -201,10 +224,10 @@ const UserForm = ({addOrUpdate, formAction, slug, aUser}) => {
                 }
             </select>
             { (errors.time_zone) && <Row><StyledLabel>&nbsp;</StyledLabel><Error>TimeZone is required</Error></Row> }
-        </Row>
-        <Row>
-            <StyledLabel>Email:</StyledLabel>
-            <StyledInput name="email"
+        </FormRow>
+        <FormRow>
+            <FormLabel>Email:</FormLabel>
+            <FormInput size="30" name="email"
                          onChange={() => {clearErrors("email"); clearErrors("confirm_email");}}
                          ref={register({
                 required: true,
@@ -212,15 +235,15 @@ const UserForm = ({addOrUpdate, formAction, slug, aUser}) => {
                 validate: () => getValues("email") === getValues("confirm_email")
             })} defaultValue={(aUser) ? aUser.email : ""} type="text"/>
             { (errors.email && errors.email.type === "required") &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Email is required</Error></> }
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Email is required</Error></> }
             { (errors.email && errors.email.type === "pattern") &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Email is not valid</Error></> }
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Email is not valid</Error></> }
             { (errors.email && (errors.email.type !== "required" && errors.email.type !== "pattern")) &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Email and Confirm Email must be the same</Error></> }
-        </Row>
-        <Row>
-            <StyledLabel>Confirm Email:</StyledLabel>
-            <StyledInput name="confirm_email"
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Email and Confirm Email must be the same</Error></> }
+        </FormRow>
+        <FormRow>
+            <FormLabel>Confirm Email:</FormLabel>
+            <FormInput size="30" name="confirm_email"
                  onChange={() => {clearErrors("email"); clearErrors("confirm_email");}}
                          ref={register({
                 required: true,
@@ -228,59 +251,63 @@ const UserForm = ({addOrUpdate, formAction, slug, aUser}) => {
                 validate: () => getValues("email") === getValues("confirm_email")
             })} defaultValue={(aUser) ? aUser.email : ""} type="text"/>
             { (errors.confirm_email && errors.confirm_email.type === "required") &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Confirm Email is required</Error></> }
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Confirm Email is required</Error></> }
             { (errors.confirm_email && errors.confirm_email.type === "pattern") &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Confirm Email is not valid</Error></> }
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Confirm Email is not valid</Error></> }
             { (errors.confirm_email && (errors.confirm_email.type !== "required" &&
                 errors.confirm_email.type !== "pattern")) &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Email and Confirm Email must be the same</Error></> }
-        </Row>
-        <Row>
-            <StyledLabel>Change Password:</StyledLabel>
-            <StyledInput name="password"
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Email and Confirm Email must be the same</Error></> }
+        </FormRow>
+        <FormRow>
+            <FormLabel>{(!isAdminForm) ? "Change " : ""}Password:</FormLabel>
+            <FormInput size="30" name="password"
+
                          onChange={() => {clearErrors("password"); clearErrors("confirm_password");}}
                          ref={register({
-                minLength: MIN_PASSWORD_LENGTH,
+                required: isAdminForm,
+                minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")
             })} defaultValue="" type="text"/>
             { (errors.password && errors.password.type === "minLength") &&
             <>
-                <StyledLabel>&nbsp;</StyledLabel>
-                <Error>Password should be minimum of {MIN_PASSWORD_LENGTH} characters</Error>
+                {(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}
+                <Error>Password should be minimum of {MIN_PASSWORD_LEN} characters</Error>
             </> }
             { (errors.password && errors.password.type !== "required") &&
-            <Row><StyledLabel>&nbsp;</StyledLabel><Error>Password and Confirm Password must be the same</Error></Row> }
-        </Row>
-        <Row>
-            <StyledLabel>Confirm Password:</StyledLabel>
-            <StyledInput name="confirm_password"
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Password and Confirm Password must be the same</Error></> }
+        </FormRow>
+        <FormRow>
+            <FormLabel>Confirm Password:</FormLabel>
+            <FormInput size="30" name="confirm_password"
                          onChange={() => {clearErrors("password"); clearErrors("confirm_password");}}
                          ref={register({
-                minLength: MIN_PASSWORD_LENGTH,
+                             required: isAdminForm,
+                minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")
             })} defaultValue="" type="text"/>
             { (errors.confirm_password && errors.confirm_password.type === "minLength") &&
             <>
                 <StyledLabel>&nbsp;</StyledLabel>
-                <Error>Confirm Password should be minimum of {MIN_PASSWORD_LENGTH} characters</Error>
+                <Error>Confirm Password should be minimum of {MIN_PASSWORD_LEN} characters</Error>
             </> }
             { (errors.confirm_password && errors.confirm_password.type !== "required") &&
-            <><StyledLabel>&nbsp;</StyledLabel><Error>Password and Confirm Password must be the same</Error></> }
-        </Row>
-        <Row>
-            <StyledLabel>&nbsp;</StyledLabel>
+            <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Password and Confirm Password must be the same</Error></> }
+        </FormRow>
+        <FormRow>
+            <FormLabel>&nbsp;</FormLabel>
             <SecondaryButton id="update_submit" name="commit"
-                             type="submit">{(aUser) ? "Update": "Create"}</SecondaryButton>&nbsp;&nbsp;
+                             type="submit">{(isAdminForm) ? "Add User": (aUser) ? "Update": "Create"}</SecondaryButton>&nbsp;&nbsp;
             <Link to={(aUser) ? `/users/${slug}`: '/users/'}>Cancel</Link>
-        </Row>
-    </StyledForm>);
+        </FormRow>
+    </Form>);
 };
 
 UserForm.propTypes = {
     formAction: PropTypes.func,
     addOrUpdate: PropTypes.func,
     aUser: PropTypes.object,
-    slug: PropTypes.string
+    slug: PropTypes.string,
+    isAdminForm: PropTypes.bool
 };
 
 export default UserForm;

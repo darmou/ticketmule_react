@@ -4,7 +4,37 @@ class Api::V1::TicketsController < ApplicationController
 
   # GET /tickets
   def index
-    tickets = Ticket.all_relevant_tickets
+    title = nil
+    if params[:search]
+      if !search_params[:title].blank?
+        title = Ticket.arel_table[:title]
+        query = search_params[:title]
+        params[:search].delete(:title)
+      end
+      if !search_params[:created_at_gte].blank?
+        start_date = DateTime.parse(params[:search][:created_at_gte])
+        start_date = start_date.midnight.gmtime
+        params[:search][:created_at] = start_date..Float::INFINITY
+        params[:search].delete(:created_at_gte)
+      end
+      if !search_params[:created_at_lt].blank?
+        end_date = DateTime.parse(search_params[:created_at_lt])
+        end_date = end_date.next.midnight.gmtime
+        search_params[:created_at] = -Float::INFINITY..end_date
+        params[:search].delete(:created_at_lt)
+      end
+      if title then
+        tickets = (search_params.empty?) ? Ticket.where(title.matches("%#{query}%")) :
+                    Ticket.where(search_params).where(title.matches("%#{query}%"))
+      else
+        tickets = Ticket.where(search_params)
+      end
+
+    else
+      tickets = Ticket.all_relevant_tickets
+    end
+
+
     @pagy, @tickets = pagy(tickets)
     ticket_records_with_associations =
         TicketSerializer.new(@tickets, { params: { :ticketlist => true } }).hash_for_collection[:data].map { | ticket |
@@ -54,6 +84,10 @@ class Api::V1::TicketsController < ApplicationController
   end
 
   private
+
+  def search_params
+    params[:search].empty? ? {} : params.require(:search).permit!.to_h.symbolize_keys
+  end
 
   def ticket_params
     # whitelist ticket params

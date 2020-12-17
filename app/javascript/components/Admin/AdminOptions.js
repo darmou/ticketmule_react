@@ -6,15 +6,13 @@ import useTicketMule from "../../hooks/useTicketMule";
 import AdminSection from "./AdminSection";
 import { TicketContext } from "../../packs/application";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
-import FieldStyled from "../ComponentLibrary/FieldStyled";
+import { FieldStyled } from "../ComponentLibrary/FormComponentsStyled";
 import { useForm } from "react-hook-form";
 import { createStandardSuccessMessage, createStandardErrorMessage } from "../ComponentLibrary/FlashMessages";
 import { PropTypes } from "prop-types";
 import { capitalizeEachWord } from "../../utils/displayUtils";
 import { Error } from "../Resources/FormResouces";
 import { getPlural } from "../../utils/network";
-import DisableIcon from "../../images/disable.png";
-import EnableIcon from "../../images/accept.png";
 import TicketStore from "../../actions/ticketStore";
 
 const FieldContainer = styled.div`

@@ -47,6 +47,10 @@ export const onSubmitForm = async (data, type, formAction, addOrUpdate, aResourc
     }
 };
 
+export const isEmpty = (str) => {
+    return (!str || 0 === str.length);
+};
+
 export const deleteAlert = async (alert, deleteTheAlert) => {
     if (window.confirm(`Really remove alert for ticket #${alert.ticket_id}?`)) {
         //useMutation to delete this alert

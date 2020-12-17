@@ -2,6 +2,7 @@ import { useTable } from "react-table";
 import {
     TableHeaderStyled,
     TableListingStyled,
+    StyledBodyTableRow,
     TableWithPagination,
     TRHeaderStyled
 } from "../ComponentLibrary/TableStyles";
@@ -41,11 +42,11 @@ const ResourcesTable = ({columns, data, isPagination, resourceType}) => {
                     (row, idx) => {
                         prepareRow(row);
                         return (
-                            <tr key={idx} {...row.getRowProps()}>
+                            <StyledBodyTableRow key={idx} {...row.getRowProps()}>
                                 {row.cells.map((cell, i) => {
                                     return <td key={i} {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                 })}
-                            </tr>
+                            </StyledBodyTableRow>
                         );}
                 )}
                 </tbody>

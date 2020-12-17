@@ -13,3 +13,13 @@ export const DeleteLink = styled(Link)`
     -webkit-border-radius: 3px;
     display: none;
 `;
+
+export const FakeLink = styled.span`
+    text-decoration: underline;
+    color: #4d88cf;
+    cursor: pointer;
+    
+    &:hover {
+        color: #90af4c;
+    }
+`;

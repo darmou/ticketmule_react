@@ -24,19 +24,6 @@ const UserStore = {
           draftState.userPageInfo.letterSelected = letter;
         });
     },
-    setPerPage: function ({state, perPage}) {
-        return produce(state, draftState => {
-            draftState.userPageInfo.perPage = perPage;
-        });
-    },
-    setUsersData: function ({state, usersData}) {
-        return produce(state, draftState => {
-            draftState.userPageInfo.currentPage = usersData['pagy']['page'];
-            draftState.userPageInfo.resourceCount = usersData['pagy']['count'];
-            draftState.userPageInfo.lastPage = usersData['pagy']['last'];
-            draftState.users = usersData['data'];
-        });
-    },
     resetIsLoggingOut: function ({state}) {
         return produce(state, draftState => {
             draftState.isLoggingOut = false;

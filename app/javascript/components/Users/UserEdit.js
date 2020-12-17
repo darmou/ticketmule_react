@@ -21,15 +21,15 @@ const UserEdit = () => {
     const [editTheUser] = useMutation(
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.USER),
         {
-            onSuccess: async (user) => {
+            onSuccess: async (theUser) => {
                 dispatch({
                     action_fn: TicketStore.setFlashMsg,
-                    flashMsg: createStandardSuccessMessage(`${user.username} was successfully edited!`)});
+                    flashMsg: createStandardSuccessMessage(`${theUser.username} was successfully edited!`)});
 
-                editUser(user);
+                editUser(theUser);
                 // Query Invalidations
-                await queryCache.invalidateQueries('user');
-                navigate(`/users/${user.id}`);
+                await queryCache.invalidateQueries('AUser');
+                navigate(`/users/${theUser.id}`);
             },
         }
     );
@@ -39,9 +39,9 @@ const UserEdit = () => {
     };
 
     return (<>
-        {(user) &&
+        {(aUser && user) &&
             <>
-        <h2>Editing user {user.full_name}</h2>
+        <h2>Edit {aUser.username}</h2>
             <UserForm addOrUpdate={editUser} user={user} formAction={editTheUser} slug={slug} aUser={aUser} />
             </>
         }

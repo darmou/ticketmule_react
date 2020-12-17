@@ -65,13 +65,11 @@ const ResourceStyled = styled(ResourceWrapperStyled)`
 export const AResourceStyled = styled(ResourceStyled)`
     
     table {
-        border-top: 1px solid #ececec;
+        border-top: 1px solid #ccc;
      }
-    tr:nth-last-child(2) {
-        border-bottom: none;
-    }
+
     tr {
-        border-bottom: 1px solid #ececec;
+        border-bottom: 1px solid #ccc;
         height: 25px;
     }
     a:hover {

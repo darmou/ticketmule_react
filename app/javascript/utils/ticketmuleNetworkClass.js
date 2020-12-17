@@ -21,6 +21,10 @@ class TicketmuleNetwork {
         }
     }
 
+    async forgot(email) {
+        return await doNetworkRequest(`/api/v1/user/forgot`, SendMethod.POST, null, { email });
+    }
+
     async updateResource(appState, type, data) {
         if (appState.user) {
             const id = getId(appState, type);
@@ -37,13 +41,13 @@ class TicketmuleNetwork {
         }
     }
 
-    async fetchResources (page, perPage, letterSelected, type)  {
+    async fetchResources (page, perPage, letterSelected, type, searchStr = "")  {
         if (this.user) {
             // wait for the fetch to finish then dispatch the result
             const letterFilter = (letterSelected == null) ? "" : `&letter=${letterSelected}`;
-            return await doNetworkRequest(`${this.prefix}/${type}s/?page=${page}&perPage=${perPage}${letterFilter}`,
+            return await doNetworkRequest(`${this.prefix}/${type}s/?page=${page}&perPage=${perPage}${letterFilter}${searchStr}`,
                 SendMethod.GET, this.user);
-        };
+        }
     }
 
     async addResource(appState, type, data) {

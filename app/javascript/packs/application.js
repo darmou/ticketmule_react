@@ -34,7 +34,8 @@ export const TicketContextProvider = props => {
             currentPage: 1,
             resourceCount: null,
             lastPage: null,
-            perPage: 10
+            perPage: 10,
+            searchString: ""
         },
         contactPageInfo: {
             currentPage: 1,

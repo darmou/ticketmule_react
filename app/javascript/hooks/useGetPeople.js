@@ -7,6 +7,7 @@ import { TicketContext } from "../packs/application";
 import usePrevious from "./usePrevious";
 import { RESOURCE_TYPES } from "../utils/types";
 import UserStore from "../actions/userStore";
+import TicketStore from "../actions/ticketStore";
 
 const useGetPeople = (resourceType) => {
     const { state, dispatch } = useContext(TicketContext);
@@ -43,7 +44,7 @@ const useGetPeople = (resourceType) => {
                     dispatch({action_fn: ContactStore.setContactsData, contactsData: data});
                     break;
                 case RESOURCE_TYPES.USER:
-                    dispatch({action_fn: UserStore.setUsersData, usersData: data});
+                    dispatch({action_fn: TicketStore.setPageData, pageInfoType: "userPageInfo", type: "users", pageData: data});
                     break;
             }
         }

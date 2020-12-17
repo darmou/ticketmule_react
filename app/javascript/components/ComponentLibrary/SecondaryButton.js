@@ -22,7 +22,6 @@ export const SecondaryButton = styled.button`
     text-shadow: 0 1px 1px rgba(255,255,255,0.65);
     outline: none;
     overflow: visible;
-    margin-left: 11px;
     display: inline;
     line-height: 14px;
     &:hover {

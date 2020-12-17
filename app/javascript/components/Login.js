@@ -10,8 +10,8 @@ import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import TicketStore from "../actions/ticketStore";
+import { stringToBoolean } from "../utils/displayUtils";
 
-const MIN_PASSWORD_LEN = 7;
 const formTypeEnum = { USERNAME: 1, PASSWORD: 2 };
 Object.freeze(formTypeEnum);
 
@@ -60,6 +60,9 @@ const Login = () =>  {
 
     const onSubmit = async (data) => {
         isLoading = true;
+        if (stringToBoolean(`${data["remember_me"]}`) === true) {
+            localStorage.setItem("username", data.username);
+        }
         await login(data);
         isLoading = false;
     };
@@ -85,8 +88,9 @@ const Login = () =>  {
                         <StyledInput
                                id="user_session_username"
                                ref={register({required:true})}
+                               defaultValue={localStorage.getItem("username")}
                                name="username" size="20"
-                               type="text" autoComplete="off"/>
+                               type="text" autoComplete={(localStorage.getItem("username")) ? "on": "off"}/>
                         {errors.username && <ValidationDiv>Username is required</ValidationDiv>}
                     </dd>
                     <dt>
@@ -96,21 +100,21 @@ const Login = () =>  {
                         <StyledInputPassword
                                id="user_session_password" name="password"
                                size="20"
-                               ref={register({required:true, minLength:MIN_PASSWORD_LEN})}
-                               type="password" autoComplete="off"/>
-                        {errors.password && <ValidationDiv> {(errors.password.type === 'required') ? "Password is required" : `Password length must be at least ${MIN_PASSWORD_LEN} characters.`} </ValidationDiv>}
+                               ref={register({required:true})}
+                               type="password" autoComplete={(localStorage.getItem("username")) ? "on": "off"}/>
+                        {errors.password && <ValidationDiv>Password is required</ValidationDiv>}
                     </dd>
                     <dd>
                         <input name="user_session[remember_me]" type="hidden" value="0"/>
-                        <input id="user_session_remember_me" name="user_session[remember_me]"
+                        <input id="user_session_remember_me" name="remember_me"
                                ref={register}
-                               type="checkbox" value="1"/>
+                               type="checkbox" value="true"/>
                         <label htmlFor="user_session_remember_me">Remember me</label>
                     </dd>
                     <dd>
                         <SecondaryButton disabled={isLoading} name="commit" type="submit"
                         >Sign In</SecondaryButton>&nbsp;&nbsp;
-                        <Link to="/password_resets/new">
+                        <Link to="/forgot">
                             Forgot your password?
                         </Link>
                     </dd>
@@ -121,7 +125,7 @@ const Login = () =>  {
 
 };
 
-const ValidationDiv = styled.div`
+export const ValidationDiv = styled.div`
     margin-top: 3px;
     margin-bottom: 3px;
     color: red;
@@ -130,7 +134,7 @@ const ValidationDiv = styled.div`
 
 
 
-const LoginStyled = styled.div`
+export const LoginStyled = styled.div`
 margin: 20px auto;
   width: 375px;
 
@@ -145,7 +149,7 @@ margin: 20px auto;
 `;
 
 
-const textField = `
+export const textField = `
         padding: 4px;
         background: #fff;
         border: 1px solid #ccc;
@@ -154,7 +158,7 @@ const textField = `
         -webkit-border-radius: 3px;
 `;
 
-const loginInputs = `
+export const loginInputs = `
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAXFJREFUOBGVVDGKwkAUfZHFaBBS2riQSrC18QJpAvbeYAVbD6DxFm4TELyA1R7BKmUgjRa7pAwELKKF2XljEuMSN/HDZOb//96b+X+GKLZtW0mSrMV4Rw1TFOVbwD6Wy+UX4Y1XyCSkG31yTaNArZ1v8Nu3yGkUE1VrTdPQ7\\/cfYC8JGIYB0zTLBVqtVp5QVRWiWblfzOXBdPHGeTweYzgcYrvdIgxDzGYzBEEAx3Eecn/J9F8qoUxAWSwWCRM8ZhzHEsMSzudzGT6PiRJ/hDPNT5CRiagiEyOusiemtewBA//ZZDLBYDDIIavVCtfrVYrUEmi324iiCPv9XoqQnFkjfduZXzpToNlsykdUJBNMgWmViO/78DwPuq7DsizwQWV2fy1ZJJ2z26Hb6XRwOp0wGo2kwG63g+u6ElmrB/P5XApQ6HK54HA4pNsATwV4z+lVYbPZoNvtys6zHDaURsxTAZFnb/ij6R2PR3AUjWRifgHmko6KAvVfRAAAAABJRU5ErkJggg==);
         background-repeat: no-repeat;
         background-attachment: scroll;
@@ -162,26 +166,23 @@ const loginInputs = `
         background-position: 98% 50%;
 `;
 
-const password = `
+export const password = `
     cursor: pointer;
 `;
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
     ${textField}
     ${loginInputs}
 `;
 
-const StyledInputPassword = styled.input`
+export const StyledInputPassword = styled.input`
     ${textField}
     ${loginInputs}
     ${password}
 `;
 
-export const FlashStyled = styled.div`
-    width: calc(100% - 20px);
-`;
 
-const BoxStyled = styled.div`
+export const BoxStyled = styled.div`
     padding: 10px;
     margin: 30px 5px 5px 0;
     background: #fff;

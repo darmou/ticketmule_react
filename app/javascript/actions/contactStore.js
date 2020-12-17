@@ -24,11 +24,6 @@ const ContactStore = {
           draftState.contactPageInfo.letterSelected = letter;
         });
     },
-    setPerPage: function ({state, perPage}) {
-        return produce(state, draftState => {
-            draftState.contactPageInfo.perPage = perPage;
-        });
-    },
     setContactsData: function ({state, contactsData}) {
         return produce(state, draftState => {
             draftState.contactPageInfo.currentPage = contactsData['pagy']['page'];
@@ -40,12 +35,6 @@ const ContactStore = {
     setContact: function ({state, contact}) {
         return produce(state, draftState => {
             draftState.contact = contact;
-        });
-    },
-    deleteContact: function ({state, id}) {
-        const index = state.contacts.findIndex(contact => contact.id === id);
-        return produce(state, draftState => {
-            draftState.contacts.splice(index, 1);
         });
     },
 };

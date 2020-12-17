@@ -54,19 +54,31 @@ class User < ApplicationRecord
 
   def deliver_password_reset_instructions!
     #reset_perishable_token!
-    Notifier.deliver_password_reset_instructions(self)
+    Notifier.password_reset_instructions(self)
   end
 
   def enabled?
     disabled_at.blank?
   end
 
-  def locked?
-    if failed_login_count.blank?
-      false
-    else
-      failed_login_count >= APP_CONFIG['failed_logins_limit']
-    end
+  # def locked?
+  #   if failed_login_count.blank?
+  #     false
+  #   else
+  #     failed_login_count >= APP_CONFIG['failed_logins_limit']
+  #   end
+  # end
+  #
+
+
+  protected
+  def set_reset_password_token
+    raw, enc = Devise.token_generator.custom_generate(self.class, :reset_password_token)
+
+    self.reset_password_token   = enc
+    self.reset_password_sent_at = Time.now.utc
+    save(validate: false)
+    raw
   end
 
 end

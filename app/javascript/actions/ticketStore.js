@@ -34,12 +34,17 @@ const TicketStore = {
             draftState.ticketPageInfo.perPage = perPage;
         });
     },
-    setTicketsData: function ({state, ticketsData}) {
+    setPageData: function ({state, pageInfoType, type, pageData}) {
         return produce(state, draftState => {
-            draftState.ticketPageInfo.currentPage = ticketsData['pagy']['page'];
-            draftState.ticketPageInfo.resourceCount = ticketsData['pagy']['count'];
-            draftState.ticketPageInfo.lastPage = ticketsData['pagy']['last'];
-            draftState.tickets = ticketsData['data'];
+            draftState[pageInfoType].currentPage = pageData['pagy']['page'];
+            draftState[pageInfoType].resourceCount = pageData['pagy']['count'];
+            draftState[pageInfoType].lastPage = pageData['pagy']['last'];
+            draftState[type] = pageData['data'];
+        });
+    },
+    setSearchString: function ({state, searchStr}) {
+        return produce(state, draftState => {
+            draftState.ticketPageInfo.searchString = searchStr;
         });
     },
     setOptions: function ({state, options}) {

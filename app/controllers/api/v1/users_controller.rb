@@ -66,6 +66,14 @@ class Api::V1::UsersController < ApplicationController
     params.require(:user).permit!
   end
 
+  def forgot
+
+  end
+
+  def reset_password
+
+  end
+
   def set_user
     begin
       @user = User.find(params[:id])
