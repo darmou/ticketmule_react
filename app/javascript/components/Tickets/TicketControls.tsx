@@ -13,6 +13,7 @@ import TicketStore from "../../actions/ticketStore";
 import { isEmpty } from "../../utils/displayUtils";
 import "react-datepicker/dist/react-datepicker.css";
 import useGetOptions from "../../hooks/useGetOptions";
+import usePrevious from "../../hooks/usePrevious";
 
 const newResource = (event, navigate, resourceType) => {
     navigate(`/${resourceType}/new`);
@@ -89,6 +90,8 @@ const TicketControls = ({loggedIn} : Props) => {
     const { user } = state;
     const [showFilterForm, setShowFilterForm] = React.useState(false);
     const navigate = useNavigate();
+    const [currentTicketId, setCurrentTicketId] = React.useState();
+    const previousTIcketId = usePrevious(currentTicketId);
     const location = useLocation();
 
     const onFilterFormSubmit = (filterData) => {
@@ -121,12 +124,20 @@ const TicketControls = ({loggedIn} : Props) => {
             }
     };
 
+    React.useEffect(() => {
+            if (previousTIcketId !== currentTicketId) {
+                navigate(`/tickets/${currentTicketId}`);
+            }
+        }
+    );
+
     const buttons = (location != null && !location.pathname.includes('/admin')) ?
         (<Fragment><PrimaryButton click={e => newResource(e, navigate, 'tickets')} text="New ticket"/>
             <PrimaryButton click={e => newResource(e, navigate, 'contacts')} text="New Contact"/></Fragment>) : null;
 
     const onSubmit = (values) => {
-        navigate(`/tickets/${values.jumpId}`);
+        //navigate(`/tickets/${values.jumpId}`);
+        setCurrentTicketId(values.jumpId);
     };
 
     if (loggedIn === false) return null;
