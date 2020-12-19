@@ -368,7 +368,7 @@ DEPENDENCIES
   puma (~> 4.1)
   rack-cors
   rails (~> 6.0.3.2)
-  rspec-rails (~> 3.5)
+  rspec-rails
   rubocop-faker
   ruport
   sass-rails (>= 6)

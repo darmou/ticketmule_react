@@ -12,7 +12,7 @@ class Attachment < ApplicationRecord
   # Validations
   #          ,file_content_type: { allow: ['image/jpeg', 'image/png', 'image/gif'] }
   validates :ticket_id, :user_id, presence: true
-  validates :data, presence: true, file_size: { less_than_or_equal_to: APP_CONFIG['attachment_size_limit'].megabytes }
+  validates :data, presence: true, file_size: { less_than_or_equal_to: ENV['attachment_size_limit'].to_i.megabytes }
 
   def self.strong_params(params)
     params.permit(:attachment).permit(:data_file_name, :data_content_type, :data_file_size)

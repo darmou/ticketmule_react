@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe StatusesController, type: :controller do
+RSpec.describe Api::V1::StatusesController, type: :controller do
 
   describe "GET #index" do
     it "returns http success" do

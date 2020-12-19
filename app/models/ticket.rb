@@ -33,7 +33,7 @@ class Ticket < ApplicationRecord
   end
 
   # Validations
-  validates_presence_of :title, :group_id, :status_id, :priority_id, :time_type_id, :contact_id, :created_by
+  validates_presence_of :title, :details, :group_id, :status_id, :priority_id, :time_type_id, :contact_id, :created_by
 
   # Callbacks
   before_update :set_closed_at

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
   root to: 'home#index'
+  get '/rails/conductor/action_mailbox/inbound_emails/new', to: 'rails/conductor/action_mailbox/inbound_emails#new', as: 'new_rails_conductor_inbound_email'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   namespace :api do
     namespace :v1 do
@@ -38,7 +40,9 @@ Rails.application.routes.draw do
   end
 
   get '*all', to: 'home#index', constraints: lambda { |req|
-    req.path.exclude? 'rails/active_storage'
+    req.path.exclude? 'rails/active_storage' and
+    req.path.exclude? 'rails/conductor' and
+    req.path.exclude? 'rails/mailer'
   }
 
 

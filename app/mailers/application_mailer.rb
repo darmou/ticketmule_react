@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: APP_CONFIG['app_email']
+  default from: defined? ENV['app_email'] ? ENV['app_email'] : "ticketmule@example.com"
   layout 'mailer'
 end

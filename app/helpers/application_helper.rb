@@ -5,11 +5,16 @@ module ApplicationHelper
   end
 
   def ticket_url(ticket)
-    "#{APP_CONFIG['host']}/tickets/#{ticket.id}"
+    "#{ENV['host']}/tickets/#{ticket.id}"
   end
 
-  def edit_password_url(user, reset_password_token)
-    "#{APP_CONFIG['host']}/reset_password/?reset_token=#{reset_password_token}&username=#{user.username}"
+  def user
+    @user ||= User.find_by(:email => mail.from) #.addresses[0] ?
   end
 
+  def ensure_user
+    if user.nil?
+      bounce_with TicketAlertMailer.missing(inbound_email)
+    end
+  end
 end

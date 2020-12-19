@@ -26,31 +26,22 @@ import { CookiesProvider } from "react-cookie";
 import functionReducer, { logReducer } from "function-reducer";
 
 export const TicketContext = createContext({});
+
+const initialPageInfo  = {
+    currentPage: 1,
+    resourceCount: null,
+    lastPage: null,
+    perPage: 10,
+    searchString: ""
+};
+
 export const TicketContextProvider = props => {
     const initialState = {
         tickets: null,
         flashMsg: null,
-        ticketPageInfo: {
-            currentPage: 1,
-            resourceCount: null,
-            lastPage: null,
-            perPage: 10,
-            searchString: ""
-        },
-        contactPageInfo: {
-            currentPage: 1,
-            resourceCount: null,
-            lastPage: null,
-            letterSelected: null,
-            perPage: 10
-        },
-        userPageInfo: {
-            currentPage: 1,
-            resourceCount: null,
-            lastPage: null,
-            letterSelected: null,
-            perPage: 10
-        },
+        ticketPageInfo: initialPageInfo,
+        contactPageInfo: initialPageInfo,
+        userPageInfo: initialPageInfo,
         contacts: null,
         contact: null,
         ticket: null,

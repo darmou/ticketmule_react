@@ -37,6 +37,9 @@ gem 'jsonapi-serializer'
 
 gem 'file_validators', '~> 2.3.0'
 
+
+gem 'figaro'
+
 # Use Active Storage variant
 gem 'image_processing', '~> 1.2'
 
@@ -48,9 +51,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry'
   gem 'rubocop-faker'
-  gem 'figaro'
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 3.5'
+  gem 'rspec-rails'
 end
 
 group :development do

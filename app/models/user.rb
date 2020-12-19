@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   # Authlogic config
   #acts_as_authentic do |c|
-  #  c.logged_in_timeout = APP_CONFIG['session_timeout'].minutes
+  #  c.logged_in_timeout = ENV['session_timeout'].to_i.minutes
   #  c.validates_length_of_login_field_options :in => 4..35
   #  c.validates_format_of_login_field_options :with => /^[A-Z0-9_]*$/i, :message => "must contain only letters, numbers, and underscores"
   #end
@@ -54,7 +54,8 @@ class User < ApplicationRecord
 
   def deliver_password_reset_instructions!
     #reset_perishable_token!
-    Notifier.password_reset_instructions(self)
+    set_reset_password_token()
+    ResetPasswordMailer.reset_password(self).deliver
   end
 
   def enabled?
@@ -65,7 +66,7 @@ class User < ApplicationRecord
   #   if failed_login_count.blank?
   #     false
   #   else
-  #     failed_login_count >= APP_CONFIG['failed_logins_limit']
+  #     failed_login_count >= ENV['failed_logins_limit'].to_i
   #   end
   # end
   #
