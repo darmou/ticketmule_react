@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation, queryCache } from "react-query";
+import {Link, useNavigate} from "react-router-dom";
+import {queryCache, useMutation} from "react-query";
 import EditTicketIcon from "../images/edit-ticket.png";
 import PDFIcon from "../images/document-pdf.png";
 import AddAlertIcon from "../images/add-alert.png";
@@ -14,14 +14,14 @@ import EnableContactIcon from "../images/accept.png";
 import DisableContactIcon from "../images/disable.png";
 import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
-import { deleteAlert } from "../utils/displayUtils";
+import {deleteAlert} from "../utils/displayUtils";
 import TicketStore from "../actions/ticketStore";
 import ContactStore from "../actions/contactStore";
-import { RESOURCE_TYPES } from "../types/types";
-import { TicketContext } from "../packs/application";
+import {RESOURCE_TYPES} from "../types/types";
+import {TicketContext} from "../packs/application";
 import UserStore from "../actions/userStore";
 import useDeleteAlert from "../hooks/useDeleteAlert";
-import { createStandardSuccessMessage } from "./ComponentLibrary/FlashMessages";
+import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
 
 
 /*
@@ -38,7 +38,7 @@ interface Props {
 const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachmentForm} : Props) => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
-    const { alert } = resource;
+    const { alert } = (resourceType === RESOURCE_TYPES.TICKET && resource) ? resource : { alert: null };
     const navigate = useNavigate();
     const { deleteTheAlert } = useDeleteAlert();
     const ticketMule = new TicketmuleNetwork(user);
@@ -82,7 +82,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                     action_fn: TicketStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage("Your alert was added and you will now receive an email any time this ticket is updated!")});
                 // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
+                await queryCache.invalidateQueries(RESOURCE_TYPES.TICKET);
             },
         }
     );

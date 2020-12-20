@@ -7,7 +7,7 @@ interface Props {
         ticket: Ticket
 }
 const TicketTable = ({ticket} : Props) => {
-    const contact = (ticket.contact) ? `${ticket.contact.full_name}` : "";
+    const contact = (ticket && ticket.contact) ? `${ticket.contact.full_name}` : "";
     const data = React.useMemo(
         () => (ticket != null) ? [
         {heading1: <strong>Title:</strong>, data1: ticket.title},

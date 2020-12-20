@@ -14,7 +14,7 @@ const useGetTicket = (id: number) => {
     );
 
     React.useEffect(() => {
-        if (data && !isLoading && !ticket) {
+        if (data && !isLoading) {
             dispatch({action_fn: TicketStore.setTicket, ticket: data});
         }
     }, [dispatch, user, data, ticket]);
