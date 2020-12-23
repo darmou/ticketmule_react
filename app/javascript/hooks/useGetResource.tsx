@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { TicketContext } from "../packs/application";

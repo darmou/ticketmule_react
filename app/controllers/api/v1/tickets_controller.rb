@@ -97,7 +97,7 @@ class Api::V1::TicketsController < ApplicationController
   # PUT /tickets/:id
   def update
     @ticket.update(ticket_params)
-    json_response({}, :ok)
+    json_response(@ticket, :ok)
   end
 
   # DELETE /tickets/:id

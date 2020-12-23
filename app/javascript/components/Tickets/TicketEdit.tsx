@@ -1,11 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetResource from "../../hooks/useGetResource";
 import TicketForm from "./TicketForm";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import TicketStore from "../../actions/ticketStore";
-import { Context, RESOURCE_TYPES } from "../../types/types";
+import { Context, RESOURCE_TYPES, Ticket } from "../../types/types";
 
 interface Props {
     context: Context
@@ -14,6 +14,7 @@ interface Props {
 const TicketEdit = ({context} : Props) => {
     const { state, dispatch } = context;
     const { user } = state;
+    const navigate = useNavigate();
     const { slug } = useParams();
     const ticket = useGetResource(parseInt(slug), RESOURCE_TYPES.TICKET);
 
@@ -21,9 +22,11 @@ const TicketEdit = ({context} : Props) => {
     const [editTheTicket] = useMutation(
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.TICKET),
         {
-            onSuccess: async () => {
+            onSuccess: async (ticket: Ticket) => {
+                dispatch({action_fn: TicketStore.setTicket, ticket});
                 // Query Invalidations
                 await queryCache.invalidateQueries('ticket');
+                navigate(`/tickets/${ticket.id}`);
             },
         }
     );
