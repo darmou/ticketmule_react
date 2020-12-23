@@ -125,14 +125,16 @@ function BaseApp ({context}) {
                         <Route path='/reset_password' element={<ResetPassword/>}/>
                         <Route path='/contacts/*' element={<ContactRoutes/>}/>
                         <Route path='/users/*' element={<UserRoutes/>}/>
-                        <Route path='/admin' element={<Admin/>}>
-                            <Route path='/' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                            <Route path='/groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                            <Route path='/statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
-                            <Route path='/priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
-                            <Route path='/time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
-                            <Route path='/users' element={<AdminUsers/>}/>
-                        </Route>
+                        {(user && user.admin) &&
+                            <Route path='/admin' element={<Admin/>}>
+                                <Route path='/' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                                <Route path='/groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                                <Route path='/statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
+                                <Route path='/priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
+                                <Route path='/time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
+                                <Route path='/users' element={<AdminUsers/>}/>
+                            </Route>
+                        }
                         <Route path='/' element={<Dash/>}/>
                     </Routes>
                 </AppWrapper>
