@@ -33,7 +33,7 @@ const Login = () =>  {
             onSuccess: async (theUser: User) => {
                 dispatch({
                     action_fn: TicketStore.setFlashMsg,
-                    flashMsg: createStandardSuccessMessage(`Welcome admin! You last signed in on ${moment(theUser.last_sign_in_at).format("DD MMM YYYY hh:mm A")} from ${theUser.last_sign_in_ip}`)});
+                    flashMsg: createStandardSuccessMessage(`Welcome ${theUser.username}! You last signed in on ${moment(theUser.last_sign_in_at).format("DD MMM YYYY hh:mm A")} from ${theUser.last_sign_in_ip}`)});
                 dispatch({action_fn: UserStore.setUser, user: theUser});
             },
             onError: (error: Error) => {

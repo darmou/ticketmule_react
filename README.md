@@ -4,9 +4,9 @@ No frills, general use support ticket tracking. Easily document and communicate 
 
 ## Note
 
-This is a complete redesign of the origoal Ticketmule by Lee Smith (rails 2.3, https://github.com/leesmith/ticket_mule).
+This is a complete redesign of the origoal Ticketmule by Lee Smith (rails 2.3, <https://github.com/leesmith/ticket_mule>).
 
-It is still very much a work in progress. Many features still to be implemented including porting to use Typescript 4.0.
+System is now feature complete, some tests still to be written.
 
 Also once finished will include, Jest and rspec for unit testing and Cypress tests for integration.
 

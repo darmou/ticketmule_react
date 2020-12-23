@@ -5,7 +5,7 @@ class Api::V1::SessionsController < Devise::SessionsController
     user = User.where(username: user_params[:username]).first
     if user&.valid_password?(user_params[:password])
       sign_in("user", user)
-      render json: user.as_json(only: [:email, :authentication_token, :username, :last_sign_in_at, :last_sign_in_ip, :id]), status: :created
+      render json: user.as_json(only: [:email, :authentication_token, :username, :admin, :last_sign_in_at, :last_sign_in_ip, :id]), status: :created
     else
       head(:unauthorized)
     end

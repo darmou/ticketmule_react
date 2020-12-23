@@ -31,6 +31,7 @@ import { AResourceStyled } from "./ComponentLibrary/Resources";
 import Forgot from "./Forgot";
 import { OptionTypes } from "../types/types";
 import ResetPassword from "./ResetPassword";
+import { stringToBoolean } from "../utils/displayUtils";
 
 const SESSION_TIMEOUT = 300000; //5 mins
 
@@ -59,6 +60,7 @@ function BaseApp ({context}) {
                     email: sessionStorage.getItem("email"),
                     authentication_token: sessionStorage.getItem("authentication_token"),
                     username: sessionStorage.getItem("username"),
+                    admin: stringToBoolean(sessionStorage.getItem("admin")),
                     id: sessionStorage.getItem("id")
                 };
                 dispatch({action_fn: UserStore.setUser, user: theUser});

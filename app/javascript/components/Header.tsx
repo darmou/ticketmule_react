@@ -10,12 +10,14 @@ const menuItems = [
   { id: 0, path: "/", text: "Dashboard" },
   { id: 1, path: "/tickets", text: "Tickets" },
   { id: 2, path: "/contacts", text: "Contacts" },
-  { id: 3, path: "/users", text: "Users" },
-  { id: 4, path: "/admin", text: "Admin" }
+  { id: 3, path: "/users", text: "Users" }
 ];
 
 const Header = () => {
   const { dispatch, state } = useContext(TicketContext);
+  const { user } = state;
+
+  const fullMenusItems = (user && user.admin) ? [...menuItems, { id: 4, path: "/admin", text: "Admin" }] : menuItems;
   const navigate = useNavigate();
 
   const signedIn = (state.user) ? (<div><StatusStyled>Signed in as&nbsp;
@@ -26,7 +28,7 @@ const Header = () => {
             }
           }
       }>Sign out</Link></StatusStyled>
-      <Menu menuItems={menuItems}/></div>) : null;
+      <Menu menuItems={fullMenusItems}/></div>) : null;
 
   return (
       <HeaderStyled>
