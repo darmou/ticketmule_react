@@ -19,11 +19,14 @@ Rails.application.routes.draw do
       resources :time_types, only: [:index, :create]
       resources :priorities, only: [:index, :create]
       resources :statuses, only: [:index, :create]
+      get 'watch', :to => 'tickets#watch'
       resources :tickets do
         resources :comments, only: [:create, :destroy]
         resources :attachments, only: [:create, :destroy]
         resources :alerts, only: [:create, :destroy]
       end
+
+
 
       resources :users, only: [:index, :show, :update] do
         member do

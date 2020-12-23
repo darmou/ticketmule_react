@@ -28,6 +28,9 @@ class User < ApplicationRecord
 
   # Scopes
   scope :enabled, -> { where(order: 'username', conditions:  { disabled_at: nil }) }
+  scope :last_updated, -> {
+    order('updated_at DESC, created_at DESC').limit(1)
+  }
 
   #attr_protected :admin
 

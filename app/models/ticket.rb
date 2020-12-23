@@ -39,6 +39,9 @@ class Ticket < ApplicationRecord
   before_update :set_closed_at
 
   # Scopes
+  scope :last_updated, -> {
+    order('updated_at DESC, created_at DESC').limit(1)
+  }
   scope :with_long_title, -> { where("LENGTH(title) > 20") }
   scope :not_closed, -> { joins(:status).where("statuses.name is not 'Closed'") }
   scope :recently_assigned_to, -> (user_id) { where(owned_by: user_id).order(updated_at: :desc).limit(5) }

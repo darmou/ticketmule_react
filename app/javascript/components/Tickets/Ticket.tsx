@@ -4,7 +4,7 @@ import useSliderToggle from "react-slide-toggle-hooks";
 import { SLIDE_DURATION } from "../../utils/displayUtils";
 import { SLIDE_STATES } from "../ComponentLibrary/H3ToggleStyled";
 import TicketTable from "./TicketTable";
-import useGetTicket from "../../hooks/useGetTicket";
+import useGetResource from "../../hooks/useGetResource";
 import Controls from "../Controls";
 import { CommentForm } from "../CommentForm";
 import AttachmentList from "../AttachmentList";
@@ -18,7 +18,7 @@ import { RESOURCE_TYPES } from "../../types/types";
 const Ticket = React.memo(() => {
     const { state } = useContext(TicketContext);
     const { slug } = useParams();
-    const ticket = useGetTicket(parseInt(slug));
+    const ticket = useGetResource(parseInt(slug), RESOURCE_TYPES.TICKET);
     const ticketMule = useTicketmule();
 
     const getSliderToggle = React.useCallback(useSliderToggle,[]);

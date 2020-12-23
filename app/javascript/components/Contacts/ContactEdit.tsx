@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ContactForm from "./ContactForm";
-import {queryCache, useMutation} from "react-query";
+import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import ContactStore from "../../actions/contactStore";
-import useGetContact from "../../hooks/useGetContact";
+import useGetResource from "../../hooks/useGetResource";
 import { TicketContext } from "../../packs/application";
 import { Contact, RESOURCE_TYPES } from "../../types/types";
 
@@ -12,7 +12,7 @@ const ContactEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
     const { slug } = useParams();
-    const contact = useGetContact(parseInt(slug));
+    const contact = useGetResource(parseInt(slug), RESOURCE_TYPES.CONTACT);
     const navigate = useNavigate();
 
     const ticketMule = useTicketmule();

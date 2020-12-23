@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
-import useGetTickets from "../../hooks/useGetTickets";
+import useGetResources from "../../hooks/useGetResources";
 import { TicketContext } from "../../packs/application";
 import TicketStore from "../../actions/ticketStore";
+import { RESOURCE_TYPES } from "../../types/types";
 
 const TicketsPerPage = styled.div`
     float: right;
@@ -11,7 +12,7 @@ const TicketsPerPage = styled.div`
 
 // eslint-disable-next-line react/display-name
 const Tickets =  React.memo(() => {
-    const { tickets, isLoading } = useGetTickets();
+    const { tickets, isLoading } = useGetResources(RESOURCE_TYPES.TICKET);
     const { state, dispatch } = useContext(TicketContext);
     const { ticketPageInfo  } = state;
     const { perPage, searchString } = ticketPageInfo;

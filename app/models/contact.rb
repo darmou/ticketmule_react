@@ -4,6 +4,9 @@ class Contact < ApplicationRecord
 
   # Scopes
   scope :enabled, -> { where(disabled_at: nil) && order(last_name: :asc) }
+  scope :last_updated, -> {
+    order('updated_at DESC, created_at DESC').limit(1)
+  }
 
   # Validations
   validates_presence_of :last_name

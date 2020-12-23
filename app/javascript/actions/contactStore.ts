@@ -29,14 +29,6 @@ const ContactStore = {
           draftState.contactPageInfo.letterSelected = letter;
         });
     },
-    setContactsData: function ({state, contactsData}) {
-        return produce(state, draftState => {
-            draftState.contactPageInfo.currentPage = contactsData['pagy']['page'];
-            draftState.contactPageInfo.resourceCount = contactsData['pagy']['count'];
-            draftState.contactPageInfo.lastPage = contactsData['pagy']['last'];
-            draftState.contacts = contactsData['data'];
-        });
-    },
     setContact: function ({state, contact}) {
         return produce(state, draftState => {
             draftState.contact = contact;

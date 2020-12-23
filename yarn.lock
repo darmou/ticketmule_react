@@ -907,7 +907,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5":
   version "7.12.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
   integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
@@ -7823,6 +7823,13 @@ react-hook-form@^6.8.6:
   version "6.8.6"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.8.6.tgz#c82b38b01e0a77689214c3ceb873eab9405d27a0"
   integrity sha512-ZCp7Y+IrlsQma08uy3H6l/qF7dZWqAWMkZ4vVbHVfh1EHjsO1SwU7aYVHgJSQpriHtEdGszCW8NS/aujGsLk0g==
+
+react-hooks-sse@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-hooks-sse/-/react-hooks-sse-2.0.0.tgz#d42215b1a21542a820250a1c02e4538c3b67af96"
+  integrity sha512-Bv/KYK+QUVS6UWwCyx6nyaOYIvaTMTCjmlXuBK9nATH2DOz+g4PGiIxi5q71ljUTmSPn/q9Cod7xwDA3/gqVQA==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
 
 react-html-parser@^2.0.2:
   version "2.0.2"

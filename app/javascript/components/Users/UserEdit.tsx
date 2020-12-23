@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UserForm from "./UserForm";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import UserStore from "../../actions/userStore";
-import useGetUser from "../../hooks/useGetUser";
+import useGetResource from "../../hooks/useGetResource";
 import { TicketContext } from "../../packs/application";
 import { RESOURCE_TYPES, User } from "../../types/types";
 import { createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
@@ -14,7 +14,7 @@ const UserEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
     const { slug } = useParams();
-    const aUser = useGetUser(parseInt(slug));
+    const aUser = useGetResource(parseInt(slug), RESOURCE_TYPES.USER);
     const navigate = useNavigate();
 
     const ticketMule = useTicketmule();

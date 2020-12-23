@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import useGetContact from "../../hooks/useGetContact";
+import useGetResource from "../../hooks/useGetResource";
 import ContactTable from "./ContactTable";
 import Controls from "../Controls";
 import { RESOURCE_TYPES } from "../../types/types";
@@ -8,7 +8,7 @@ import { RESOURCE_TYPES } from "../../types/types";
 // eslint-disable-next-line react/display-name
 const Contact = React.memo(() => {
     const { slug } = useParams();
-    const contact = useGetContact(parseInt(slug));
+    const contact = useGetResource(parseInt(slug), RESOURCE_TYPES.CONTACT);
 
     return(<>
         {(contact) &&

@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
     Routes,
     Route, useNavigate, useLocation
 } from "react-router-dom";
 import IdleTimer from "react-idle-timer";
 import styled from "styled-components";
+import { SSEProvider } from "react-hooks-sse";
+import EventSource from "eventsource";
 import Login from "./Login";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
@@ -35,11 +37,20 @@ const SESSION_TIMEOUT = 300000; //5 mins
 function BaseApp ({context}) {
     const navigate = useNavigate();
     const location = useLocation();
-    const [timeoutValue, setTimeoutValue] = useState(SESSION_TIMEOUT);
     const [isTimeout, setIsTimeout] = useState(false);
     const { state, dispatch } = context;
     const { user, flashMsg } = state;
     const idleTimer = useRef();
+
+
+    const createSource = () => {
+        let myHeaders = {};
+        if (user) {
+            myHeaders['X-User-Email'] = user.email;
+            myHeaders['X-User-Token'] = user.authentication_token;
+        }
+        return new EventSource("/api/v1/watch", myHeaders);
+    };
 
     useEffect(() => {
         if (!user) {
@@ -86,6 +97,7 @@ function BaseApp ({context}) {
 
     const AppWrapper = (user == null) ? React.Fragment : AResourceStyled;
 
+
     return (<AppStyled>
         <IdleTimer  // @ts-ignore
             ref = {ref => idleTimer.current = ref }
@@ -94,37 +106,39 @@ function BaseApp ({context}) {
             onIdle={_onIdle}
             onAction={_onActionOrActive}
             debounce={250}
-            timeout={timeoutValue} />
-        <ContentStyled>
-            <Header/>
-            <AppWrapper>
-                {(user == null) ? null : flashMsg}
-                <Routes>
-                    <Route path='/tickets' element={<TicketDash/>}>
-                        <Route path='/' element={<Tickets/>} />
-                        <Route path='/new' element={<TicketNew context={context}/>} />
-                        <Route path=':slug' element={<Ticket/>} />
-                        <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
-                    </Route>
-                    <Route path='/forgot' element={<Forgot/>}/>
-                    <Route path='/reset_password' element={<ResetPassword/>}/>
-                    <Route path='/contacts/*' element={<ContactRoutes/>}/>
-                    <Route path='/users/*' element={<UserRoutes/>}/>
-                    <Route path='/admin' element={<Admin/>}>
-                        <Route path='/' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                        <Route path='/groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                        <Route path='/statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
-                        <Route path='/priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
-                        <Route path='/time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
-                        <Route path='/users' element={<AdminUsers/>}/>
-                    </Route>
-                    <Route path='/' element={<Dash/>}/>
-                </Routes>
-            </AppWrapper>
-            <RightColumnStyled>
-                <TicketControls loggedIn={user != null}/>
-            </RightColumnStyled>
-        </ContentStyled>
+            timeout={SESSION_TIMEOUT} />
+        <SSEProvider source={() => createSource()}>
+            <ContentStyled>
+                <Header/>
+                <AppWrapper>
+                    {(user == null) ? null : flashMsg}
+                    <Routes>
+                        <Route path='/tickets' element={<TicketDash/>}>
+                            <Route path='/' element={<Tickets/>} />
+                            <Route path='/new' element={<TicketNew context={context}/>} />
+                            <Route path=':slug' element={<Ticket/>} />
+                            <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
+                        </Route>
+                        <Route path='/forgot' element={<Forgot/>}/>
+                        <Route path='/reset_password' element={<ResetPassword/>}/>
+                        <Route path='/contacts/*' element={<ContactRoutes/>}/>
+                        <Route path='/users/*' element={<UserRoutes/>}/>
+                        <Route path='/admin' element={<Admin/>}>
+                            <Route path='/' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                            <Route path='/groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                            <Route path='/statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
+                            <Route path='/priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
+                            <Route path='/time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
+                            <Route path='/users' element={<AdminUsers/>}/>
+                        </Route>
+                        <Route path='/' element={<Dash/>}/>
+                    </Routes>
+                </AppWrapper>
+                <RightColumnStyled>
+                    <TicketControls loggedIn={user != null}/>
+                </RightColumnStyled>
+            </ContentStyled>
+        </SSEProvider>
     </AppStyled>);
 }
 

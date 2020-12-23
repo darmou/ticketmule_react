@@ -25,7 +25,6 @@ import "idempotent-babel-polyfill";
 import { CookiesProvider } from "react-cookie";
 import functionReducer, { logReducer } from "function-reducer";
 
-export const TicketContext = createContext({});
 
 const initialPageInfo  = {
     currentPage: 1,
@@ -35,22 +34,26 @@ const initialPageInfo  = {
     searchString: ""
 };
 
+const initialState = {
+    tickets: null,
+    flashMsg: null,
+    ticketPageInfo: initialPageInfo,
+    contactPageInfo: initialPageInfo,
+    userPageInfo: initialPageInfo,
+    contacts: null,
+    contact: null,
+    ticket: null,
+    aUser: null,
+    users: null,
+    user: null,
+    options: null,
+    isLoggingOut: null,
+};
+
+// eslint-disable-next-line no-undef
+export const TicketContext = createContext({state: initialState, dispatch: null});
+
 export const TicketContextProvider = props => {
-    const initialState = {
-        tickets: null,
-        flashMsg: null,
-        ticketPageInfo: initialPageInfo,
-        contactPageInfo: initialPageInfo,
-        userPageInfo: initialPageInfo,
-        contacts: null,
-        contact: null,
-        ticket: null,
-        aUser: null,
-        users: null,
-        user: null,
-        options: null,
-        isLoggingOut: null,
-    };
 
     const [state, dispatch] = useReducer((state, action) => logReducer(functionReducer, state, action), initialState);
     return (

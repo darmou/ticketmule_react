@@ -10,8 +10,8 @@ import YellowBullet from "../../images/bullet_yellow.png";
 import BlueBullet from "../../images/bullet_blue.png";
 import { SLIDE_DURATION } from "../../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
-import useGetTickets from "../../hooks/useGetTickets";
-import { TICKET_TYPES } from "../../types/types";
+import useGetResources from "../../hooks/useGetResources";
+import {RESOURCE_TYPES, TICKET_TYPES} from "../../types/types";
 
 const main_header_items = [
     { id: 0, content: "Ticket #" },
@@ -57,7 +57,7 @@ export const getTicketImage = (priorityId) => {
 };
 
 const TicketBoard = () => {
-    const { tickets, isLoading } = useGetTickets();
+    const { tickets, isLoading } = useGetResources(RESOURCE_TYPES.TICKET);
     const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: SLIDE_DURATION});
 
     return (

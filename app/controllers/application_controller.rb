@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include Response
   include ExceptionHandler
   before_action :require_login
-  #skip_before_action :verify_authenticity_token # Revert later once we have csrf
 
   private
 

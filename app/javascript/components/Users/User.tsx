@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import useGetUser from "../../hooks/useGetUser";
+import useGetResource from "../../hooks/useGetResource";
 import UserTable from "./UserTable";
 import { RESOURCE_TYPES } from "../../types/types";
 import Controls from "../Controls";
@@ -16,7 +16,7 @@ import useDeleteAlert from "../../hooks/useDeleteAlert";
 // eslint-disable-next-line react/display-name
 const User = React.memo(() => {
     const { slug } = useParams();
-    const aUser = useGetUser(parseInt(slug));
+    const aUser = useGetResource(parseInt(slug), RESOURCE_TYPES.USER);
     const { deleteTheAlert } = useDeleteAlert();
     const { expandableRef, toggle, slideToggleState } =
         useSliderToggle({duration: SLIDE_DURATION});

@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { TicketContext } from "../../packs/application";
 import UsersTable from "./UsersTable";
 import LetterButtons from "../People/LetterButtons";
-import useGetPeople from "../../hooks/useGetPeople";
+import useGetResources from "../../hooks/useGetResources";
 import { RESOURCE_TYPES } from "../../types/types";
 
 // eslint-disable-next-line react/display-name
 const Users =  React.memo(() => {
-    const { users, isLoading } = useGetPeople(RESOURCE_TYPES.USER);
+    const { users, isLoading } = useGetResources(RESOURCE_TYPES.USER);
     const { state } = useContext(TicketContext);
     const { userPageInfo  } = state;
 
