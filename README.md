@@ -14,27 +14,25 @@ Also once finished will include, Jest and rspec for unit testing and Cypress tes
 
 * Clean interface that is compatible with modern web browsers
 * Add comments and file attachments to tickets
-Subscribe to ticket updates via email (alerts)
+* Subscribe to ticket updates via email (alerts)
 * Automatically sends an email to the user assigned as owner of a ticket
 * View recent ticket activity and timeline statistics from the dashboard
 * Export ticket in PDF format
 * No complicated permission system...only admins can perform negative actions
 * In-line admin controls to delete comments, attachments, and tickets
-* Basic reporting in the admin interface
-* Gravatar integration
 * Ruby on Rails 6.0, ReactJS 16.13.1
 
 
 ## Included Gems
 
 * api-pagination 4.0.2
-* paperclip 6.0.0
+* pagy 3.8
 * faker 1.0.1
 * devise 4.7.2
 * byebug 11.0
 * puma 4.3.6
 
-populator and faker are only used to load fake data.
+Faker is only used to load fake data.
 
 ## Database support
 
