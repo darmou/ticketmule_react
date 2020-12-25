@@ -8,7 +8,7 @@ const AdminUsers = React.memo(() => {
     const addTheUser = useAddUser(true);
 
     return(
-        <UserForm addOrUpdate={addTheUser} aUser={null} isAdminForm={true}/>
+        <UserForm formAction={addTheUser} aUser={null} isAdminForm={true}/>
     );
 });
 

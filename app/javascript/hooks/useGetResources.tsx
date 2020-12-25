@@ -5,7 +5,7 @@ import { getResourcePageInfo } from "../utils/displayUtils";
 import { TicketContext } from "../packs/application";
 import usePrevious from "./usePrevious";
 import { RESOURCE_TYPES } from "../types/types";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import { useSSE } from "react-hooks-sse";
 
 const useGetResources = (resourceType) => {
@@ -49,7 +49,7 @@ const useGetResources = (resourceType) => {
 
     React.useEffect(() => {
         if (data && !isLoading && JSON.stringify(data['data']) !== JSON.stringify(resources)) {
-            dispatch({action_fn: TicketStore.setPageData, pageInfoType: `${resourceType}PageInfo`, type: `${resourceType}s`, pageData: data});
+            dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData: data});
         }
     }, [dispatch, data, currentPage, resources, resourceType]);
 

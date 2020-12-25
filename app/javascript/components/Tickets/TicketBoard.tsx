@@ -1,7 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { renderList } from "../../utils/displayUtils";
-import { ticketsTypes } from "../../actions/ticketStore";
 import moment from "moment";
 import { TableSection } from "../TableSection";
 import { H3ToggleStyled } from "../ComponentLibrary/H3ToggleStyled";
@@ -11,7 +10,7 @@ import BlueBullet from "../../images/bullet_blue.png";
 import { SLIDE_DURATION } from "../../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import useGetResources from "../../hooks/useGetResources";
-import {RESOURCE_TYPES, TICKET_TYPES} from "../../types/types";
+import { RESOURCE_TYPES, TICKET_TYPES, TICKET_STATUS_TYPES } from "../../types/types";
 
 const main_header_items = [
     { id: 0, content: "Ticket #" },
@@ -63,8 +62,8 @@ const TicketBoard = () => {
     return (
        <>
            <h2>Dashboard</h2>
-           <TableSection pageisLoading={isLoading} tickets={tickets} type={ticketsTypes.NOT_CLOSED}  headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
-           <TableSection isLoading={isLoading} tickets={tickets} type={ticketsTypes.CLOSED}  headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
+           <TableSection pageisLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.NOT_CLOSED} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.CLOSED}  headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
            <>
                <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>

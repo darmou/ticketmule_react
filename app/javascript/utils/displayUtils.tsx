@@ -30,7 +30,11 @@ const cleanData = (data) => {
     return data;
 };
 
-export const onSubmitForm = async (data, type, formAction, addOrUpdate, aResource) => {
+export const getQueryKey =  (resourceType: RESOURCE_TYPES) => {
+    return (resourceType === RESOURCE_TYPES.USER) ? "aUser" : `${resourceType}`;
+};
+
+export const onSubmitForm = async (data, type, formAction) => {
     data = cleanData(data);
     try {
         const toSend = {
@@ -41,7 +45,6 @@ export const onSubmitForm = async (data, type, formAction, addOrUpdate, aResourc
             await formAction(JSON.stringify(toSend));
         }
 
-        addOrUpdate({...aResource, ...data});
     } catch (error) {
         console.error(error);
     }

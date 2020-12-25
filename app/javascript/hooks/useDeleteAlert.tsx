@@ -3,7 +3,7 @@ import useTicketMule from "./useTicketMule";
 import React, { useContext } from "react";
 import { TicketContext } from "../packs/application";
 import { SuccessNotificationStyled } from "../components/ComponentLibrary/FlashMessages";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import EnableIcon from "../images/accept.png";
 
 interface Response {
@@ -18,7 +18,7 @@ const useDeleteAlert = () => {
         {
             onSuccess: async (response: Response) => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: <SuccessNotificationStyled>
                         <img src={`${EnableIcon}`} /> The alert for ticket #{response.ticket_id} was removed!
                     </SuccessNotificationStyled>});

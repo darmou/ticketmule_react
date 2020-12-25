@@ -4,7 +4,7 @@ import useGetResource from "../../hooks/useGetResource";
 import TicketForm from "./TicketForm";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
-import TicketStore from "../../actions/ticketStore";
+import ResourceStore from "../../actions/resourceStore";
 import { Context, RESOURCE_TYPES, Ticket } from "../../types/types";
 
 interface Props {
@@ -20,10 +20,11 @@ const TicketEdit = ({context} : Props) => {
 
     const ticketMule = useTicketmule();
     const [editTheTicket] = useMutation(
-        ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.TICKET),
+        ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.TICKET, parseInt(slug)),
         {
             onSuccess: async (ticket: Ticket) => {
-                dispatch({action_fn: TicketStore.setTicket, ticket});
+                dispatch({action_fn: ResourceStore.setResource, ticket, resourceType: RESOURCE_TYPES.TICKET});
+                dispatch({action_fn: ResourceStore.update, resource: ticket, resourceType: RESOURCE_TYPES.TICKET});
                 // Query Invalidations
                 await queryCache.invalidateQueries('ticket');
                 navigate(`/tickets/${ticket.id}`);
@@ -31,13 +32,9 @@ const TicketEdit = ({context} : Props) => {
         }
     );
 
-    const editTicket = (ticket) => {
-        dispatch({action_fn: TicketStore.update, aTicket: ticket});
-    };
-
     return (<>
         <h2>Editing ticket #{slug}</h2>
-        <TicketForm addOrUpdate={editTicket} user={user} formAction={editTheTicket} slug={slug} ticket={ticket}/>
+        <TicketForm user={user} formAction={editTheTicket} slug={slug} ticket={ticket}/>
 
     </>);
 };

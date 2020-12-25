@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { H3ToggleStyled } from "./ComponentLibrary/H3ToggleStyled";
 import TicketsTable from "./Tickets/TicketsTable";
 import useSliderToggle from "react-slide-toggle-hooks";
-import { ticketsTypes } from "../actions/ticketStore";
+import { TICKET_STATUS_TYPES } from "../types/types";
 import { SLIDE_DURATION } from "../utils/displayUtils";
 
 const MAX_TICKETS_INDEX = 6;
@@ -12,7 +12,7 @@ const MAX_TICKETS_INDEX = 6;
 const TableSection = memo(({isLoading, type, tickets, sectionName, sectionId}) => {
 
     const filteredTickets = (tickets) ? tickets.slice(0, MAX_TICKETS_INDEX).filter(ticket => {
-       return (type == ticketsTypes.NOT_CLOSED) ? ticket.status.name !== "Closed" : ticket.status.name === "Closed";
+       return (type == TICKET_STATUS_TYPES.NOT_CLOSED) ? ticket.status.name !== "Closed" : ticket.status.name === "Closed";
     }) : null;
 
     const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: SLIDE_DURATION});
@@ -36,7 +36,5 @@ TableSection.propTypes = {
     sectionName: PropTypes.string,
     sectionId: PropTypes.string
 };
-
-
 
 export { TableSection };

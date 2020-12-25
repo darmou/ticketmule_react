@@ -2,11 +2,10 @@ import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { TicketContext } from "../packs/application";
-import UserStore from "../actions/userStore";
 import { RESOURCE_TYPES } from "../types/types";
 import { useSSE } from "react-hooks-sse";
-import ContactStore from "../actions/contactStore";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
+import { getQueryKey } from "../utils/displayUtils";
 
 const useGetResource = (id: number, resourceType: RESOURCE_TYPES) => {
     const { state, dispatch } = useContext(TicketContext);
@@ -23,7 +22,7 @@ const useGetResource = (id: number, resourceType: RESOURCE_TYPES) => {
         }
     };
 
-    const queryKey = (resourceType === RESOURCE_TYPES.USER) ? "aUser" : `${resourceType}`;
+    const queryKey = getQueryKey(resourceType);
     const ticketMule = new TicketmuleNetwork(user);
     const last = useSSE(`${resourceType}`, {
         id: null,
@@ -40,16 +39,7 @@ const useGetResource = (id: number, resourceType: RESOURCE_TYPES) => {
 
     React.useEffect(() => {
         if (data && !isLoading && JSON.stringify(data['data']) !== JSON.stringify(resource)) {
-            switch (resourceType) {
-                case RESOURCE_TYPES.USER:
-                    dispatch({action_fn: UserStore.setAUser, user: data});
-                    break;
-                case RESOURCE_TYPES.CONTACT:
-                    dispatch({action_fn: ContactStore.setContact, contact: data});
-                    break;
-                default:
-                    dispatch({action_fn: TicketStore.setTicket, ticket: data});
-            }
+            dispatch({action_fn: ResourceStore.setResource, resource: data, resourceType});
         }
     }, [dispatch, data, resource]);
 

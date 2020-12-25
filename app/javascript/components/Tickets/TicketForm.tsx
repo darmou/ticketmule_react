@@ -50,13 +50,12 @@ const StyledForm = styled.form`
 
 interface Props {
     ticket: Ticket,
-    addOrUpdate: (jsonObj : any) => void,
     user: User,
     formAction?: (json: string) => void,
     slug?: string
 }
 
-const TicketForm = ({addOrUpdate, user, formAction, slug, ticket} : Props) => {
+const TicketForm = ({user, formAction, slug, ticket} : Props) => {
     const { register, handleSubmit } = useForm();
     const { options } = useGetOptions(true);
 
@@ -76,11 +75,10 @@ const TicketForm = ({addOrUpdate, user, formAction, slug, ticket} : Props) => {
             const toSend = {
                 ticket: data
             };
+
             if (formAction != null) {
                 await formAction(JSON.stringify(toSend));
             }
-
-            addOrUpdate({...ticket, ...data});
          } catch (error) {
                 console.log(error);
          }

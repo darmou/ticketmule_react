@@ -9,7 +9,7 @@ import moment from "moment";
 import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import { stringToBoolean } from "../utils/displayUtils";
 import { User } from "../types/types";
 import { AxiosResponse } from "axios";
@@ -32,14 +32,14 @@ const Login = () =>  {
         ticketMule.login.bind(this), {
             onSuccess: async (theUser: User) => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`Welcome ${theUser.username}! You last signed in on ${moment(theUser.last_sign_in_at).format("DD MMM YYYY hh:mm A")} from ${theUser.last_sign_in_ip}`)});
                 dispatch({action_fn: UserStore.setUser, user: theUser});
             },
             onError: (error: Error) => {
                 const msg = (error.response.status === 401 ) ? "Incorrect login details" : "Error occurred";
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
 
@@ -50,7 +50,7 @@ const Login = () =>  {
 
         if (isLoggingOut && flashMsg == null) {
             dispatch({
-                action_fn: TicketStore.setFlashMsg,
+                action_fn: ResourceStore.setFlashMsg,
                 flashMsg: createStandardSuccessMessage("Logged Out Successfully")});
             dispatch({action_fn: UserStore.resetIsLoggingOut } );
         }
@@ -58,7 +58,7 @@ const Login = () =>  {
         if (flashMsg) {
             setTimeout(() => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: null});
             }, TIMEOUT);
         }

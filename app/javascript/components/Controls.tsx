@@ -15,11 +15,9 @@ import DisableContactIcon from "../images/disable.png";
 import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import {deleteAlert} from "../utils/displayUtils";
-import TicketStore from "../actions/ticketStore";
-import ContactStore from "../actions/contactStore";
+import ResourceStore from "../actions/resourceStore";
 import {RESOURCE_TYPES} from "../types/types";
 import {TicketContext} from "../packs/application";
-import UserStore from "../actions/userStore";
 import useDeleteAlert from "../hooks/useDeleteAlert";
 import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
 
@@ -47,29 +45,19 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         ticketMule.toggleEnableContact.bind(this, state),
         {
             onSuccess: async (contact) => {
-                dispatch({action_fn: ContactStore.setContact, contact});
+                dispatch({action_fn: ResourceStore.setResource, resource: contact, resourceType});
                 // Query Invalidations
-                await queryCache.invalidateQueries('contact');
+                await queryCache.invalidateQueries(`${resourceType}`);
             },
         }
     );
 
-    const [deleteTheTicket] = useMutation(
-        ticketMule.deleteResource.bind(this, state, RESOURCE_TYPES.TICKET),
+    const [deleteTheResource] = useMutation(
+        ticketMule.deleteResource.bind(this, state, resourceType, resource.id),
         {
             onSuccess: async () => {
                 // Query Invalidations
-                await queryCache.invalidateQueries('tickets');
-            },
-        }
-    );
-
-    const [deleteTheUser] = useMutation(
-        ticketMule.deleteResource.bind(this, state, RESOURCE_TYPES.USER),
-        {
-            onSuccess: async () => {
-                // Query Invalidations
-                await queryCache.invalidateQueries('users');
+                await queryCache.invalidateQueries(`${resourceType}s`);
             },
         }
     );
@@ -79,7 +67,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         {
             onSuccess: async () => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage("Your alert was added and you will now receive an email any time this ticket is updated!")});
                 // Query Invalidations
                 await queryCache.invalidateQueries(RESOURCE_TYPES.TICKET);
@@ -107,21 +95,13 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         }
     };
 
-    const deleteTicket = async () => {
-        if (window.confirm(`Really delete ticket #${resource.id} and all its associated data?`)) {
+    const deleteResource = async () => {
+        const text = (resourceType === RESOURCE_TYPES.USER) ? `(${resource.full_name})` : "and all its associated data";
+        if (window.confirm(`Really delete ${resourceType} #${resource.id} ${text}?`)) {
             //useMutation to use delete method on ticket
-            await deleteTheTicket();
-            dispatch({action_fn: TicketStore.deleteTicket, id: resource.id});
-            navigate("/tickets");
-        }
-    };
-
-    const deleteUser = async () => {
-        if (window.confirm(`Really delete user #${resource.id} (${resource.full_name})?`)) {
-            //useMutation to use delete method on ticket
-            await deleteTheUser();
-            dispatch({action_fn: UserStore.deleteUser, id: resource.id});
-            navigate("/users");
+            await deleteTheResource();
+            dispatch({action_fn: ResourceStore.deleteResource, id: resource.id, resourceType});
+            navigate(`/${resourceType}s`);
         }
     };
 
@@ -145,17 +125,17 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
 
     //node Add alert becomes remove alert if there is already an alert on the ticket
     const alertKey = (alert == null) ? "Add Alert" : "Remove Alert";
-    const enableKey = (state.contact && state.contact.is_enabled) ? "Disable" : "Enable";
+    const enableKey = (resource && resource.is_enabled) ? "Disable" : "Enable";
     const controlList =  ((resourceType) => {
         switch (resourceType) {
             case RESOURCE_TYPES.TICKET:
                 return {
-                    "Edit": {link: `/tickets/${state.ticket.id}/edit`, icon: EditTicketIcon},
-                    "Pdf": {link: () => getPdf(state.ticket.id), icon: PDFIcon},
+                    "Edit": {link: `/tickets/${resource.id}/edit`, icon: EditTicketIcon},
+                    "Pdf": {link: () => getPdf(resource.id), icon: PDFIcon},
                     [alertKey]: {link: () => (alert != null) ? removeAlert(alert) : addAlert(), icon: AddAlertIcon},
                     "Add Comment": {link: () => setShowCommentForm(), icon: AddCommentIcon},
                     "Add Attachment": {link: () => setShowAttachmentForm(), icon: AddAttachmentIcon},
-                    "Delete": {link: () => deleteTicket(), icon: DeleteIcon},
+                    "Delete": {link: () => deleteResource(), icon: DeleteIcon},
                     "Back": {link: "/tickets/", icon: BackArrowIcon}
                 };
             case RESOURCE_TYPES.CONTACT:
@@ -170,7 +150,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
             case RESOURCE_TYPES.USER:
                 return {
                     "Edit": { link: `/users/${resource.id}/edit`, icon: EditUserIcon },
-                    "Delete": { link: () => deleteUser(), icon: DeleteIcon },
+                    "Delete": { link: () => deleteResource(), icon: DeleteIcon },
                     "Back": { link: "/users/", icon: BackArrowIcon }
                 };
         }

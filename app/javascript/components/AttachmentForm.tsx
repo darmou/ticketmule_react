@@ -8,7 +8,7 @@ import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { queryCache, useMutation } from "react-query";
 import { TicketContext } from "../packs/application";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 
 interface Props {
     toggleForm: () => void,
@@ -50,7 +50,7 @@ export const AttachmentForm = React.forwardRef((props: Props, ref: ForwardedRef<
             addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
             reset();
             dispatch({
-                action_fn: TicketStore.setFlashMsg,
+                action_fn: ResourceStore.setFlashMsg,
                 flashMsg: createStandardSuccessMessage("Attachment added!" )});
 
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
@@ -59,7 +59,7 @@ export const AttachmentForm = React.forwardRef((props: Props, ref: ForwardedRef<
             const msg = (error.response.status === 403 ) ? 'Bad Request' : 'Error occurred';
             if (flashMsg == null) {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
         }
@@ -68,14 +68,14 @@ export const AttachmentForm = React.forwardRef((props: Props, ref: ForwardedRef<
     React.useEffect(() => {
         if (errors.comment && flashMsg == null) {
             dispatch({
-                action_fn: TicketStore.setFlashMsg,
+                action_fn: ResourceStore.setFlashMsg,
                 flashMsg: createStandardErrorMessage("Attachment field is required")});
             clearErrors("comment");
         }
         if (flashMsg) {
             setTimeout(() => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: null});
             }, TIMEOUT);
         }

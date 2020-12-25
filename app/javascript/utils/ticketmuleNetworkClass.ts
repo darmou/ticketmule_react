@@ -1,4 +1,4 @@
-import { doNetworkRequest, getPlural, getId } from "./network";
+import { doNetworkRequest, getPlural } from "./network";
 import { SEND_METHOD } from "../types/types";
 
 class TicketmuleNetwork {
@@ -35,18 +35,15 @@ class TicketmuleNetwork {
             { user: { password, reset_password_token }});
     }
 
-    async updateResource(appState, type, data) {
+    async updateResource(appState, resourceType, id, data) {
         if (appState.user) {
-            const id = getId(appState, type);
-
-            return await doNetworkRequest(`/api/v1/${type}s/${id}`, SEND_METHOD.PATCH, appState.user, data);
+            return await doNetworkRequest(`/api/v1/${resourceType}s/${id}`, SEND_METHOD.PATCH, appState.user, data);
         }
     }
 
-    async deleteResource(appState, type) {
-        const id = getId(appState, type);
+    async deleteResource(appState, resourceType, id) {
         if (appState.user && id != null) {
-            return await doNetworkRequest(`/api/v1/${type}s/${id}`,
+            return await doNetworkRequest(`/api/v1/${resourceType}s/${id}`,
                 SEND_METHOD.DELETE, appState.user);
         }
     }

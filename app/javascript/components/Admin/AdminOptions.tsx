@@ -12,7 +12,7 @@ import { createStandardSuccessMessage, createStandardErrorMessage } from "../Com
 import { capitalizeEachWord } from "../../utils/displayUtils";
 import { Error } from "../ComponentLibrary/FormComponentsStyled";
 import { getPlural } from "../../utils/network";
-import TicketStore from "../../actions/ticketStore";
+import ResourceStore from "../../actions/resourceStore";
 import {OptionType, OptionTypes, Result} from "../../types/types";
 
 const FieldContainer = styled.div`
@@ -38,7 +38,7 @@ const AdminOptions = React.memo(({type}: Props) => {
             onSuccess: async (option: OptionType) => {
                 const msg = (option.disabled_at) ? 'disabled' : 'enabled';
                 dispatch({
-                        action_fn: TicketStore.setFlashMsg,
+                        action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} was successfully ${msg}!`)});
 
                 await queryCache.invalidateQueries("options");
@@ -54,7 +54,7 @@ const AdminOptions = React.memo(({type}: Props) => {
         {
             onSuccess: async (option: OptionType) => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} successfully added!`)});
 
                 await queryCache.invalidateQueries("options");
@@ -63,7 +63,7 @@ const AdminOptions = React.memo(({type}: Props) => {
             },
             onError: async (result: Result) => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(result.response.data.message)});
             }
         }

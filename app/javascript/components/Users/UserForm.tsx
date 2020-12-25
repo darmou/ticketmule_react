@@ -186,13 +186,12 @@ const UserStyledLabel = styled(StyledLabel)`;
 
 interface Props {
     isAdminForm?: boolean,
-    addOrUpdate: any,
     aUser: User,
-    formAction?: (json: string) => void,
+    formAction?: any,
     slug?: string
 }
 
-const UserForm = ({addOrUpdate, formAction, slug, aUser, isAdminForm = false}: Props) => {
+const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
     const { register, handleSubmit, errors, getValues, clearErrors } = useForm();
 
     const onSubmit = async (data) => {
@@ -201,7 +200,7 @@ const UserForm = ({addOrUpdate, formAction, slug, aUser, isAdminForm = false}: P
         if (!isAdminForm && data["password"].length === 0) {
             delete data["password"];
         }
-        await onSubmitForm(data, RESOURCE_TYPES.USER, formAction, addOrUpdate, aUser);
+        await onSubmitForm(data, RESOURCE_TYPES.USER, formAction);
     };
     const Form = (isAdminForm) ? StyledFormAdmin : StyledForm;
     const FormRow = (isAdminForm) ? StyledRow : Row;

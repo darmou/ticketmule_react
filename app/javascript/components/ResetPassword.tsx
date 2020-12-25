@@ -6,7 +6,7 @@ import { useMutation } from "react-query";
 import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage } from "./ComponentLibrary/FlashMessages";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import { BoxStyled, LoginStyled, ValidationDiv, StyledInputPassword } from "./Login";
 import { MIN_PASSWORD_LEN } from "./ComponentLibrary/FormComponentsStyled";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,11 +28,11 @@ const ResetPassword = () => {
             onSuccess: async (theUser) => {
                 if (theUser === "not_found") {
                     dispatch({
-                        action_fn: TicketStore.setFlashMsg,
+                        action_fn: ResourceStore.setFlashMsg,
                         flashMsg: createStandardErrorMessage("User not found, invalid token")});
                 } else {
                     dispatch({
-                        action_fn: TicketStore.setFlashMsg,
+                        action_fn: ResourceStore.setFlashMsg,
                         flashMsg: createStandardSuccessMessage(`Reset password request successful!`)});
 
                     dispatch({action_fn: UserStore.setUser, user: theUser});
@@ -43,7 +43,7 @@ const ResetPassword = () => {
             onError: () => {
                 const msg = "Error occurred";
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
 

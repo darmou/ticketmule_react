@@ -1,13 +1,11 @@
 import React, {useContext} from "react";
 import usePrevious from "../hooks/usePrevious";
 import styled from "styled-components";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import { TicketContext } from "../packs/application";
 import PageButton from "./ComponentLibrary/PageButton";
 import { RESOURCE_TYPES } from "../types/types";
-import ContactStore from "../actions/contactStore";
-import UserStore from "../actions/userStore";
-import {getResourcePageInfo} from "../utils/displayUtils";
+import { getResourcePageInfo } from "../utils/displayUtils";
 
 const PaginationWrapper = styled.div`   
     display: flex;
@@ -47,17 +45,7 @@ const Pagination = React.memo(({previousText, nextText, resourceType}: Props) =>
 
     React.useEffect(() => {
         if (currentPage !== _currentPage.current && _currentPage.current != null) {
-            switch (resourceType) {
-                case RESOURCE_TYPES.TICKET:
-                    dispatch({action_fn: TicketStore.setTicketPage, page: _currentPage.current});
-                    break;
-                case RESOURCE_TYPES.CONTACT:
-                    dispatch({action_fn: ContactStore.setContactPage, page: _currentPage.current});
-                    break;
-                case RESOURCE_TYPES.USER:
-                    dispatch({action_fn: UserStore.setUserPage, page: _currentPage.current});
-                    break;
-            }
+            dispatch({action_fn: ResourceStore.setResourcePage, page: _currentPage.current, resourceType });
         }
     }, [_currentPage.current, currentPage]);
 

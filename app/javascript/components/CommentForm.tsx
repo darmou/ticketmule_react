@@ -2,7 +2,7 @@ import React, {ForwardedRef, useContext} from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import {
     TIMEOUT,
@@ -29,7 +29,7 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
             await addTheComment(`{"comment":{"comment":"${data["comment"]}","close_ticket":${data["close_ticket"]}}}`);
             reset();
             dispatch({
-                action_fn: TicketStore.setFlashMsg,
+                action_fn: ResourceStore.setFlashMsg,
                 flashMsg: createStandardSuccessMessage("Comment added!")});
             setTimeout(toggleForm, (TIMEOUT * 1.1)); // Give time to view success message
 
@@ -37,7 +37,7 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
             const msg = (error.response.status === 403 ) ? 'Bad Request' : 'Error occurred';
             if (flashMsg == null) {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
         }
@@ -46,7 +46,7 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
     React.useEffect(() => {
         if (errors.comment && flashMsg == null) {
             dispatch({
-                action_fn: TicketStore.setFlashMsg,
+                action_fn: ResourceStore.setFlashMsg,
                 flashMsg: createStandardErrorMessage("Comment field is required")});
             clearErrors("comment");
         }
@@ -54,7 +54,7 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
         if (flashMsg) {
             setTimeout(() => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: null});
             }, TIMEOUT);
         }

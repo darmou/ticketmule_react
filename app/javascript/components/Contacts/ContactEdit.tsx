@@ -3,10 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import ContactForm from "./ContactForm";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
-import ContactStore from "../../actions/contactStore";
 import useGetResource from "../../hooks/useGetResource";
 import { TicketContext } from "../../packs/application";
 import { Contact, RESOURCE_TYPES } from "../../types/types";
+import ResourceStore from "../../actions/resourceStore";
 
 const ContactEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
@@ -17,10 +17,10 @@ const ContactEdit = () => {
 
     const ticketMule = useTicketmule();
     const [editTheContact] = useMutation(
-        ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.CONTACT),
+        ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.CONTACT, parseInt(slug)),
         {
             onSuccess: async (contact: Contact) => {
-                editContact(contact);
+                dispatch({action_fn: ResourceStore.setResource, resource: contact, ResourceType: RESOURCE_TYPES.CONTACT});
                 // Query Invalidations
                 await queryCache.invalidateQueries('contact');
                 navigate(`/contacts/${contact.id}`);
@@ -28,15 +28,12 @@ const ContactEdit = () => {
         }
     );
 
-    const editContact = (contact) => {
-        dispatch({action_fn: ContactStore.setContact, contact});
-    };
 
     return (<>
         {(contact) &&
             <>
         <h2>Editing contact {contact.full_name}</h2>
-            <ContactForm addOrUpdate={editContact} user={user} formAction={editTheContact} slug={slug} contact={contact}/>
+            <ContactForm user={user} formAction={editTheContact} slug={slug} contact={contact}/>
             </>
         }
     </>);

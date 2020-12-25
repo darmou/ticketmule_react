@@ -17,7 +17,7 @@ import TicketDash from "./Tickets/TicketDash";
 import TicketNew from "./Tickets/TicketNew";
 import TicketEdit from "./Tickets/TicketEdit";
 import Tickets from "./Tickets/Tickets";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import Ticket from "./Tickets/Ticket";
 import TicketControls from "./Tickets/TicketControls";
 import ContactRoutes from "./Contacts/ContactRoutes";
@@ -73,10 +73,10 @@ function BaseApp ({context}) {
         }
         if (flashMsg) {
             setTimeout(() => {
-                dispatch({action_fn: TicketStore.setFlashMsg, flashMsg: null});
+                dispatch({action_fn: ResourceStore.setFlashMsg, flashMsg: null});
             }, TIMEOUT);
         }
-    }, [TicketStore, user, flashMsg, dispatch, TIMEOUT]);
+    }, [ResourceStore, user, flashMsg, dispatch, TIMEOUT]);
 
     const _onActionOrActive = () => {
         setIsTimeout(false);

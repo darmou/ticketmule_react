@@ -5,9 +5,9 @@ import { TicketContext } from "../packs/application";
 import { useMutation } from "react-query";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage } from "./ComponentLibrary/FlashMessages";
-import TicketStore from "../actions/ticketStore";
-import {BoxStyled, LoginStyled, ValidationDiv, StyledInput} from "./Login";
-import {Link} from "react-router-dom";
+import ResourceStore from "../actions/resourceStore";
+import { BoxStyled, LoginStyled, ValidationDiv, StyledInput } from "./Login";
+import { Link } from "react-router-dom";
 
 const Forgot = () => {
     const ticketMule = useTicketmule();
@@ -20,13 +20,13 @@ const Forgot = () => {
         ticketMule.forgot.bind(this), {
             onSuccess: async () => {
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`Forgot password request successful! Please check your email!`)});
             },
             onError: () => {
                 const msg = "Error occurred";
                 dispatch({
-                    action_fn: TicketStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
 

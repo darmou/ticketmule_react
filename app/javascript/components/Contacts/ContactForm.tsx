@@ -12,13 +12,12 @@ const PaddedTextarea = styled.textarea`
     padding-right: 9px !important;
 `;
 
-const ContactForm = ({addOrUpdate, formAction, slug, contact}) => {
+const ContactForm = ({formAction, slug, contact}) => {
     const { register, handleSubmit } = useForm();
 
     const onSubmit = async (data) => {
-        await onSubmitForm(data, RESOURCE_TYPES.CONTACT, formAction, addOrUpdate, contact);
+        await onSubmitForm(data, RESOURCE_TYPES.CONTACT, formAction);
     };
-
 
     return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}>
         <Row>

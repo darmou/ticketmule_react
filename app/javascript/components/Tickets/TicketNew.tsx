@@ -2,9 +2,9 @@ import React from "react";
 import TicketForm from "./TicketForm";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
-import TicketStore from "../../actions/ticketStore";
+import ResourceStore from "../../actions/resourceStore";
 import { useNavigate } from "react-router-dom";
-import { Context,Ticket } from "../../types/types";
+import { Context, RESOURCE_TYPES, Ticket } from "../../types/types";
 
 interface Props {
     context: Context
@@ -30,12 +30,12 @@ const TicketNew = ({context} : Props) => {
 
     const addTicket = (ticket) => {
         //We want to just set the current ticket as we do not know what page we are on
-        dispatch({action_fn: TicketStore.setTicket, ticket});
+        dispatch({action_fn: ResourceStore.setResource, resource: ticket, resourceType: RESOURCE_TYPES.TICKET});
     };
 
     return (<>
         <h2>New ticket</h2>
-        <TicketForm addOrUpdate={addTheTicket} user={user} ticket={null}/>
+        <TicketForm formAction={addTheTicket} user={user} ticket={null}/>
     </>);
 };
 

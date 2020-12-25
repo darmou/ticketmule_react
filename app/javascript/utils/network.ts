@@ -23,18 +23,6 @@ export const getPlural = (type) => {
         default:
             return `${type}s`;
     }
-}
-
-export const getId = (appState, type) => {
-    const { ticket, contact, aUser } = appState;
-    switch (type) {
-        case RESOURCE_TYPES.TICKET:
-            return ticket.id;
-        case RESOURCE_TYPES.CONTACT:
-            return contact.id;
-        case RESOURCE_TYPES.USER:
-            return aUser.id;
-    }
 };
 
 export const doNetworkRequest = async (url, method, user, data = null,

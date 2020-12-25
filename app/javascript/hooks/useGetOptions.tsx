@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import PropTypes from "prop-types";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
-import TicketStore from "../actions/ticketStore";
+import ResourceStore from "../actions/resourceStore";
 import { TicketContext } from "../packs/application";
 
 const useGetOptions = (shouldFetchPeoeple : boolean) => {
@@ -19,7 +19,7 @@ const useGetOptions = (shouldFetchPeoeple : boolean) => {
 
     React.useEffect(() => {
         if (data && !isLoading && !options) {
-            dispatch({action_fn: TicketStore.setOptions, options: data});
+            dispatch({action_fn: ResourceStore.setOptions, options: data});
         }
     }, [dispatch, data, options]);
 

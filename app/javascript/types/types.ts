@@ -1,6 +1,11 @@
 import { AxiosResponse } from "axios";
 import { Dispatch } from "react";
 
+export enum TICKET_STATUS_TYPES  {
+    NOT_CLOSED = "NOT_CLOSED",
+    CLOSED = "CLOSED"
+};
+
 export enum OptionTypes {
     STATUS= "status",
     PRIORITY= "priority",

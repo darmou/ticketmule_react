@@ -2,28 +2,6 @@ import produce from "immer";
 
 
 const UserStore = {
-    add: function ({state, user}) {
-        return {...state, users: [...state.users, user]};
-    },
-    update: function ({state, aUser}) {
-        if (state && state.users) {
-            const index = state.users.findIndex(user => user.id === aUser.id);
-            return produce(state, draftState => {
-                draftState.users[index] = {...draftState.users[index], ...aUser};
-            });
-        }
-        return state;
-    },
-    setUserPage: function ({state, page}) {
-        return produce(state, draftState => {
-            draftState.userPageInfo.currentPage = page;
-        });
-    },
-    setUserLetterSelected: function ({state, letter}) {
-      return produce(state, draftState => {
-          draftState.userPageInfo.letterSelected = letter;
-        });
-    },
     resetIsLoggingOut: function ({state}) {
         return produce(state, draftState => {
             draftState.isLoggingOut = false;
@@ -46,17 +24,6 @@ const UserStore = {
         return produce(state, draftState => {
             draftState.isLoggingOut = (user == null) ? true : false;
             draftState.user = user;
-        });
-    },
-    setAUser: function ({state, user}) {
-        return produce(state, draftState => {
-            draftState.aUser = user;
-        });
-    },
-    deleteUser: function ({state, id}) {
-        const index = state.users.findIndex(user => user.id === id);
-        return produce(state, draftState => {
-            draftState.users.splice(index, 1);
         });
     },
 };

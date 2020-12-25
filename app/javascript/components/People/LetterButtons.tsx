@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import ContactStore from "../../actions/contactStore";
-import UserStore from "../../actions/userStore";
+import ResourceStore from "../../actions/resourceStore";
 import PageButton from "../ComponentLibrary/PageButton";
 import styled from "styled-components";
 import { TicketContext } from "../../packs/application";
@@ -29,15 +28,7 @@ const LetterButtons = ({resourcePageInfo, resourceType} : Props) => {
         if (letter === '*') {
             letter = null;
         }
-
-        switch (resourceType) {
-            case RESOURCE_TYPES.CONTACT:
-                dispatch({action_fn: ContactStore.setContactLetterSelected, letter});
-                break;
-            case RESOURCE_TYPES.USER:
-                dispatch({action_fn: UserStore.setUserLetterSelected, letter});
-                break;
-        }
+        dispatch({action_fn: ResourceStore.setResourceLetterSelected, letter, resourceType});
     };
 
     const letters = ['*', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',

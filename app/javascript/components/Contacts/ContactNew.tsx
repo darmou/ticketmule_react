@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { queryCache, useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import { useNavigate } from "react-router-dom";
-import ContactStore from "../../actions/contactStore";
+import ResourceStore from "../../actions/resourceStore";
 import ContactForm from "./ContactForm";
 import { TicketContext } from "../../packs/application";
-import { Contact } from "../../types/types";
+import { Contact, RESOURCE_TYPES } from "../../types/types";
 
 const ContactNew = () => {
     const { state, dispatch } = useContext(TicketContext);
@@ -27,7 +27,7 @@ const ContactNew = () => {
 
     const addContact = (contact) => {
         //We want to just set the curret ticket as we do not know what page we are on
-        dispatch({action_fn: ContactStore.setContact, contact});
+        dispatch({action_fn: ResourceStore.setResource, resource: contact, resourceType: RESOURCE_TYPES.CONTACT});
     };
 
     return (<>

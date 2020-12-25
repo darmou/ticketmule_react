@@ -9,11 +9,12 @@ import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { FakeLink } from "../ComponentLibrary/StyledLinks";
 import { FieldStyled, Label, StyledRow } from "../ComponentLibrary/FormComponentsStyled";
 import { TicketContext } from "../../packs/application";
-import TicketStore from "../../actions/ticketStore";
+import ResourceStore from "../../actions/resourceStore";
 import { isEmpty } from "../../utils/displayUtils";
 import "react-datepicker/dist/react-datepicker.css";
 import useGetOptions from "../../hooks/useGetOptions";
 import usePrevious from "../../hooks/usePrevious";
+import {RESOURCE_TYPES} from "../../types/types";
 
 const newResource = (event, navigate, resourceType) => {
     navigate(`/${resourceType}/new`);
@@ -104,22 +105,29 @@ const TicketControls = ({loggedIn} : Props) => {
             }
         });
 
-        dispatch({action_fn: TicketStore.setSearchString, searchStr: newFilterString});
+        dispatch({action_fn: ResourceStore.setSearchString, searchStr: newFilterString, resourceType: RESOURCE_TYPES.TICKET});
     };
 
     const filterTickets = (type) => {
             switch (type) {
                 case "my_open":
-                    dispatch({action_fn: TicketStore.setSearchString, searchStr: `&search[status_id]=${user.id}&search[owned_by]=${user.id}`});
+                    dispatch({action_fn: ResourceStore.setSearchString,
+                        searchStr: `&search[status_id]=${user.id}&search[owned_by]=${user.id}`,
+                        resourceType: RESOURCE_TYPES.TICKET});
                     break;
                 case "all":
-                    dispatch({action_fn: TicketStore.setSearchString, searchStr: ""});
+                    dispatch({action_fn: ResourceStore.setSearchString,
+                        searchStr: "", resourceType: RESOURCE_TYPES.TICKET});
                     break;
                 case "my_closed":
-                    dispatch({action_fn: TicketStore.setSearchString, searchStr: `&search[status_id]=2&search[owned_by]=${user.id}`});
+                    dispatch({action_fn: ResourceStore.setSearchString,
+                        searchStr: `&search[status_id]=2&search[owned_by]=${user.id}`,
+                        resourceType: RESOURCE_TYPES.TICKET});
                     break;
                 case "closed":
-                    dispatch({action_fn: TicketStore.setSearchString, searchStr: `&search[status_id]=2`});
+                    dispatch({action_fn: ResourceStore.setSearchString,
+                        searchStr: `&search[status_id]=2`,
+                        resourceType: RESOURCE_TYPES.TICKET});
                     break;
             }
     };
@@ -136,7 +144,6 @@ const TicketControls = ({loggedIn} : Props) => {
             <PrimaryButton click={e => newResource(e, navigate, 'contacts')} text="New Contact"/></Fragment>) : null;
 
     const onSubmit = (values) => {
-        //navigate(`/tickets/${values.jumpId}`);
         setCurrentTicketId(values.jumpId);
     };
 
@@ -162,7 +169,8 @@ const TicketControls = ({loggedIn} : Props) => {
                         Go
                     </SecondaryButton>
                     {errors.jumpId && (
-                        <InputFeedback>{(errors.jumpId.type === 'pattern') ? "Must be an integer only." : "Please enter ticket number."}</InputFeedback>
+                        <InputFeedback>{(errors.jumpId.type === 'pattern') ? "Must be an integer only."
+                            : "Please enter ticket number."}</InputFeedback>
                     )}
                 </p>
             </form>
@@ -176,7 +184,8 @@ const TicketControls = ({loggedIn} : Props) => {
                         Tickets</FakeLink></li>
                     <li><FakeLink onClick={() => filterTickets("all")}>All Active Tickets</FakeLink></li>
                     <li><FakeLink onClick={() => filterTickets("closed")}>All Closed Tickets</FakeLink></li>
-                    <li><FakeLink onClick={(event) => {event.stopPropagation();setShowFilterForm(!showFilterForm);}}>Custom Filter...</FakeLink></li>
+                    <li><FakeLink onClick={(event) =>
+                        {event.stopPropagation();setShowFilterForm(!showFilterForm);}}>Custom Filter...</FakeLink></li>
                 </StyledUL>
 
                 {(showFilterForm) && <FilterForm onSubmit={filterForm.handleSubmit(onFilterFormSubmit)} id="ticket-filter" >

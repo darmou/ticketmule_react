@@ -3,7 +3,7 @@ import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import useGetResources from "../../hooks/useGetResources";
 import { TicketContext } from "../../packs/application";
-import TicketStore from "../../actions/ticketStore";
+import ResourceStore from "../../actions/resourceStore";
 import { RESOURCE_TYPES } from "../../types/types";
 
 const TicketsPerPage = styled.div`
@@ -21,7 +21,7 @@ const Tickets =  React.memo(() => {
     const updatePageLength = (event, pageLen) => {
         event.preventDefault();
         event.stopPropagation();
-        dispatch({action_fn: TicketStore.setPerPage, perPage: pageLen});
+        dispatch({action_fn: ResourceStore.setPerPage, perPage: pageLen, resourceType: RESOURCE_TYPES.TICKET});
     };
 
     const perPages = [10, 20, 30].map((pageLen, idx, array) => {

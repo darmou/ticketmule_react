@@ -22,11 +22,10 @@ const Ticket = React.memo(() => {
     const ticketMule = useTicketmule();
 
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
-    const { expandableRef, toggle } = getSliderToggle(
-        { initialState: SLIDE_STATES.COLLAPSED, duration: SLIDE_DURATION });
+    const { expandableRef, toggle } = getSliderToggle({
+            initialState: SLIDE_STATES.COLLAPSED, duration: SLIDE_DURATION });
 
-    const attachmentToggle = getSliderToggle(
-        {
+    const attachmentToggle = getSliderToggle({
             initialState: SLIDE_STATES.COLLAPSED, duration: SLIDE_DURATION }
     );
 
@@ -43,7 +42,7 @@ const Ticket = React.memo(() => {
     return(<>
         <h2>Ticket #{slug}</h2>
 
-        {(state.ticket) &&
+        {(ticket) &&
             <>
                 <Controls setShowCommentForm={toggle}
                           resource={ticket}
