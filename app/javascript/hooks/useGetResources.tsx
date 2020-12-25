@@ -6,7 +6,7 @@ import { TicketContext } from "../packs/application";
 import usePrevious from "./usePrevious";
 import { RESOURCE_TYPES } from "../types/types";
 import TicketStore from "../actions/ticketStore";
-import {useSSE} from "react-hooks-sse";
+import { useSSE } from "react-hooks-sse";
 
 const useGetResources = (resourceType) => {
     const { state, dispatch } = useContext(TicketContext);
@@ -36,7 +36,7 @@ const useGetResources = (resourceType) => {
     const aChangedResource = (last.id == null) ? null : resources.filter(aResource => last.id === aResource.id)[0];
 
     const { data, isLoading } = useQuery(`${resourceType}s`, () =>
-        ticketMule.fetchResources(currentPage, perPage, null, resourceType, searchString), { refetchOnMount: false,
+        ticketMule.fetchResources(currentPage, perPage, letterSelected, resourceType, searchString), { refetchOnMount: false,
         refetchOnWindowFocus: false,
         enabled: (state.user != null &&
             (resources == null ||
