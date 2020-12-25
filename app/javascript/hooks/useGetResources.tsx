@@ -12,8 +12,9 @@ const useGetResources = (resourceType) => {
     const { state, dispatch } = useContext(TicketContext);
     const { contacts, users, tickets, contactPageInfo, userPageInfo, ticketPageInfo } = state;
     const resourcePageInfo = getResourcePageInfo(resourceType, ticketPageInfo, contactPageInfo, userPageInfo);
-    const { currentPage, resourceCount, lastPage, perPage, letterSelected } = resourcePageInfo;
+    const { currentPage, resourceCount, lastPage, perPage, letterSelected, searchString } = resourcePageInfo;
     const prevPage = usePrevious(currentPage);
+    const prevSearchString = usePrevious(searchString);
     const prevLetterSelected = usePrevious(letterSelected);
     const prevPerPage = usePrevious(perPage);
     const ticketMule = new TicketmuleNetwork(state.user);
@@ -35,13 +36,15 @@ const useGetResources = (resourceType) => {
     const aChangedResource = (last.id == null) ? null : resources.filter(aResource => last.id === aResource.id)[0];
 
     const { data, isLoading } = useQuery(`${resourceType}s`, () =>
-        ticketMule.fetchResources(currentPage, perPage, letterSelected, resourceType), { refetchOnMount: false,
+        ticketMule.fetchResources(currentPage, perPage, null, resourceType, searchString), { refetchOnMount: false,
         refetchOnWindowFocus: false,
-        enabled: (state.user != null && (resources == null ||
-            prevLetterSelected !== letterSelected ||
-            (last.id != null && aChangedResource != null && last.updated_at !== aChangedResource.updated_at)
-            || prevPage !== currentPage
-            || prevPerPage !== perPage)) }
+        enabled: (state.user != null &&
+            (resources == null ||
+                prevPage !== currentPage ||
+                (last.id != null && aChangedResource != null && last.updated_at !== aChangedResource.updated_at) ||
+                prevLetterSelected !== letterSelected ||
+                prevSearchString !== searchString ||
+                prevPerPage !== perPage)) }
     );
 
     React.useEffect(() => {
