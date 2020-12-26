@@ -74,7 +74,7 @@ class Api::V1::TicketsController < ApplicationController
   # PUT /tickets/:id
   def update
     @ticket.update(ticket_params)
-    json_response(@ticket, :ok)
+    json_response(TicketSerializer.new(@ticket, { params: { :ticketlist => false, :user_id => @user.id } }), :ok)
   end
 
   # DELETE /tickets/:id

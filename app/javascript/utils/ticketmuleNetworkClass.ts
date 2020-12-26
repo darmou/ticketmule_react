@@ -114,9 +114,9 @@ class TicketmuleNetwork {
         }
     }
 
-    async addRelatedTicketRecord(appState, type, data) {
+    async addRelatedTicketRecord(appState, type, id, data) {
         if (appState.user) {
-            return await doNetworkRequest(`/api/v1/tickets/${appState.ticket.id}/${type}`,
+            return await doNetworkRequest(`/api/v1/tickets/${id}/${type}`,
                 SEND_METHOD.POST, appState.user, data, type === "attachments");
         }
     }

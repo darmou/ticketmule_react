@@ -16,7 +16,7 @@ import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import {deleteAlert} from "../utils/displayUtils";
 import ResourceStore from "../actions/resourceStore";
-import {RESOURCE_TYPES} from "../types/types";
+import {RESOURCE_TYPES, Ticket} from "../types/types";
 import {TicketContext} from "../packs/application";
 import useDeleteAlert from "../hooks/useDeleteAlert";
 import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
@@ -36,7 +36,7 @@ interface Props {
 const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachmentForm} : Props) => {
     const { state, dispatch } = useContext(TicketContext);
     const { user } = state;
-    const { alert } = (resourceType === RESOURCE_TYPES.TICKET && resource) ? resource : { alert: null };
+    const alert = (resourceType === RESOURCE_TYPES.TICKET && resource) ? resource.alert : { alert: null };
     const navigate = useNavigate();
     const { deleteTheAlert } = useDeleteAlert();
     const ticketMule = new TicketmuleNetwork(user);
@@ -63,13 +63,19 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
     );
 
     const [addTheAlert] = useMutation(
-        ticketMule.addRelatedTicketRecord.bind(this, state, "alerts"),
+        ticketMule.addRelatedTicketRecord.bind(this, state, "alerts", resource.id),
         {
-            onSuccess: async () => {
+            onSuccess: async (ticket: Ticket) => {
                 dispatch({
                     action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage("Your alert was added and you will now receive an email any time this ticket is updated!")});
                 // Query Invalidations
+
+                dispatch({
+                    action_fn: ResourceStore.setResource,
+                    resource: ticket,
+                    resourceType: RESOURCE_TYPES.TICKET});
+
                 await queryCache.invalidateQueries(RESOURCE_TYPES.TICKET);
             },
         }

@@ -16,14 +16,13 @@ interface Props {
     id?: number
 }
 
-export const AttachmentForm = React.forwardRef((props: Props, ref: ForwardedRef<HTMLFormElement>) => {
+export const AttachmentForm = React.forwardRef(({toggleForm, addTheComment, id}: Props, ref: ForwardedRef<HTMLFormElement>) => {
     const ticketMule = useTicketmule();
-    const { toggleForm, addTheComment } = props;
     const { state, dispatch } = useContext(TicketContext);
     const { flashMsg } = state;
     const { register, handleSubmit, clearErrors, errors, reset } = useForm();
     const [addTheAttachment] = useMutation(
-        ticketMule.addRelatedTicketRecord.bind(this, state, "attachments"),
+        ticketMule.addRelatedTicketRecord.bind(this, state, "attachments", id),
         {
             onSuccess: async () => {
                 // Query Invalidations

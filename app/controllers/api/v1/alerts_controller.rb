@@ -8,7 +8,7 @@ class Api::V1::AlertsController < ApplicationController
     respond_to do |format|
       format.json {
         if @user.has_ticket_alert?(@ticket.id) or @alert.save
-          json_response("Your alert was added and you will now receive an email any time this ticket is updated!!", :ok)
+          json_response(TicketSerializer.new(@ticket, { params: { :ticketlist => false, :user_id => @user.id } }), :ok)
         else
           json_response(@alert.errors.full_messages, :unprocessable_entity)
         end
@@ -25,11 +25,12 @@ class Api::V1::AlertsController < ApplicationController
       alert = Alert.find_by_id_and_user_id(params[:id], @user.id)
     end
     ticket_id = alert.ticket_id
+    ticket = Ticket.find(ticket_id)
     alert.destroy
 
     respond_to do |format|
       format.json {
-        json_response({:ticket_id => ticket_id}, :ok)
+        json_response(TicketSerializer.new(ticket, { params: { :ticketlist => false, :user_id => @user.id } }), :ok)
       }
     end
   end

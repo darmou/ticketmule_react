@@ -30,7 +30,7 @@ const Ticket = React.memo(() => {
     );
 
     const [addTheComment] = useMutation(
-        ticketMule.addRelatedTicketRecord.bind(this, state, "comments"),
+        ticketMule.addRelatedTicketRecord.bind(this, state, "comments", slug),
         {
             onSuccess: async () => {
                 // Query Invalidations
