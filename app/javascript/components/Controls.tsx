@@ -106,7 +106,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         if (window.confirm(`Really delete ${resourceType} #${resource.id} ${text}?`)) {
             //useMutation to use delete method on ticket
             await deleteTheResource();
-            dispatch({action_fn: ResourceStore.deleteResource, id: resource.id, resourceType});
+            dispatch({action_fn: ResourceStore.deleteResource, resourceType, id: resource.id});
             navigate(`/${resourceType}s`);
         }
     };
