@@ -59,7 +59,12 @@ const CommentList = React.memo(({comments, state}: Props) => {
            <ResourceItem key={`comment_id_${comment.id}`}>
 
                <CommentSquare>#{comment.id}</CommentSquare>
-               <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
+               {comment.user &&
+                    <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
+               }
+               {!comment.user &&
+                <strong>Deleted User </strong>
+               }
                <Timestamp>{moment(comment.created_at).format("DD MMM YYYY hh:mm A")}</Timestamp>
                <DeleteLink to="" onClick={() => deleteComment(comment.id)}>Delete</DeleteLink>
                <p>

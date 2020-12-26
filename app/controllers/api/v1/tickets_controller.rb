@@ -36,6 +36,7 @@ class Api::V1::TicketsController < ApplicationController
 
 
     @pagy, @tickets = pagy(tickets)
+
     ticket_records_with_associations =
         TicketSerializer.new(@tickets, { params: { :ticketlist => true } }).hash_for_collection[:data].map { | ticket |
       ticket[:attributes]

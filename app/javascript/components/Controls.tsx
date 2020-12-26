@@ -57,6 +57,25 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         {
             onSuccess: async () => {
                 // Query Invalidations
+                // If after deletion our page data is out of date we want to update the page data
+                // So we don't try to pull a current page that does not exist.
+                const resourceCount = state[`${resourceType}PageInfo`].resourceCount;
+                const perPage = state[`${resourceType}PageInfo`].perPage;
+                const lastPage = state[`${resourceType}PageInfo`].lastPage;
+                const calculatedPages = Math.ceil((resourceCount -1) / perPage);
+                const currentPage = (state[`${resourceType}PageInfo`].currentPage < calculatedPages) ?
+                    state[`${resourceType}PageInfo`].currentPage : calculatedPages;
+                if (calculatedPages < lastPage) {
+                    const pageData = {
+                        pagy: {
+                            page: currentPage,
+                            count: resourceCount -1,
+                            last: calculatedPages
+                        },
+                        data: state[`${resourceType}s`]
+                    };
+                    dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData});
+                }
                 await queryCache.invalidateQueries(`${resourceType}s`);
             },
         }
