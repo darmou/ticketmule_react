@@ -4,7 +4,7 @@ No frills, general use support ticket tracking. Easily document and communicate 
 
 ## Note
 
-This is a complete redesign of the origoal Ticketmule by Lee Smith (rails 2.3, <https://github.com/leesmith/ticket_mule>).
+This is a complete redesign of the origonal Ticketmule by Lee Smith (rails 2.3, <https://github.com/leesmith/ticket_mule>).
 
 System is now feature complete, some tests still to be written.
 
