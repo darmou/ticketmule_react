@@ -75,7 +75,7 @@ export type User = {
     last_name?: string,
     time_zone?: string,
     email?: string,
-    authentication_token?: string | null
+    token?: string | null
 }
 
 

@@ -12,26 +12,6 @@ import useSliderToggle from "react-slide-toggle-hooks";
 import useGetResources from "../../hooks/useGetResources";
 import { RESOURCE_TYPES, TICKET_TYPES, TICKET_STATUS_TYPES } from "../../types/types";
 
-const main_header_items = [
-    { id: 0, content: "Ticket #" },
-    { id: 1, content: "Title" },
-    { id: 2, content: "Group" },
-    { id: 3, content: "Status" },
-    { id: 4, content: "Priority" },
-    { id: 5, content: "Time Type" },
-    { id: 6, content: "Owner" }
-];
-
-const headerItems = [
-    ...main_header_items,
-    { id: 7, content: "Last Activity" }
-];
-
-const closed_ticket_items = [
-    ...main_header_items,
-    { id: 7, content: "Closed At" }
-];
-
 const ticketTimeLineList = (type, style) => {
     let the_str_date, content = null;
     const type_tickets = [];
@@ -62,8 +42,8 @@ const TicketBoard = () => {
     return (
        <>
            <h2>Dashboard</h2>
-           <TableSection pageisLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.NOT_CLOSED} headerItems={headerItems} sectionName="Active Tickets" sectionId="active-listing"/>
-           <TableSection isLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.CLOSED}  headerItems={closed_ticket_items} sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.NOT_CLOSED} sectionName="Active Tickets" sectionId="active-listing"/>
+           <TableSection isLoading={isLoading} tickets={tickets} type={TICKET_STATUS_TYPES.CLOSED}  sectionName="Recently Closed Tickets" sectionId="closed-listing"/>
 
            <>
                <H3ToggleStyled isOpen={slideToggleState.toggleState} onClick={toggle}>Timeline</H3ToggleStyled>

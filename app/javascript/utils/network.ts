@@ -1,5 +1,4 @@
 import axios from "axios";
-import { RESOURCE_TYPES } from "../types/types";
 
 
 const createHeaders = (user, isAttachment) => {
