@@ -8,7 +8,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "activestorage": "rails/activestorage",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.3",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
