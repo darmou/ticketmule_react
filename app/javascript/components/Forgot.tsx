@@ -29,7 +29,6 @@ const Forgot = () => {
                     action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardErrorMessage(msg)});
             }
-
         },
     );
 

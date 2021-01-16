@@ -76,7 +76,6 @@ const ResourceStore = {
             draftState[`${resourceType}s`].splice(index, 1);
         });
     },
-
 };
 
 export default ResourceStore;
