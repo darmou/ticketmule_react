@@ -4,22 +4,9 @@ import { RESOURCE_TYPES } from "../types/types";
 
 export const SLIDE_DURATION = 800;
 
-export const renderTableHeader = (header_items) => {
-    const header = header_items.map(header_item =>
-        <th key={header_item.id} >
-            {header_item.content}
-        </th>
-    );
-
-    return <HeaderStyled>
-        {header}
-    </HeaderStyled>;
-};
-
 export const getAttachmentFileSize = (byteFileSize) => {
     return (byteFileSize *  0.000977).toFixed(1);
 };
-
 
 const cleanData = (data) => {
     Object.keys(data).map(key => {
@@ -120,6 +107,7 @@ const ULStyled = styled.ul`
     background: #fff;
     white-space: nowrap;
 `;
+
 const LIStyled = styled.li`
     position: relative;
     float: left;
@@ -138,8 +126,5 @@ const LIStyled = styled.li`
         height: 100%;
    
     }
-`;
-const HeaderStyled = styled.tr`
-    background: #f1f1f1;
 `;
 

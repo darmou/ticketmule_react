@@ -130,8 +130,8 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         }
     };
 
-    const getPdf = async id => {
-        const pdf = await ticketMule.fetchTicket(resource.id, true);
+    const getPdf = async (id) => {
+        const pdf = await ticketMule.fetchTicket(id, true);
         if (pdf) {
             const a = document
                 .createElement("a");
@@ -139,7 +139,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
             const b64encoded = btoa([].reduce.call(new Uint8Array(pdf),
                 (p,c) => p + String.fromCharCode(c),''));
             a.href = "data:application/pdf;base64,"+ b64encoded;
-            a.download = `ticket_${resource.id}.pdf`;
+            a.download = `ticket_${id}.pdf`;
             a.click();
         }
     };

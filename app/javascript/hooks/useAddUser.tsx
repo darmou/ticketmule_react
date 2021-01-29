@@ -3,7 +3,7 @@ import { queryCache, useMutation } from "react-query";
 import useTicketMule from "./useTicketMule";
 import { TicketContext } from "../packs/application";
 import ResourceStore from "../actions/resourceStore";
-import {RESOURCE_TYPES, Result, User} from "../types/types";
+import { RESOURCE_TYPES, Result, User } from "../types/types";
 import { useNavigate } from "react-router-dom";
 import { createStandardSuccessMessage, createStandardErrorMessage } from "../components/ComponentLibrary/FlashMessages";
 

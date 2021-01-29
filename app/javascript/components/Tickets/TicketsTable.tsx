@@ -8,7 +8,6 @@ import { RESOURCE_TYPES, Ticket } from "../../types/types";
 
 const MAX_TICKET_LENGTH = 37;
 
-
 interface Props  {
     tickets: Ticket[],
     isAgo: boolean,
@@ -89,6 +88,7 @@ const TicketsTable = React.memo(({tickets, isAgo, isPagination} : Props) => {
             };
         }) : [];
     };
+
     const data = React.useMemo(() => getData(), [ticketsRef.current]);
     const columns = React.useMemo(getColumns, []);
 
