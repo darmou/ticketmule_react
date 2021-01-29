@@ -130,8 +130,8 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         }
     };
 
-    const getPdf = async (id) => {
-        const pdf = await ticketMule.fetchTicket(id, true);
+    const getPdf = async () => {
+        const pdf = await ticketMule.fetchTicket(resource.id, true);
         if (pdf) {
             const a = document
                 .createElement("a");
@@ -139,7 +139,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
             const b64encoded = btoa([].reduce.call(new Uint8Array(pdf),
                 (p,c) => p + String.fromCharCode(c),''));
             a.href = "data:application/pdf;base64,"+ b64encoded;
-            a.download = `ticket_${id}.pdf`;
+            a.download = `ticket_${resource.id}.pdf`;
             a.click();
         }
     };
@@ -156,7 +156,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
             case RESOURCE_TYPES.TICKET:
                 return {
                     "Edit": {link: `/tickets/${resource.id}/edit`, icon: EditTicketIcon},
-                    "Pdf": {link: () => getPdf(resource.id), icon: PDFIcon},
+                    "Pdf": {link: () => getPdf(), icon: PDFIcon},
                     [alertKey]: {link: () => (alert != null) ? removeAlert(alert) : addAlert(), icon: AddAlertIcon},
                     "Add Comment": {link: () => setShowCommentForm(), icon: AddCommentIcon},
                     "Add Attachment": {link: () => setShowAttachmentForm(), icon: AddAttachmentIcon},
