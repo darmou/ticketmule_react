@@ -26,6 +26,10 @@ const CommentSquare = styled.span`
 
 `;
 
+const DeletedUserLabel = styled.strong`
+    padding-left: 5px;
+`;
+
 interface Props {
     comments: Comment[],
     state: State
@@ -63,7 +67,7 @@ const CommentList = React.memo(({comments, state}: Props) => {
                     <Link to={`/users/${comment.user.id}`}>{comment.user.username}</Link>
                }
                {!comment.user &&
-                <strong>Deleted User </strong>
+                <DeletedUserLabel>Deleted User </DeletedUserLabel>
                }
                <Timestamp>{moment(comment.created_at).format("DD MMM YYYY hh:mm A")}</Timestamp>
                <DeleteLink to="" onClick={() => deleteComment(comment.id)}>Delete</DeleteLink>
