@@ -14,7 +14,7 @@ import EnableContactIcon from "../images/accept.png";
 import DisableContactIcon from "../images/disable.png";
 import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
-import {deleteAlert} from "../utils/displayUtils";
+import { deleteAlert } from "../utils/displayUtils";
 import ResourceStore from "../actions/resourceStore";
 import {RESOURCE_TYPES, Ticket} from "../types/types";
 import {TicketContext} from "../packs/application";
@@ -139,6 +139,8 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
             const b64encoded = btoa([].reduce.call(new Uint8Array(pdf),
                 (p,c) => p + String.fromCharCode(c),''));
             a.href = "data:application/pdf;base64,"+ b64encoded;
+            // download attribute to specify that the target will be downloaded when a user clicks on the hyperlink.
+            // specifing a value will change the name of the downloaded file otherwise will keep origonal name.
             a.download = `ticket_${resource.id}.pdf`;
             a.click();
         }
