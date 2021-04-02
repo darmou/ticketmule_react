@@ -33,7 +33,7 @@ const useGetResources = (resourceType) => {
         }
     };
     const resources = getResources();
-    const aChangedResource = (last.id == null) ? null : resources.filter(aResource => last.id === aResource.id)[0];
+    const aChangedResource = (last.id == null || resources == null) ? null : resources.filter(aResource => last.id === aResource.id)[0];
 
     const { data, isLoading } = useQuery(`${resourceType}s`, () =>
         ticketMule.fetchResources(currentPage, perPage, letterSelected, resourceType, searchString), { refetchOnMount: false,
