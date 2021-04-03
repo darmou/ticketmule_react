@@ -4,6 +4,7 @@ capybara-*.html
 .DS_Store
 .idea
 /public/packs
+/dist
 /log
 /tmp
 /db/*.sqlite3

@@ -64,6 +64,16 @@ Test drive initialize with seed data, and load 150 contacts, 500 tickets, and 4 
 
 ```$ rake db:seed; rake db:populate```
 
+## Running In Development
+
+Running webpack in a separate terminal:
+
+```$ yarn dev```
+
+To run main Rails server:
+
+```$ ./bin/rails s```
+
 ## Notes
 
 By default, users can create their own accounts by navigating to /users/new. If this is not desired and you only want admins to create user accounts, a small change to +config+/+routes+.+rb+ is required. The users resource will need the exception added for the new action. See the comments for the users resource map for details.
