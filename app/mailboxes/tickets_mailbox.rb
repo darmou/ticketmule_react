@@ -1,5 +1,4 @@
 class TicketsMailbox < ApplicationMailbox
-  MATCHER = /ticket-(.+)@ticket.example.com/i
   include ApplicationHelper
 
   before_processing :ensure_user

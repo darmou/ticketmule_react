@@ -1,5 +1,4 @@
 class RepliesMailbox < ApplicationMailbox
-  MATCHER = /reply-(.+)@reply.example.com/i
   include ApplicationHelper
 
   # examlple
@@ -25,7 +24,7 @@ class RepliesMailbox < ApplicationMailbox
   end
 
   def ticket_id
-    recipient = mail.recipients.find { |r | MATCHER.match(r) }
+    recipient = mail.recipients.find { |r | ApplicationMailbox.REPLIES_MATCHER.match(r) }
     recipient[MATCHER, 1]
   end
 
