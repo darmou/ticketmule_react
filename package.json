@@ -4,7 +4,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.10.4",
     "@rails/ujs": "^6.0.3-2",
-    "@rails/webpacker": "4.3.0",
+    "@rails/webpacker": "6.0.0-beta.6",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "activestorage": "rails/activestorage",
@@ -68,7 +68,7 @@
     "fork-ts-checker-webpack-plugin": "^6.0.7",
     "react-is": "^16.13.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
+    "webpack-dev-server": "^3.11.2",
     "yarn-upgrade-all": "^0.5.2"
   }
 }
