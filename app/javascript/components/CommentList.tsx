@@ -23,7 +23,6 @@ const CommentSquare = styled.span`
     border: 1px solid #ccc;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-
 `;
 
 const DeletedUserLabel = styled.strong`

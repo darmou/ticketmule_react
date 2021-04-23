@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  webpack:
+    build: .
+    command: ./bin/webpack-dev-server --mode development --env development
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '3035:3035'
+    environment:
+      NODE_ENV: development
+      RAILS_ENV: development
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      RACK_ENV: development
+      POSTGRES_USER: ticketmule
+      POSTGRES_PASSWORD: z!Yh2Kw7^mJ
+      POSTGRES_DB: ticketmule_db  
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - webpack
