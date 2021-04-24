@@ -8,15 +8,15 @@ class Api::V1::ServerSentEventsController < ApplicationController
     last_updated = Ticket.last_updated.first()
     user_updated = User.last_updated.first()
     contact_updated = Contact.last_updated.first()
-    if  recently_changed? last_updated
+    if not last_updated.nil? and recently_changed? last_updated
       sse.write({:id=>last_updated.id, :updated_at=> last_updated.updated_at}, event: "ticket")
     end
 
-    if recently_changed? user_updated
+    if not user_updated.nil? and recently_changed? user_updated
       sse.write({:id=>user_updated.id, :updated_at=> user_updated.updated_at}, event: "user")
     end
 
-    if recently_changed? contact_updated
+    if not contact_updated.nil? and recently_changed? contact_updated
       sse.write({:id=>contact_updated.id, :updated_at=> contact_updated.updated_at}, event: "contact")
     end
   ensure

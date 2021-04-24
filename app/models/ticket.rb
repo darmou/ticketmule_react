@@ -43,10 +43,10 @@ class Ticket < ApplicationRecord
     order('updated_at DESC, created_at DESC').limit(1)
   }
   scope :with_long_title, -> { where("LENGTH(title) > 20") }
-  scope :not_closed, -> { joins(:status).where("statuses.name is not 'Closed'") }
+  scope :not_closed, -> { joins(:status).where("statuses.name != 'Closed'") }
   scope :recently_assigned_to, -> (user_id) { where(owned_by: user_id).order(updated_at: :desc).limit(5) }
   scope :active_tickets, -> { joins(:status).where("statuses.name = 'Re-opened' OR statuses.name = 'Open'").order(updated_at: :desc).limit(5) }
-  scope :closed_tickets, -> { joins(:status).where("statuses.name is 'Closed'").order(closed_at: :desc).limit(5) }
+  scope :closed_tickets, -> { joins(:status).where("statuses.name = 'Closed'").order(closed_at: :desc).limit(5) }
   scope :all_relevant_tickets, -> do
     scopes = [
         not_closed,

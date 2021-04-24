@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2020_12_18_200401) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -24,8 +27,8 @@ ActiveRecord::Schema.define(version: 2020_12_18_200401) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.integer "record_id", null: false
-    t.integer "blob_id", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -43,8 +46,8 @@ ActiveRecord::Schema.define(version: 2020_12_18_200401) do
   end
 
   create_table "alerts", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "ticket_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "ticket_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ticket_id", "user_id"], name: "index_alerts_on_ticket_id_and_user_id", unique: true
@@ -57,8 +60,8 @@ ActiveRecord::Schema.define(version: 2020_12_18_200401) do
     t.string "data_content_type", null: false
     t.integer "data_file_size", null: false
     t.integer "download_count", default: 0
-    t.integer "ticket_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "ticket_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ticket_id"], name: "index_attachments_on_ticket_id"
@@ -67,8 +70,8 @@ ActiveRecord::Schema.define(version: 2020_12_18_200401) do
 
   create_table "comments", force: :cascade do |t|
     t.text "comment", null: false
-    t.integer "ticket_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "ticket_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ticket_id"], name: "index_comments_on_ticket_id"
@@ -108,11 +111,11 @@ ActiveRecord::Schema.define(version: 2020_12_18_200401) do
   create_table "tickets", force: :cascade do |t|
     t.string "title", null: false
     t.text "details"
-    t.integer "group_id", null: false
-    t.integer "status_id", null: false
-    t.integer "priority_id", null: false
-    t.integer "time_type_id", null: false
-    t.integer "contact_id", null: false
+    t.bigint "group_id", null: false
+    t.bigint "status_id", null: false
+    t.bigint "priority_id", null: false
+    t.bigint "time_type_id", null: false
+    t.bigint "contact_id", null: false
     t.integer "created_by", null: false
     t.integer "owned_by"
     t.datetime "closed_at"

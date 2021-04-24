@@ -15,8 +15,12 @@ services:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: z!Yh2Kw7^mJ
+      POSTGRES_USER: ticketmule
+      POSTGRES_DB: ticketmule_db
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -31,5 +35,5 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - db
-      - webpack
+      - "db"
+      - "webpack"

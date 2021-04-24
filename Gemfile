@@ -7,6 +7,7 @@ ruby '2.7.3'
 gem 'rails', '~> 6.0.3.5'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
+gem 'pg', '~> 1.2'
 
 gem 'simple_token_authentication'
 # Use Puma as the app server

@@ -10,8 +10,13 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  database: db/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: ticketmule_db
+  pool: 5
+  host: db
+  username: ticketmule
+  password: z!Yh2Kw7^mJ
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
