@@ -25,6 +25,7 @@ RUN bundle install
 RUN yarn install
 RUN npm rebuild node-sass
 RUN bundle exec rails assets:precompile
+RUN rake 
 
 # COPY ../compose /myapp
 

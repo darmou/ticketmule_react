@@ -74,6 +74,18 @@ To run main Rails server:
 
 ```$ ./bin/rails s```
 
+To run docker containers:
+
+```$ docker compose up```
+
+If this is the first time you have run the containers you will need to find the rails container (`docker ps`). Then, once you have the Docker container id, `docker exec -it <container-id> /bin/bash`.  You can finally run the db migrations (`rake db:migrate`) and `rake db: seed`.  Once the containers are running they can be accessed via `http://localhost:3000`.
+
+Because of the need to run in a Docker container to run development locally update your local hostfile to point db to localhost:
+
+``/etc/hosts`` os Os X and other Unix like operating systems.
+
+```127.0.0.1	db```
+
 ## Notes
 
 By default, users can create their own accounts by navigating to /users/new. If this is not desired and you only want admins to create user accounts, a small change to +config+/+routes+.+rb+ is required. The users resource will need the exception added for the new action. See the comments for the users resource map for details.
