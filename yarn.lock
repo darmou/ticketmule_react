@@ -4417,10 +4417,12 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-function-reducer@^1.0.6:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/function-reducer/-/function-reducer-1.0.8.tgz#5c868812afb877f7ffec675919e026c68a28a2fa"
-  integrity sha512-FibpqxUMj2rP3Kf1qGWdQphBcvMWoLkms52HGGOSeicIfL1hJMGpPr8RO3KNSiLXR7CaWKTcxn+53uhY0A5w9w==
+function-reducer@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/function-reducer/-/function-reducer-2.0.0.tgz#a80f29ddf192cad0698822ac392b4775af620946"
+  integrity sha512-N6cMVCEZ8PIB67UJtF397n4BKKwhGAwCr2DjYLco/O/JqoPAH+Vwwc+w8rGLp/jBWKXaQKW/dp9dY7cRJtW0VQ==
+  dependencies:
+    object-hash "^2.1.1"
 
 functional-red-black-tree@^1.0.1:
   version "1.0.1"
@@ -6057,6 +6059,11 @@ object-copy@^0.1.0:
     copy-descriptor "^0.1.0"
     define-property "^0.2.5"
     kind-of "^3.0.3"
+
+object-hash@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-2.1.1.tgz#9447d0279b4fcf80cff3259bf66a1dc73afabe09"
+  integrity sha512-VOJmgmS+7wvXf8CjbQmimtCnEx3IAoLxI3fp2fbWehxrWBcAQFbk+vcwb6vzR0VZv/eNCJ/27j151ZTwqW/JeQ==
 
 object-inspect@^1.9.0:
   version "1.10.3"

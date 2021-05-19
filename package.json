@@ -23,7 +23,7 @@
     "date-fns": "^2.7.0",
     "eslint-plugin-react": "^7.16.0",
     "eventsource": "^1.0.7",
-    "function-reducer": "^1.0.6",
+    "function-reducer": "2.0.0",
     "history": "^5.0.0",
     "hosted-git-info": "^2.8.9",
     "idempotent-babel-polyfill": "^7.4.4",
