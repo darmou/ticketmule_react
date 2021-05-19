@@ -1,10 +1,7 @@
-const { environment } = require('@rails/webpacker')
-const typescript =  require('./loaders/typescript')
+const { environment } = require('@rails/webpacker');
 
-environment.loaders.prepend('typescript', typescript)
-module.exports = environment
-
-const nodeModulesLoader = environment.loaders.get('nodeModules')
+module.exports = environment;
+const nodeModulesLoader = environment.loaders.get('nodeModules');
 
 if (!Array.isArray(nodeModulesLoader.exclude)) {
   nodeModulesLoader.exclude = (nodeModulesLoader.exclude == null) ? [] : [nodeModulesLoader.exclude]
