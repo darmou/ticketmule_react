@@ -22,7 +22,7 @@ WORKDIR /usr/src/app
 COPY Gemfile /usr/src/app/Gemfile
 COPY Gemfile.lock /usr/src/app/Gemfile.lock
 RUN bundle install
-RUN yarn install
+RUN yarn install --frozen-lockfile
 RUN npm rebuild node-sass
 RUN bundle exec rails assets:precompile
 RUN rake 
