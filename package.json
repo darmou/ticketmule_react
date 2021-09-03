@@ -27,7 +27,7 @@
     "history": "^5.0.0",
     "hosted-git-info": "^2.8.9",
     "idempotent-babel-polyfill": "^7.4.4",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "interweave": "^12.5.0",
     "match-sorter": "^4.0.2",
     "mini-css-extract-plugin": "^1.4.0",
