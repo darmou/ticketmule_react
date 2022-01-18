@@ -96,7 +96,7 @@
     "fork-ts-checker-webpack-plugin": "^6.0.7",
     "react-is": "^16.13.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.2",
+    "webpack-dev-server": "^4.7.3",
     "yarn-upgrade-all": "^0.5.2"
   }
 }
