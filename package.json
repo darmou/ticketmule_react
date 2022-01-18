@@ -7,7 +7,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.13.13",
     "@rails/ujs": "^6.0.3-2",
-    "@rails/webpacker": "5.4.0",
+    "@rails/webpacker": "^5.4.3",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "activestorage": "rails/activestorage",
@@ -32,6 +32,9 @@
     "match-sorter": "^4.0.2",
     "mini-css-extract-plugin": "^1.4.0",
     "moment": "^2.24.0",
+    "node-forge": "^1.0.0",
+    "nth-check": "^2.0.1",
+    "postcss": "^8.2.13",
     "prop-types": "^15.7.2",
     "property-expr": "^2.0.3",
     "react": "^16.13.1",
