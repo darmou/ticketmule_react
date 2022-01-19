@@ -6,12 +6,13 @@ import useSliderToggle from "react-slide-toggle-hooks";
 import styled from "styled-components";
 import Interweave from "interweave";
 import { Link } from "react-router-dom";
-import { useMutation, queryCache } from "react-query";
+import { useMutation } from "react-query";
 import useTicketmule from "../hooks/useTicketMule";
 import { ResourceItem } from "./ComponentLibrary/Resources";
 import { DeleteLink } from "./ComponentLibrary/StyledLinks";
 import { Timestamp } from "./ComponentLibrary/TimeFormating";
 import { Comment, State } from "../types/types";
+import { queryClient } from "../utils/network";
 
 const CommentSquare = styled.span`
     padding: 3px 2px;
@@ -37,12 +38,12 @@ interface Props {
 const CommentList = React.memo(({comments, state}: Props) => {
     const ticketMule = useTicketmule();
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
-    const [deleteTheComment] = useMutation(
+    const {mutate} = useMutation(
         ticketMule.deleteRelatedTicketRecord.bind(this, state, "comments"),
         {
             onSuccess: async () => {
                 // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
+                queryClient.removeQueries('ticket', { exact: true });
             },
         }
     );
@@ -53,7 +54,7 @@ const CommentList = React.memo(({comments, state}: Props) => {
     const deleteComment = async (id) => {
         if (window.confirm(`Really delete this comment #${id}?`)) {
             //useMutation to use delete method on comment
-            await deleteTheComment(id);
+            await mutate(id);
         }
     };
 

@@ -1,13 +1,14 @@
 import React, {useContext} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UserForm from "./UserForm";
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import useGetResource from "../../hooks/useGetResource";
 import { TicketContext } from "../../packs/application";
 import { RESOURCE_TYPES, User } from "../../types/types";
 import { createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
 import ResourceStore from "../../actions/resourceStore";
+import { queryClient } from "../../utils/network";
 
 const UserEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
@@ -17,7 +18,7 @@ const UserEdit = () => {
     const navigate = useNavigate();
 
     const ticketMule = useTicketmule();
-    const [editTheUser] = useMutation(
+    const { mutate: editTheUser} = useMutation(
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.USER, parseInt(slug)),
         {
             onSuccess: async (theUser: User) => {
@@ -27,7 +28,7 @@ const UserEdit = () => {
 
                 dispatch({action_fn: ResourceStore.setResource, user, resourceType: RESOURCE_TYPES.USER});
                 // Query Invalidations
-                await queryCache.invalidateQueries('AUser');
+                queryClient.removeQueries("AUser", { exact: true });
                 navigate(`/users/${theUser.id}`);
             },
         }

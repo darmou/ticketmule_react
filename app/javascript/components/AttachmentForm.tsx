@@ -6,9 +6,10 @@ import useTicketmule from "../hooks/useTicketMule";
 import { getAttachmentFileSize } from "../utils/displayUtils";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import { TicketContext } from "../packs/application";
 import ResourceStore from "../actions/resourceStore";
+import { queryClient } from "../utils/network";
 
 interface Props {
     toggleForm: () => void,
@@ -20,16 +21,15 @@ export const AttachmentForm = React.forwardRef(({toggleForm, addTheComment, id}:
     const ticketMule = useTicketmule();
     const { state, dispatch } = useContext(TicketContext);
     const { flashMsg } = state;
-    const { register, handleSubmit, clearErrors, errors, reset } = useForm();
-    const [addTheAttachment] = useMutation(
-        ticketMule.addRelatedTicketRecord.bind(this, state, "attachments", id),
-        {
-            onSuccess: async () => {
-                // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
-            },
+
+    const { register, handleSubmit, clearErrors, formState: { errors }, reset } = useForm();
+
+    const { mutate } = useMutation(ticketMule.addRelatedTicketRecord.bind(this, state, "attachments", id),{
+        onSuccess:()=>{
+            // Query Invalidations
+            queryClient.removeQueries('ticket', { exact: true });
         }
-    );
+    });
 
     const onSubmit = async data => {
         console.log(data);
@@ -39,7 +39,7 @@ export const AttachmentForm = React.forwardRef(({toggleForm, addTheComment, id}:
             const file = data.data[0];
             formData.append("attachment[data]", file);
             // @ts-ignore
-            await addTheAttachment(formData);
+            await mutate(formData);
             // We want to add comment here
             const fileSizeKB = getAttachmentFileSize(file.size);
             data = {
@@ -87,7 +87,7 @@ export const AttachmentForm = React.forwardRef(({toggleForm, addTheComment, id}:
                 { flashMsg }
 
                 <p>
-                    <input ref={register} id="attachment_data" name="data" size={30} type="file"/>
+                    <input {...register("data")} id="attachment_data" name="data" size={30} type="file"/>
                         <span id="attachment_limit">Limit 10 megabytes</span>
                 </p>
 

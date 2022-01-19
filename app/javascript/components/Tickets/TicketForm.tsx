@@ -5,6 +5,7 @@ import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { useForm } from "react-hook-form";
 import useGetOptions from "../../hooks/useGetOptions";
 import { Ticket, User } from "../../types/types";
+import { UseMutateFunction } from "react-query";
 
 const Row = styled.div`
   float: left;
@@ -51,7 +52,7 @@ const StyledForm = styled.form`
 interface Props {
     ticket: Ticket,
     user: User,
-    formAction?: (json: string) => void,
+    formAction?: UseMutateFunction<Ticket, unknown, string, unknown>,
     slug?: string
 }
 
@@ -77,7 +78,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
             };
 
             if (formAction != null) {
-                await formAction(JSON.stringify(toSend));
+                formAction(JSON.stringify(toSend));
             }
          } catch (error) {
                 console.log(error);
@@ -91,7 +92,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Contact:</StyledLabel>
-            <select defaultValue={(ticket && ticket.contact) ? ticket.contact.id : null} name="contact_id" ref={register}>
+            <select defaultValue={(ticket && ticket.contact) ? ticket.contact.id : null} name="contact_id" {...register("contact_id")}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'contacts')) && options.contacts.map(contact => {
                     return (<option key={`contact_${contact.id}`} value={contact.id}>{contact.first_name} {contact.last_name}</option>);
@@ -101,7 +102,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Group:</StyledLabel>
-            <select defaultValue={(ticket && ticket.group) ? ticket.group.id : null} name="group_id" ref={register}>
+            <select defaultValue={(ticket && ticket.group) ? ticket.group.id : null} name="group_id" {...register("group_id")}>
                 <option  value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'groups')) &&
                     options.groups.filter((group) => group.disabled_at == null).map(group => {
@@ -112,7 +113,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Status:</StyledLabel>
-            <select defaultValue={(ticket && ticket.status) ? ticket.status.id : (options && options.statuses) ? options.statuses[0].id : null} name="status_id" ref={register}>
+            <select defaultValue={(ticket && ticket.status) ? ticket.status.id : (options && options.statuses) ? options.statuses[0].id : null} name="status_id" {...register("status_id")}>
                 <option  value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'statuses')) &&
                     options.statuses.filter((group) => group.disabled_at == null).map(status => {
@@ -123,7 +124,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Time Type:</StyledLabel>
-            <select defaultValue={(ticket && ticket.time_type) ? ticket.time_type.id : null}  name="time_type_id" ref={register}>
+            <select defaultValue={(ticket && ticket.time_type) ? ticket.time_type.id : null}  name="time_type_id" {...register("time_type_id")}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'time_types')) &&
                     options.time_types.filter((group) => group.disabled_at == null).map(time_type => {
@@ -134,7 +135,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Priority:</StyledLabel>
-            <select  defaultValue={(ticket && ticket.priority) ? ticket.priority.id : null} name="priority_id" ref={register}>
+            <select  defaultValue={(ticket && ticket.priority) ? ticket.priority.id : null} name="priority_id" {...register("priority_id")}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'priorities')) &&
                     options.priorities.filter((group) => group.disabled_at == null).map(priority => {
@@ -145,7 +146,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Owner:</StyledLabel>
-            <select defaultValue={(ticket && ticket.owner) ? ticket.owner.id : null} name="owned_by" ref={register}>
+            <select defaultValue={(ticket && ticket.owner) ? ticket.owner.id : null} name="owned_by" {...register("owned_by")}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'owners')) && options.owners.map(owner => {
                     return (<option key={`owner_${owner.id}`} value={owner.id}>{owner.username}</option>);
@@ -155,7 +156,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Details: </StyledLabel>
-            <textarea defaultValue={(ticket) ? ticket.details : ""} name="details" ref={register} cols={45} rows={6}/>
+            <textarea defaultValue={(ticket) ? ticket.details : ""} name="details" {...register("details")} cols={45} rows={6}/>
         </Row>
         <Row>
             <StyledLabel>&nbsp;</StyledLabel>

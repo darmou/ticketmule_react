@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import OptionsStore from "../../actions/optionsStore";
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useTicketMule from "../../hooks/useTicketMule";
 import AdminSection from "./AdminSection";
 import { TicketContext } from "../../packs/application";
@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { createStandardSuccessMessage, createStandardErrorMessage } from "../ComponentLibrary/FlashMessages";
 import { capitalizeEachWord } from "../../utils/displayUtils";
 import { Error } from "../ComponentLibrary/FormComponentsStyled";
-import { getPlural } from "../../utils/network";
+import { getPlural, queryClient } from "../../utils/network";
 import ResourceStore from "../../actions/resourceStore";
 import {OptionType, OptionTypes, Result} from "../../types/types";
 
@@ -23,16 +23,17 @@ interface Props {
     type: OptionTypes
 }
 
+
 // eslint-disable-next-line react/display-name
 const AdminOptions = React.memo(({type}: Props) => {
-    const { register, handleSubmit, errors, reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const { state, dispatch } = useContext(TicketContext);
     const plural = getPlural(type);
     const label = `${type}`.replace("_", " ");
     const captial = capitalizeEachWord(label);
     const ticketMule = useTicketMule();
 
-    const [toggleEnableOption] = useMutation(
+    const {mutate: toggleEnableOption} = useMutation(
         ticketMule.toggleEnableOption.bind(this, state, type),
         {
             onSuccess: async (option: OptionType) => {
@@ -40,15 +41,14 @@ const AdminOptions = React.memo(({type}: Props) => {
                 dispatch({
                         action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} was successfully ${msg}!`)});
-
-                await queryCache.invalidateQueries("options");
+                queryClient.removeQueries("options", { exact: true });
                 dispatch({action_fn: OptionsStore.updateOption, type, anOption: option});
                 // Query Invalidations
             },
         }
     );
 
-    const [addTheOption] = useMutation(
+    const { mutate: addTheOption } = useMutation(
         ticketMule.addOption.bind(this, state, type),
 
         {
@@ -57,7 +57,8 @@ const AdminOptions = React.memo(({type}: Props) => {
                     action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} successfully added!`)});
 
-                await queryCache.invalidateQueries("options");
+                queryClient.removeQueries("options", { exact: true });
+
                 dispatch({action_fn: OptionsStore.addOption, type, anOption: option});
                 // Query Invalidations
             },
@@ -101,7 +102,7 @@ const AdminOptions = React.memo(({type}: Props) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FieldContainer>
                     <FieldStyled width={225} type="text" name="addOption"
-                                 ref={register({required: true})}></FieldStyled>
+                                 {...register("addOption", {required: true})}></FieldStyled>
                     <SecondaryButton type="submit">
                         Add {captial}
                     </SecondaryButton>

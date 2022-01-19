@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
 import {Link, useNavigate} from "react-router-dom";
-import {queryCache, useMutation} from "react-query";
+import {useMutation} from "react-query";
 import EditTicketIcon from "../images/edit-ticket.png";
 import PDFIcon from "../images/document-pdf.png";
 import AddAlertIcon from "../images/add-alert.png";
@@ -20,6 +20,7 @@ import {RESOURCE_TYPES, Ticket} from "../types/types";
 import {TicketContext} from "../packs/application";
 import useDeleteAlert from "../hooks/useDeleteAlert";
 import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
+import { queryClient } from "../utils/network";
 
 
 /*
@@ -41,18 +42,18 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
     const { deleteTheAlert } = useDeleteAlert();
     const ticketMule = new TicketmuleNetwork(user);
 
-    const [toggleEnableContact] = useMutation(
+    const { mutate:toggleEnableContact } = useMutation(
         ticketMule.toggleEnableContact.bind(this, state),
         {
             onSuccess: async (contact) => {
                 dispatch({action_fn: ResourceStore.setResource, resource: contact, resourceType});
                 // Query Invalidations
-                await queryCache.invalidateQueries(`${resourceType}`);
+                queryClient.removeQueries(`${resourceType}`, { exact: true });
             },
         }
     );
 
-    const [deleteTheResource] = useMutation(
+    const { mutate: deleteTheResource } = useMutation(
         ticketMule.deleteResource.bind(this, state, resourceType, resource.id),
         {
             onSuccess: async () => {
@@ -76,12 +77,12 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                     };
                     dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData});
                 }
-                await queryCache.invalidateQueries(`${resourceType}s`);
+                queryClient.removeQueries(`${resourceType}s`, { exact: true });
             },
         }
     );
 
-    const [addTheAlert] = useMutation(
+    const {mutate: addTheAlert} = useMutation(
         ticketMule.addRelatedTicketRecord.bind(this, state, "alerts", resource.id),
         {
             onSuccess: async (ticket: Ticket) => {
@@ -95,7 +96,7 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                     resource: ticket,
                     resourceType: RESOURCE_TYPES.TICKET});
 
-                await queryCache.invalidateQueries(RESOURCE_TYPES.TICKET);
+                queryClient.removeQueries(RESOURCE_TYPES.TICKET, { exact: true });
             },
         }
     );

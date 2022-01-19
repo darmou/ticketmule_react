@@ -192,7 +192,7 @@ interface Props {
 }
 
 const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
-    const { register, handleSubmit, errors, getValues, clearErrors } = useForm();
+    const { register, handleSubmit, formState: { errors }, getValues, clearErrors } = useForm();
 
     const onSubmit = async (data) => {
         delete data["confirm_password"];
@@ -209,26 +209,26 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
     return(<Form acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit.bind(this))}>
         <FormRow>
             <FormLabel>Username:</FormLabel>
-            <FormInput name="username" ref={register({required: true})}
+            <FormInput name="username" {...register("username", {required: true})}
                          size="30"
                          defaultValue={(aUser) ? aUser.username : ""} type="text"/>
             {(errors.username) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Username is required</Error></>}
         </FormRow>
         <FormRow>
             <FormLabel>First name:</FormLabel>
-            <FormInput size="30" name="first_name" ref={register({required: true})}
+            <FormInput size="30" name="first_name" {...register("first_name", {required: true})}
                          defaultValue={(aUser) ? aUser.first_name : ""} type="text"/>
             {(errors.first_name) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>First name is required</Error></>}
         </FormRow>
         <FormRow>
             <FormLabel>Last name:</FormLabel>
-            <FormInput size="30" name="last_name" ref={register({required: true})}
+            <FormInput size="30" name="last_name" {...register("last_name", {required: true})}
                          defaultValue={(aUser) ? aUser.last_name : ""} type="text"/>
             {(errors.last_name) && <>{(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}<Error>Last name is required</Error></>}
         </FormRow>
         <FormRow>
             <FormLabel>Time zone:</FormLabel>
-            <select  name="time_zone" ref={register({required: true})}
+            <select  name="time_zone" {...register("time_zone", {required: true})}
                      defaultValue={(isAdminForm) ? "Central Time (US & Canada)" : (aUser && aUser.time_zone) ? aUser.time_zone : null}
             >
                 <option  value=""/>
@@ -246,7 +246,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
             <FormLabel>Email:</FormLabel>
             <FormInput size="30" name="email"
                          onChange={() => {clearErrors("email"); clearErrors("confirm_email");}}
-                         ref={register({
+                         {...register("email", {
                 required: true,
                 pattern: /^\S+@\S+$/i,
                 validate: () => getValues("email") === getValues("confirm_email")
@@ -262,7 +262,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
             <FormLabel>Confirm Email:</FormLabel>
             <FormInput size="30" name="confirm_email"
                  onChange={() => {clearErrors("email"); clearErrors("confirm_email");}}
-                         ref={register({
+                         {...register("confirm_email", {
                 required: true,
                 pattern: /^\S+@\S+$/i,
                 validate: () => getValues("email") === getValues("confirm_email")
@@ -280,7 +280,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
             <FormInput size="30" name="password"
 
                          onChange={() => {clearErrors("password"); clearErrors("confirm_password");}}
-                         ref={register({
+                         {...register("password", {
                 required: isAdminForm,
                 minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")
@@ -297,7 +297,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
             <FormLabel>Confirm Password:</FormLabel>
             <FormInput size="30" name="confirm_password"
                          onChange={() => {clearErrors("password"); clearErrors("confirm_password");}}
-                         ref={register({
+                         {...register("confirm_password", {
                              required: isAdminForm,
                 minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")

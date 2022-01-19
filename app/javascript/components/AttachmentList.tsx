@@ -11,12 +11,13 @@ import PowerPointDocumentIcon from "../images/document-powerpoint.png";
 import MusicDocumentIcon from "../images/document-music.png";
 import WordDocumentIcon from "../images/document-word.png";
 import ImageDocumentIcon from "../images/document-image.png";
-import { useMutation, queryCache } from "react-query";
+import { useMutation } from "react-query";
 import useTicketmule from "../hooks/useTicketMule";
 import { Timestamp } from "./ComponentLibrary/TimeFormating";
 import { DeleteLink } from "./ComponentLibrary/StyledLinks";
 import { getAttachmentFileSize } from "../utils/displayUtils";
 import { State } from "../types/types";
+import { queryClient } from "../utils/network";
 
 const DOC_TYPES = {
     "application/pdf": PdfDocumentIcon,
@@ -58,15 +59,13 @@ interface Props {
 const AttachmentList = React.memo(({attachments, state} : Props) => {
     const ticketMule = useTicketmule();
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
-    const [deleteTheAttachment] = useMutation(
-        ticketMule.deleteRelatedTicketRecord.bind(this, state, "attachments"),
-        {
-            onSuccess: async () => {
-                // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
-            },
+
+    const { mutate } = useMutation(ticketMule.deleteRelatedTicketRecord.bind(this, state, "attachments"),{
+        onSuccess:()=>{
+            // Query Invalidations
+            queryClient.removeQueries('ticket', { exact: true });
         }
-    );
+    });
 
     const { expandableRef, toggle, slideToggleState } =
         getSliderToggle({duration: SLIDE_DURATION});
@@ -74,7 +73,7 @@ const AttachmentList = React.memo(({attachments, state} : Props) => {
     const deleteAttachment = async (id) => {
         if (window.confirm(`Really delete this attachment #${id}?`)) {
             //useMutation to use delete method on attachment
-            await deleteTheAttachment(id);
+            await mutate(id);
         }
     };
 

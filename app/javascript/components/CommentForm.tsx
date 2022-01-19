@@ -21,7 +21,7 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
     const { toggleForm, addTheComment } = props;
     const { dispatch, state } = useContext(TicketContext);
     const { flashMsg } = state;
-    const { register, handleSubmit, clearErrors, errors, reset } = useForm();
+    const { register, handleSubmit, clearErrors, formState: { errors }, reset } = useForm();
 
     const onSubmit = async data => {
         //We want to submit our form
@@ -65,13 +65,16 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
         <form onSubmit={handleSubmit(onSubmit)} className="new_comment" id="new_comment" method="post">
             <StyledEnclosingDiv>
                 { flashMsg }
-                <StyledTextArea className="textarea" cols="70" ref={register({required: true})} id="comment_comment" name="comment" rows="6"
+                <StyledTextArea className="textarea" cols="70" {...register("comment", {required: true})}
+                                id="comment_comment"
+                                name="comment"
+                                rows="6"
                               spellCheck="false"></StyledTextArea>
 
 
             </StyledEnclosingDiv>
             <p id="close-check">
-                <input id="close_ticket" name="close_ticket" ref={register} type="checkbox"/>
+                <input id="close_ticket" name="close_ticket" {...register("close_ticket")}  type="checkbox"/>
                 <label htmlFor="close_ticket">Close ticket with this comment</label>
             </p>
             <p>

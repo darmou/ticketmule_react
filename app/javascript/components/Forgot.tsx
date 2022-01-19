@@ -11,12 +11,12 @@ import { Link } from "react-router-dom";
 
 const Forgot = () => {
     const ticketMule = useTicketmule();
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const { state, dispatch } = React.useContext(TicketContext);
     const { flashMsg } = state;
     let isLoading = false;
 
-    const [forgot] = useMutation(
+    const {mutate: forgot} = useMutation(
         ticketMule.forgot.bind(this), {
             onSuccess: async () => {
                 dispatch({
@@ -54,7 +54,7 @@ const Forgot = () => {
                     <dd>
                         <StyledInput
                             id="user_session_email"
-                            ref={register({required:true})}
+                            {...register("email", {required:true})}
                             name="email" size="23"
                             type="text"/>
                         {errors.username && <ValidationDiv>Username is required</ValidationDiv>}

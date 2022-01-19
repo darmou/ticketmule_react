@@ -11,9 +11,10 @@ import AttachmentList from "../AttachmentList";
 import CommentList from "../CommentList";
 import { TicketContext } from "../../packs/application";
 import { AttachmentForm } from "../AttachmentForm";
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import { RESOURCE_TYPES } from "../../types/types";
+import { queryClient } from "../../utils/network";
 
 const Ticket = React.memo(() => {
     const { state } = useContext(TicketContext);
@@ -29,12 +30,12 @@ const Ticket = React.memo(() => {
             initialState: SLIDE_STATES.COLLAPSED, duration: SLIDE_DURATION }
     );
 
-    const [addTheComment] = useMutation(
+    const {mutate: addTheComment} = useMutation(
         ticketMule.addRelatedTicketRecord.bind(this, state, "comments", slug),
         {
             onSuccess: async () => {
                 // Query Invalidations
-                await queryCache.invalidateQueries('ticket');
+                queryClient.removeQueries("ticket", { exact: true });
             },
         }
     );

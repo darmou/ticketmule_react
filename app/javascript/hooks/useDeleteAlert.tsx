@@ -1,4 +1,4 @@
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useTicketMule from "./useTicketMule";
 import React, { useContext } from "react";
 import { TicketContext } from "../packs/application";
@@ -6,6 +6,7 @@ import { SuccessNotificationStyled } from "../components/ComponentLibrary/FlashM
 import ResourceStore from "../actions/resourceStore";
 import {RESOURCE_TYPES, Ticket} from "../types/types";
 import EnableIcon from "../images/accept.png";
+import { queryClient } from "../utils/network";
 
 interface Response {
     ticket_id: number
@@ -14,7 +15,7 @@ interface Response {
 const useDeleteAlert = () => {
     const ticketMule = useTicketMule();
     const { state, dispatch } = useContext(TicketContext);
-    const [deleteTheAlert] = useMutation(
+    const {mutate: deleteTheAlert} = useMutation(
         ticketMule.deleteRelatedTicketRecord.bind(this, state, "alerts", null),
         {
             onSuccess: async (ticket: Ticket) => {
@@ -29,8 +30,8 @@ const useDeleteAlert = () => {
                     resourceType: RESOURCE_TYPES.TICKET
                 });
                 // Query Invalidations
-                await queryCache.invalidateQueries("ticket");
-                await queryCache.invalidateQueries("aUser");
+                queryClient.removeQueries("ticket", { exact: true });
+                queryClient.removeQueries("aUser", { exact: true });
             },
         }
     );

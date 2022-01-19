@@ -84,7 +84,7 @@ interface Props {
 }
 
 const TicketControls = ({loggedIn} : Props) => {
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const { options } = useGetOptions(true);
     const filterForm = useForm();
     const { dispatch, state }  = useContext(TicketContext);
@@ -160,7 +160,7 @@ const TicketControls = ({loggedIn} : Props) => {
                         name="jumpId"
                         type="text"
                         FieldStyled
-                        ref={register({required: true, pattern: /^\d+$/})}
+                        {...register("jumpId", {required: true, pattern: /^\d+$/})}
                         className={
                             errors.jumpId ? 'error' : ''
                         }
@@ -191,7 +191,7 @@ const TicketControls = ({loggedIn} : Props) => {
                 {(showFilterForm) && <FilterForm onSubmit={filterForm.handleSubmit(onFilterFormSubmit)} id="ticket-filter" >
                     <StyledRow marginBottom={3}>
                         <Label htmlFor="filter-title">Title</Label>
-                        <input ref={filterForm.register} className="textfield" id="filter-title" name="search[title]" size={30}
+                        <input {...filterForm.register} className="textfield" id="filter-title" name="search[title]" size={30}
                                type="text"/>
                     </StyledRow>
                     <StyledRow marginBottom={3}>
@@ -200,7 +200,7 @@ const TicketControls = ({loggedIn} : Props) => {
                             className="selectbox"
                             id="search_group_id"
                             name="search[group_id]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'groups')) &&
                             options.groups.filter((group) => group.disabled_at == null).map(group => {
                                 return (<option  key={`group_${group.id}`} value={group.id}>{group.name}</option>);
@@ -215,7 +215,7 @@ const TicketControls = ({loggedIn} : Props) => {
                                        className="selectbox"
                                        id="search_contact_id"
                                        name="search[contact_id]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'contacts')) && options.contacts.map(contact => {
                                 return (<option key={`contact_${contact.id}`} value={contact.id}>{contact.first_name} {contact.last_name}</option>);
                             })
@@ -229,7 +229,7 @@ const TicketControls = ({loggedIn} : Props) => {
                                       className="selectbox"
                                       id="search_status_id"
                                       name="search[status_id]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'statuses')) &&
                             options.statuses.filter((group) => group.disabled_at == null).map(status => {
                                 return (<option  key={`status_${status.id}`} value={status.id}>{status.name}</option>);
@@ -244,7 +244,7 @@ const TicketControls = ({loggedIn} : Props) => {
                                         className="selectbox"
                                         id="search_priority_id"
                                         name="search[priority_id]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'priorities')) &&
                             options.priorities.filter((group) => group.disabled_at == null).map(priority => {
                                 return (<option key={`time_type_${priority.id}`} value={priority.id}>{priority.name}</option>);
@@ -259,7 +259,7 @@ const TicketControls = ({loggedIn} : Props) => {
                                         className="selectbox"
                                         id="search_time_type_id"
                                         name="search[time_type_id]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'time_types')) &&
                             options.time_types.filter((group) => group.disabled_at == null).map(time_type => {
                                 return (<option key={`time_type_${time_type.id}`} value={time_type.id}>{time_type.name}</option>);
@@ -274,7 +274,7 @@ const TicketControls = ({loggedIn} : Props) => {
                                        className="selectbox"
                                        id="search_owned_by"
                                        name="search[owned_by]">
-                            <option value=""></option>
+                            <option value=""/>
                             { (options && Object.prototype.hasOwnProperty.call(options, 'owners')) && options.owners.map(owner => {
                                 return (<option key={`owner_${owner.id}`} value={owner.id}>{owner.username}</option>);
                             })
@@ -287,7 +287,7 @@ const TicketControls = ({loggedIn} : Props) => {
                         <Controller
                             name="search[created_at_gte]"
                             control={filterForm.control}
-                            render={({ onChange, value }) => (
+                            render={({ field: {value, onChange}}) => (
                                 <DatePicker
                                     selected={value}
                                     popperPlacement="top"
@@ -304,7 +304,7 @@ const TicketControls = ({loggedIn} : Props) => {
                         <Controller
                             name="search[created_at_lt]"
                             control={filterForm.control}
-                            render={({ onChange, value }) => (
+                            render={({ field: { onChange, value } }) => (
                                 <DatePicker
                                     selected={value}
                                     popperPlacement="top"

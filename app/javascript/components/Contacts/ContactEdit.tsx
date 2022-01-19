@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ContactForm from "./ContactForm";
-import { queryCache, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import useGetResource from "../../hooks/useGetResource";
 import { TicketContext } from "../../packs/application";
 import { Contact, RESOURCE_TYPES } from "../../types/types";
 import ResourceStore from "../../actions/resourceStore";
+import { queryClient } from "../../utils/network";
 
 const ContactEdit = () => {
     const { state, dispatch } = useContext(TicketContext);
@@ -16,13 +17,13 @@ const ContactEdit = () => {
     const navigate = useNavigate();
 
     const ticketMule = useTicketmule();
-    const [editTheContact] = useMutation(
+    const {mutate: editTheContact} = useMutation(
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.CONTACT, parseInt(slug)),
         {
             onSuccess: async (contact: Contact) => {
                 dispatch({action_fn: ResourceStore.setResource, resource: contact, ResourceType: RESOURCE_TYPES.CONTACT});
                 // Query Invalidations
-                await queryCache.invalidateQueries('contact');
+                queryClient.removeQueries("contact", { exact: true });
                 navigate(`/contacts/${contact.id}`);
             },
         }

@@ -23,12 +23,12 @@ interface Error {
 
 const Login = () =>  {
     const ticketMule = useTicketmule();
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const { state, dispatch } = React.useContext(TicketContext);
     const { flashMsg, isLoggingOut } = state;
     let isLoading = false;
 
-    const [login] = useMutation(
+    const {mutate: login} = useMutation(
         ticketMule.login.bind(this), {
             onSuccess: async (theUser: User) => {
                 dispatch({
@@ -94,7 +94,7 @@ const Login = () =>  {
                     <dd>
                         <StyledInput
                                id="user_session_username"
-                               ref={register({required:true})}
+                               {...register("username", {required:true})}
                                defaultValue={localStorage.getItem("username")}
                                name="username" size="20"
                                type="text" autoComplete={(localStorage.getItem("username")) ? "on": "off"}/>
@@ -107,14 +107,14 @@ const Login = () =>  {
                         <StyledInputPassword
                                id="user_session_password" name="password"
                                size="20"
-                               ref={register({required:true})}
+                               {...register("password", {required:true})}
                                type="password" autoComplete={(localStorage.getItem("username")) ? "on": "off"}/>
                         {errors.password && <ValidationDiv>Password is required</ValidationDiv>}
                     </dd>
                     <dd>
                         <input name="user_session[remember_me]" type="hidden" value="0"/>
                         <input id="user_session_remember_me" name="remember_me"
-                               ref={register}
+                               {...register}
                                type="checkbox" value="true"/>
                         <label htmlFor="user_session_remember_me">Remember me</label>
                     </dd>

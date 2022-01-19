@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
     const ticketMule = useTicketmule();
-    const { register, handleSubmit, errors, clearErrors, getValues } = useForm();
+    const { register, handleSubmit, formState: { errors }, clearErrors, getValues } = useForm();
     const { state, dispatch } = React.useContext(TicketContext);
     const { flashMsg } = state;
     const queryString = window.location.search;
@@ -23,7 +23,7 @@ const ResetPassword = () => {
     const token = urlParams.get("reset_token");
     let isLoading = false;
 
-    const [resetPassword] = useMutation(
+    const { mutate } = useMutation(
         ticketMule.reset_password.bind(this, token), {
             onSuccess: async (theUser) => {
                 if (theUser === "not_found") {
@@ -51,7 +51,7 @@ const ResetPassword = () => {
     );
 
     const onSubmit = async (data) => {
-        await resetPassword(data.password);
+        await mutate(data.password);
     };
 
     return (<LoginStyled>
@@ -72,7 +72,7 @@ const ResetPassword = () => {
                             id="user_session_password" name="password"
                             size="20"
                             onChange={() => clearErrors('password')}
-                            ref={register({required:true,
+                            {...register("password", {required:true,
                                 validate: () => getValues("password") === getValues("confirm_password"),
                                 minLength:MIN_PASSWORD_LEN})}
                             type="password"/>
@@ -89,7 +89,7 @@ const ResetPassword = () => {
                             id="user_session_confirm_password" name="confirm_password"
                             size="20"
                             onChange={() => clearErrors('confirm_password')}
-                            ref={register(
+                            {...register("confirm_password",
                                 {required:true,
                                     validate: () => getValues("password") === getValues("confirm_password"),
                                     minLength:MIN_PASSWORD_LEN})}
