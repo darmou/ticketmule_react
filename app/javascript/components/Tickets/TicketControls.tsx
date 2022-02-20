@@ -1,5 +1,4 @@
 import React, {Fragment, useContext} from "react";
-import { pure } from "recompose";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
@@ -343,4 +342,4 @@ const RightContainerStyled = styled.div`
     }
 `;
 
-export default pure(TicketControls);
+export default TicketControls;
