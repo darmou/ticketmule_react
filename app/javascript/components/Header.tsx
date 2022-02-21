@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import HeadBackground from "../images/head-bg.gif";
 import UserStore from "../actions/userStore";
 
@@ -40,7 +40,7 @@ const Header = () => {
 
 const HeaderStyled = styled.header`
     width: 100%;
-    background: #2d2d2d url(${HeadBackground}) top left repeat-x;
+    background: #2d2d2d url(/assets/${HeadBackground}) top left repeat-x;
     border-bottom: 4px solid #90af4c;
     height: 80px;
     overflow: hidden;

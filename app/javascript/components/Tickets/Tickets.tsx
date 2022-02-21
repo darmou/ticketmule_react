@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import useGetResources from "../../hooks/useGetResources";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import ResourceStore from "../../actions/resourceStore";
 import { RESOURCE_TYPES } from "../../types/types";
 

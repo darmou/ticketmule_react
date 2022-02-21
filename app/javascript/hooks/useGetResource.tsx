@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import { RESOURCE_TYPES } from "../types/types";
 import { useSSE } from "react-hooks-sse";
 import ResourceStore from "../actions/resourceStore";

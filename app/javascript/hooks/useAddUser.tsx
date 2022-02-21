@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useMutation } from "react-query";
 import useTicketMule from "./useTicketMule";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import ResourceStore from "../actions/resourceStore";
 import { RESOURCE_TYPES, Result, User } from "../types/types";
 import { useNavigate } from "react-router-dom";

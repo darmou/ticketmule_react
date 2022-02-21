@@ -10,7 +10,7 @@ const ContactRoutes = () => {
 
     return (
             <Routes>
-                <Route path='/' element={<Contacts/>}/>
+                <Route index={true} element={<Contacts/>}/>
                 <Route path=':slug' element={<Contact/>}/>
                 <Route path=':slug/edit' element={<ContactEdit/>}/>
                 <Route path='new' element={<ContactNew/>}/>

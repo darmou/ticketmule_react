@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { FakeLink } from "../ComponentLibrary/StyledLinks";
 import { FieldStyled, Label, StyledRow } from "../ComponentLibrary/FormComponentsStyled";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import ResourceStore from "../../actions/resourceStore";
 import { isEmpty } from "../../utils/displayUtils";
 import "react-datepicker/dist/react-datepicker.css";

@@ -17,7 +17,7 @@ import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { deleteAlert } from "../utils/displayUtils";
 import ResourceStore from "../actions/resourceStore";
 import {RESOURCE_TYPES, Ticket} from "../types/types";
-import {TicketContext} from "../packs/application";
+import {TicketContext} from "../application";
 import useDeleteAlert from "../hooks/useDeleteAlert";
 import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
 import { queryClient } from "../utils/network";
@@ -164,22 +164,22 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                     "Add Comment": {link: () => setShowCommentForm(), icon: AddCommentIcon},
                     "Add Attachment": {link: () => setShowAttachmentForm(), icon: AddAttachmentIcon},
                     "Delete": {link: () => deleteResource(), icon: DeleteIcon},
-                    "Back": {link: "/tickets/", icon: BackArrowIcon}
+                    "Back": {link: "/tickets/", icon: "assets" + BackArrowIcon}
                 };
             case RESOURCE_TYPES.CONTACT:
                 return {
                     "Edit": {link: `/contacts/${resource.id}/edit`, icon: EditContactIcon},
                     [enableKey]: {
                         link: () => toggleContact(),
-                        icon: (resource.is_enabled) ? DisableContactIcon : EnableContactIcon
+                        icon: "/assets" + (resource.is_enabled) ? DisableContactIcon : EnableContactIcon
                     },
-                    "Back": {link: "/contacts/", icon: BackArrowIcon}
+                    "Back": {link: "/contacts/", icon: "/assets" + BackArrowIcon}
                 };
             case RESOURCE_TYPES.USER:
                 return {
                     "Edit": { link: `/users/${resource.id}/edit`, icon: EditUserIcon },
                     "Delete": { link: () => deleteResource(), icon: DeleteIcon },
-                    "Back": { link: "/users/", icon: BackArrowIcon }
+                    "Back": { link: "/users/", icon: "/assets" + BackArrowIcon }
                 };
         }
     })(resourceType);

@@ -4,7 +4,7 @@ import ContactForm from "./ContactForm";
 import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import useGetResource from "../../hooks/useGetResource";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import { Contact, RESOURCE_TYPES } from "../../types/types";
 import ResourceStore from "../../actions/resourceStore";
 import { queryClient } from "../../utils/network";

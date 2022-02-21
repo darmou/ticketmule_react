@@ -4,7 +4,7 @@ import OptionsStore from "../../actions/optionsStore";
 import { useMutation } from "react-query";
 import useTicketMule from "../../hooks/useTicketMule";
 import AdminSection from "./AdminSection";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { FieldStyled } from "../ComponentLibrary/FormComponentsStyled";
 import { useForm } from "react-hook-form";

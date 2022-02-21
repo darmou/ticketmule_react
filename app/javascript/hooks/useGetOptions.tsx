@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import PropTypes from "prop-types";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import ResourceStore from "../actions/resourceStore";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 
 const useGetOptions = (shouldFetchPeoeple : boolean) => {
     const { state, dispatch } = useContext(TicketContext);

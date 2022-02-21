@@ -9,7 +9,7 @@ const UserRoutes = () => {
 
     return (
         <Routes>
-            <Route path='/' element={<Users/>}/>
+            <Route index={true} element={<Users/>}/>
             <Route path=':slug' element={<User/>}/>
             <Route path=':slug/edit' element={<UserEdit/>}/>
             <Route path='new' element={<UserNew/>}/>

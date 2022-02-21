@@ -3,10 +3,11 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-require("@rails/ujs").start();
-require("turbolinks").start();
-require("@rails/activestorage").start();
-require("channels");
+//require("@rails/ujs").start();
+//require("turbolinks").start();
+//require("@rails/activestorage").start();
+//require("channels");
+//import "./channels"
 
 
 // Uncomment to copy all static images under ../images to the output folder and reference
@@ -19,12 +20,11 @@ require("channels");
 import React, { createContext, useReducer } from 'react';
 import PropTypes from "prop-types";
 import { render } from "react-dom";
-import App from "../components/App";
+import App from "./components/App";
 import { BrowserRouter } from "react-router-dom";
 import "idempotent-babel-polyfill";
 import { CookiesProvider } from "react-cookie";
 import functionReducer, { logReducer } from "function-reducer";
-
 
 const initialPageInfo  = {
     currentPage: 1,

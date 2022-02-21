@@ -6,13 +6,13 @@ import {
 import IdleTimer from "react-idle-timer";
 import styled from "styled-components";
 import { SSEProvider } from "react-hooks-sse";
-import EventSource from "eventsource";
+//import EventSource from "eventsource";
 import Login from "./Login";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
 import { withCookies } from 'react-cookie';
 import PropTypes from "prop-types";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import TicketDash from "./Tickets/TicketDash";
 import TicketNew from "./Tickets/TicketNew";
 import TicketEdit from "./Tickets/TicketEdit";
@@ -32,6 +32,8 @@ import Forgot from "./Forgot";
 import { OptionTypes } from "../types/types";
 import ResetPassword from "./ResetPassword";
 import { stringToBoolean } from "../utils/displayUtils";
+import { queryClient } from "../utils/network";
+import { QueryClientProvider } from 'react-query'
 
 const SESSION_TIMEOUT = 300000; //5 mins
 
@@ -109,40 +111,42 @@ function BaseApp ({context}) {
             onAction={_onActionOrActive}
             debounce={250}
             timeout={SESSION_TIMEOUT} />
-        <SSEProvider source={() => createSource()}>
-            <ContentStyled>
-                <Header/>
-                <AppWrapper>
-                    {(user == null) ? null : flashMsg}
-                    <Routes>
-                        <Route path='/tickets' element={<TicketDash/>}>
-                            <Route path='/' element={<Tickets/>} />
-                            <Route path='/new' element={<TicketNew context={context}/>} />
-                            <Route path=':slug' element={<Ticket/>} />
-                            <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
-                        </Route>
-                        <Route path='/forgot' element={<Forgot/>}/>
-                        <Route path='/reset_password' element={<ResetPassword/>}/>
-                        <Route path='/contacts/*' element={<ContactRoutes/>}/>
-                        <Route path='/users/*' element={<UserRoutes/>}/>
-                        {(user && user.admin) &&
-                            <Route path='/admin' element={<Admin/>}>
-                                <Route path='/' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                                <Route path='/groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
-                                <Route path='/statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
-                                <Route path='/priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
-                                <Route path='/time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
-                                <Route path='/users' element={<AdminUsers/>}/>
+        <QueryClientProvider client={queryClient}>
+            <SSEProvider source={() => createSource()}>
+                <ContentStyled>
+                    <Header/>
+                    <AppWrapper>
+                        {(user == null) ? null : flashMsg}
+                        <Routes>
+                            <Route path='/tickets' element={<TicketDash/>}>
+                                <Route index={true} element={<Tickets/>} />
+                                <Route path='new' element={<TicketNew context={context}/>} />
+                                <Route path=':slug' element={<Ticket/>} />
+                                <Route path=':slug/edit' element={<TicketEdit context={context}/>} />
                             </Route>
-                        }
-                        <Route path='/' element={<Dash/>}/>
-                    </Routes>
-                </AppWrapper>
-                <RightColumnStyled>
-                    <TicketControls loggedIn={user != null}/>
-                </RightColumnStyled>
-            </ContentStyled>
-        </SSEProvider>
+                            <Route path='/forgot' element={<Forgot/>}/>
+                            <Route path='/reset_password' element={<ResetPassword/>}/>
+                            <Route path='/contacts/*' element={<ContactRoutes/>}/>
+                            <Route path='/users/*' element={<UserRoutes/>}/>
+                            {(user && user.admin) &&
+                                <Route path='/admin' element={<Admin/>}>
+                                    <Route index={true} element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                                    <Route path='groups' element={<AdminOptions type={OptionTypes.GROUP}/>}/>
+                                    <Route path='statuses' element={<AdminOptions type={OptionTypes.STATUS}/>}/>
+                                    <Route path='priorities' element={<AdminOptions type={OptionTypes.PRIORITY}/>}/>
+                                    <Route path='time_types' element={<AdminOptions type={OptionTypes.TIME_TYPE}/>}/>
+                                    <Route path='users' element={<AdminUsers/>}/>
+                                </Route>
+                            }
+                            <Route index={true} element={<Dash/>}/>
+                        </Routes>
+                    </AppWrapper>
+                    <RightColumnStyled>
+                        <TicketControls loggedIn={user != null}/>
+                    </RightColumnStyled>
+                </ContentStyled>
+            </SSEProvider>
+        </QueryClientProvider>
     </AppStyled>);
 }
 

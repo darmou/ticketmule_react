@@ -7,7 +7,7 @@ import { getAttachmentFileSize } from "../utils/displayUtils";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
 import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { useMutation } from "react-query";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import ResourceStore from "../actions/resourceStore";
 import { queryClient } from "../utils/network";
 

@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import useTicketMule from "./useTicketMule";
 import React, { useContext } from "react";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import { SuccessNotificationStyled } from "../components/ComponentLibrary/FlashMessages";
 import ResourceStore from "../actions/resourceStore";
 import {RESOURCE_TYPES, Ticket} from "../types/types";

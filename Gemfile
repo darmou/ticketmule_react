@@ -1,24 +1,24 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.3'
+ruby '3.1.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.4.6'
+gem "rails", "~> 7.0.2.2"
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
 gem 'pg', '~> 1.2'
-
-gem 'simple_token_authentication'
+gem "activerecord-session_store"
+#gem 'simple_token_authentication'
 # Use Puma as the app server
 gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 6.0.0.rc.6'
+gem "sprockets-rails"
+gem "jsbundling-rails"
 
-
-
+#gem 'simple_token_authentication', '~> 1.0'
+gem 'simple_token_authentication', git: 'https://github.com/OskarEichler/simple_token_authentication'
 
 
 gem 'devise'
@@ -34,8 +34,7 @@ gem 'pagy', '~> 3.8'
 gem 'jbuilder', '~> 2.7'
 gem 'rack-cors'
 gem 'ruport'
-gem 'prawn-rails', '~> 1.3.0'
-gem 'prawn', '~> 2.3.0'
+gem 'prawn-rails', '~> 1.4.2'
 gem 'jsonapi-serializer'
 
 #gem 'protected_attributes'

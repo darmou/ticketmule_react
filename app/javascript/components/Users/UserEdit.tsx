@@ -4,7 +4,7 @@ import UserForm from "./UserForm";
 import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";
 import useGetResource from "../../hooks/useGetResource";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import { RESOURCE_TYPES, User } from "../../types/types";
 import { createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
 import ResourceStore from "../../actions/resourceStore";

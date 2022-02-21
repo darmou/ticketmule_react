@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import ResourceStore from "../../actions/resourceStore";
 import PageButton from "../ComponentLibrary/PageButton";
 import styled from "styled-components";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import { RESOURCE_TYPES, ResourcePageInfo } from "../../types/types";
 
 const LetterButtonsWrapper = styled.div`

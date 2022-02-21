@@ -4,7 +4,7 @@ import useTicketmule from "../../hooks/useTicketMule";
 import { useNavigate } from "react-router-dom";
 import ResourceStore from "../../actions/resourceStore";
 import ContactForm from "./ContactForm";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import { Contact, RESOURCE_TYPES } from "../../types/types";
 import { queryClient } from "../../utils/network";
 

@@ -9,7 +9,7 @@ import Controls from "../Controls";
 import { CommentForm } from "../CommentForm";
 import AttachmentList from "../AttachmentList";
 import CommentList from "../CommentList";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import { AttachmentForm } from "../AttachmentForm";
 import { useMutation } from "react-query";
 import useTicketmule from "../../hooks/useTicketMule";

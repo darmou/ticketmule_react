@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import usePrevious from "../hooks/usePrevious";
 import styled from "styled-components";
 import ResourceStore from "../actions/resourceStore";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import PageButton from "./ComponentLibrary/PageButton";
 import { RESOURCE_TYPES } from "../types/types";
 import { getResourcePageInfo } from "../utils/displayUtils";

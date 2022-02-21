@@ -14,7 +14,7 @@ export const SecondaryButton = styled.button`
     -webkit-border-radius: 14px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    background: #fff url(${ButtonGradient}) repeat-x 0 0;
+    background: #fff url(/assets/${ButtonGradient}) repeat-x 0 0;
     border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
     border-style: solid;
     border-width: 1px;

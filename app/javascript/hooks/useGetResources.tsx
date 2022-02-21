@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { getResourcePageInfo } from "../utils/displayUtils";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 import usePrevious from "./usePrevious";
 import { RESOURCE_TYPES } from "../types/types";
 import ResourceStore from "../actions/resourceStore";

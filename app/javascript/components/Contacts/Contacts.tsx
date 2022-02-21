@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { TicketContext } from "../../packs/application";
+import { TicketContext } from "../../application";
 import useGetResources from "../../hooks/useGetResources";
 import ContactsTable from "./ContactsTable";
 import LetterButtons from "../People/LetterButtons";

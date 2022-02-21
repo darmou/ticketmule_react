@@ -12,7 +12,7 @@ export enum SLIDE_STATES  {
 
 export const H3ToggleStyled = styled.h3`
     padding: 6px 0 6px 20px;
-    background: ${({isOpen}) => `url(${(isOpen === SLIDE_STATES.COLLAPSED || 
+    background: ${({isOpen}) => `url(/assets/${(isOpen === SLIDE_STATES.COLLAPSED || 
         isOpen === SLIDE_STATES.COLLAPSING) ? PlusImage : MinusImage}) no-repeat left center`};
     &:hover {
       cursor: pointer;

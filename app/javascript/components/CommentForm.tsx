@@ -8,7 +8,7 @@ import {
     TIMEOUT,
     createStandardSuccessMessage, createStandardErrorMessage
 } from "./ComponentLibrary/FlashMessages";
-import { TicketContext } from "../packs/application";
+import { TicketContext } from "../application";
 
 interface Props {
     toggleForm: () => void,
