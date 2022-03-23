@@ -155,7 +155,7 @@ GEM
     hashery (2.1.2)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    image_processing (1.12.1)
+    image_processing (1.12.2)
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
     io-wait (0.2.1)
@@ -391,7 +391,7 @@ DEPENDENCIES
   faker
   figaro
   file_validators (~> 2.3.0)
-  image_processing (~> 1.2)
+  image_processing (~> 1.12)
   jbuilder (~> 2.7)
   jsbundling-rails
   jsonapi-serializer
