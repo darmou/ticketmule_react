@@ -105,7 +105,7 @@ function BaseApp ({context}) {
     return (<AppStyled>
         <IdleTimer  // @ts-ignore
             ref = {ref => idleTimer.current = ref }
-            element={document}Per
+            element={document}
             onActive={_onActionOrActive}
             onIdle={_onIdle}
             onAction={_onActionOrActive}
