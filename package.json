@@ -48,7 +48,7 @@
     "esbuild": "^0.14.23",
     "eslint-plugin-react": "^7.28.0",
     "events-browserify": "^0.0.1",
-    "eventsource": "^1.1.0",
+    "eventsource": "^2.0.2",
     "fbjs": "^3.0.4",
     "function-reducer": "2.0.1",
     "glob-parent": "^6.0.2",
