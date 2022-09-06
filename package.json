@@ -2,7 +2,7 @@
   "name": "ticketmulereact",
   "private": true,
   "scripts": {
-    "build": "esbuild app/javascript/application.tsx --bundle --sourcemap --inject:./process-polyfill.js --loader:.png=file --loader:.gif=file --loader:.jpg=file --outdir=app/assets/builds"
+    "build": "esbuild app/javascript/application.tsx --bundle --sourcemap --inject:./process-polyfill.js --loader:.png=dataurl --loader:.gif=dataurl --loader:.jpg=dataurl --outdir=app/assets/builds"
   },
   "dependencies": {
     "@babel/core": "^7.16.7",

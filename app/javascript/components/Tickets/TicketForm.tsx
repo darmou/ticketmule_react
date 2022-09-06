@@ -66,6 +66,9 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
                data[key] = (data[key]) ? parseInt(data[key]) : null;
            }
         });
+        if (slug) {
+            data.id = parseInt(slug);
+        }
         data.created_by = (data.created_by) ? data.created_by : user.id;
         return data;
     };
@@ -88,7 +91,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
     return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit)}>
         <Row>
             <StyledLabel>Title:</StyledLabel>
-            <StyledInput name="title" ref={register} defaultValue={(ticket) ? ticket.title : ""} type="text"/>
+            <StyledInput name="title" {...register("title")} defaultValue={(ticket) ? ticket.title : ""} type="text"/>
         </Row>
         <Row>
             <StyledLabel>Contact:</StyledLabel>

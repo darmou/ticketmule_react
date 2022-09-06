@@ -86,16 +86,12 @@ class Ticket < ApplicationRecord
     # send alert to the owner of the ticket
     # self.owned_by_changed? and use this for owner changed emails
     unless self.only_touched?
-      #if  !self.owned_by.nil?
         users = self.alert_users.map { |alert_user |
           "#{alert_user.first_name} #{alert_user.last_name} <#{alert_user.email}>"
         }
-        #users = self.alert_users.map(&:email)
-        # users
+
         TicketAlertMailer.ticket_alert(self, users, "ticket updated")
-      #    Notifier.deliver_owner_alert(self, self.owner.email)
-      #  end
-      # end
+
     end
   end
 end

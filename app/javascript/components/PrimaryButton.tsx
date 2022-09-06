@@ -18,7 +18,7 @@ const PrimaryButton = ({click, text}: Props) => {
 const PrimaryButtonStyled = styled.button`
     margin: 0 0 8px 0;
     padding: 3px 12px 4px;
-    background: #90af4c url(/assets/${ButtonGradient}) repeat-x 0 0;
+    background: #90af4c url(${ButtonGradient}) repeat-x 0 0;
     border: 1px solid rgba(0,0,0,0.25);
     color: #fff;
     width: 100%;

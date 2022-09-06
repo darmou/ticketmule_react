@@ -34,6 +34,7 @@ gem 'pagy', '~> 3.8'
 gem 'jbuilder', '~> 2.7'
 gem 'rack-cors'
 gem 'ruport'
+gem 'prawn'
 gem 'prawn-rails', '~> 1.4.2'
 gem 'jsonapi-serializer'
 

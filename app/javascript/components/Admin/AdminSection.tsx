@@ -36,7 +36,7 @@ const StyledLI = styled.li`
         margin-left: 5px;
         text-decoration: underline;
         box-sizing: border-box;
-        background: ${({isEnabled}) => (isEnabled) ? `#fee url(/assets/${DisableIcon})` : `#efe url(assets/${EnableIcon})`} no-repeat 2px center;
+        background: ${({isEnabled}) => (isEnabled) ? `#fee url(${DisableIcon})` : `#efe url(${EnableIcon})`} no-repeat 2px center;
         color: ${({isEnabled}) => (isEnabled)  ? "#c00" : "#585"} !important;
         font-weight: normal;
         border: 1px solid #fee;

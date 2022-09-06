@@ -19,7 +19,7 @@ class Attachment < ApplicationRecord
   end
 
   def url
-    url_for(data)
+    rails_representation_url(data, only_path: true)
   end
 
   def name

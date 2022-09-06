@@ -12,6 +12,14 @@ interface Props {
     context: Context
 }
 
+interface TicketData {
+    data: {
+        attributes: Ticket
+        id: string,
+        type: RESOURCE_TYPES.TICKET
+    }
+}
+
 const TicketEdit = ({context} : Props) => {
     const { state, dispatch } = context;
     const { user } = state;
@@ -23,12 +31,14 @@ const TicketEdit = ({context} : Props) => {
     const {mutate: editTheTicket} = useMutation(
         ticketMule.updateResource.bind(this, state, RESOURCE_TYPES.TICKET, parseInt(slug)),
         {
-            onSuccess: async (ticket: Ticket) => {
+            onSuccess: async (ticketData: TicketData) => {
+                const ticket = ticketData.data.attributes;
                 dispatch({action_fn: ResourceStore.setResource, ticket, resourceType: RESOURCE_TYPES.TICKET});
+                //@ts-ignore
                 dispatch({action_fn: ResourceStore.update, resource: ticket, resourceType: RESOURCE_TYPES.TICKET});
                 // Query Invalidations
                 queryClient.removeQueries("ticket", { exact: true });
-                navigate(`/tickets/${ticket.id}`);
+                navigate(`/tickets/${ticketData.data.id}`);
             },
         }
     );

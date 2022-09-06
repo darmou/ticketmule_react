@@ -164,22 +164,22 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                     "Add Comment": {link: () => setShowCommentForm(), icon: AddCommentIcon},
                     "Add Attachment": {link: () => setShowAttachmentForm(), icon: AddAttachmentIcon},
                     "Delete": {link: () => deleteResource(), icon: DeleteIcon},
-                    "Back": {link: "/tickets/", icon: "assets" + BackArrowIcon}
+                    "Back": {link: "/tickets/", icon: BackArrowIcon}
                 };
             case RESOURCE_TYPES.CONTACT:
                 return {
                     "Edit": {link: `/contacts/${resource.id}/edit`, icon: EditContactIcon},
                     [enableKey]: {
                         link: () => toggleContact(),
-                        icon: "/assets" + (resource.is_enabled) ? DisableContactIcon : EnableContactIcon
+                        icon: (resource.is_enabled) ? DisableContactIcon : EnableContactIcon
                     },
-                    "Back": {link: "/contacts/", icon: "/assets" + BackArrowIcon}
+                    "Back": {link: "/contacts/", icon: BackArrowIcon}
                 };
             case RESOURCE_TYPES.USER:
                 return {
                     "Edit": { link: `/users/${resource.id}/edit`, icon: EditUserIcon },
                     "Delete": { link: () => deleteResource(), icon: DeleteIcon },
-                    "Back": { link: "/users/", icon: "/assets" + BackArrowIcon }
+                    "Back": { link: "/users/", icon: BackArrowIcon }
                 };
         }
     })(resourceType);

@@ -9,15 +9,19 @@ class Api::V1::ServerSentEventsController < ApplicationController
     user_updated = User.last_updated.first()
     contact_updated = Contact.last_updated.first()
     if not last_updated.nil? and recently_changed? last_updated
-      sse.write({:id=>last_updated.id, :updated_at=> last_updated.updated_at}, event: "ticket")
+      ticket_records_with_associations =
+        TicketSerializer.new(last_updated, { params: { :ticketlist => false }}).serializable_hash[:data][:attributes]
+      sse.write(ticket_records_with_associations, event: "ticket")
     end
 
     if not user_updated.nil? and recently_changed? user_updated
-      sse.write({:id=>user_updated.id, :updated_at=> user_updated.updated_at}, event: "user")
+      user_with_associations = UserSerializer.new(user_updated, { params: { :userlist => false } }).serializable_hash[:data][:attributes]
+      sse.write(user_with_associations, event: "user")
     end
 
     if not contact_updated.nil? and recently_changed? contact_updated
-      sse.write({:id=>contact_updated.id, :updated_at=> contact_updated.updated_at}, event: "contact")
+      contact_with_associations = ContactSerializer.new(contact_updated).serializable_hash[:data][:attributes]
+      sse.write(contact_with_associations, event: "contact")
     end
   ensure
       sse.close

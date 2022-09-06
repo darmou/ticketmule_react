@@ -28,9 +28,9 @@ const ticketTimeLineList = (type, style) => {
 
 export const getTicketImage = (priorityId) => {
   const priorityIdMap = {
-      1: `url(/assets/${RedBullet}) left center no-repeat;`,
-      2: `url(/assets/${YellowBullet}) left center no-repeat;`,
-      3: `url(/assets/${BlueBullet}) left center no-repeat;`,
+      1: `url(${RedBullet}) left center no-repeat;`,
+      2: `url(${YellowBullet}) left center no-repeat;`,
+      3: `url(${BlueBullet}) left center no-repeat;`,
   };
   return priorityIdMap[priorityId];
 };

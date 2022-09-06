@@ -40,7 +40,7 @@ const Header = () => {
 
 const HeaderStyled = styled.header`
     width: 100%;
-    background: #2d2d2d url(/assets/${HeadBackground}) top left repeat-x;
+    background: #2d2d2d url(${HeadBackground}) top left repeat-x;
     border-bottom: 4px solid #90af4c;
     height: 80px;
     overflow: hidden;

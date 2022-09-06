@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { useQuery } from "react-query";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { getResourcePageInfo } from "../utils/displayUtils";
 import { TicketContext } from "../application";
 import usePrevious from "./usePrevious";
-import { RESOURCE_TYPES } from "../types/types";
 import ResourceStore from "../actions/resourceStore";
 import { useSSE } from "react-hooks-sse";
+import { queryClient } from "../utils/network";
 
 const useGetResources = (resourceType) => {
     const { state, dispatch } = useContext(TicketContext);
-    const { contacts, users, tickets, contactPageInfo, userPageInfo, ticketPageInfo } = state;
+    const { contactPageInfo, userPageInfo, ticketPageInfo } = state;
     const resourcePageInfo = getResourcePageInfo(resourceType, ticketPageInfo, contactPageInfo, userPageInfo);
     const { currentPage, resourceCount, lastPage, perPage, letterSelected, searchString } = resourcePageInfo;
     const prevPage = usePrevious(currentPage);
@@ -22,41 +22,55 @@ const useGetResources = (resourceType) => {
         id: null,
         updated_at: null
     });
-    const getResources = () => {
-        switch (resourceType) {
-            case RESOURCE_TYPES.CONTACT:
-                return contacts;
-            case RESOURCE_TYPES.USER:
-                return users;
-            default:
-                return tickets;
-        }
-    };
-    const resources = getResources();
-    const aChangedResource = (last.id == null || resources == null) ? null : resources.filter(aResource => last.id === aResource.id)[0];
+    const prevLast = usePrevious(last);
+    const prevData = useRef(null);
+    //Update query cache if something is updated from SSE
+    if (last && last.id && (!prevLast || (prevLast && JSON.stringify(last) !== JSON.stringify(prevLast)))) {
+        queryClient.setQueryData(`${resourceType}s`, (resources) => {
+            let newResources;
+            if (typeof resources === 'object' && 'data' in resources) {
+                //@ts-ignore
+                newResources = resources.data.map((resource, idx) => {
+                    if (resource.id === last.id) {
+                        return last;
+                    } else {
+                        return resource;
+                    }
+                })
+            }
+            //@ts-ignore
+            return  { data: newResources, pagy: resources?.pagy };
+        });
+    }
 
-    const { data, isLoading } = useQuery(`${resourceType}s`, () =>
-        ticketMule.fetchResources(currentPage, perPage, letterSelected, resourceType, searchString), { refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        enabled: (state.user != null &&
-            (resources == null ||
-                prevPage !== currentPage ||
-                (last.id != null && aChangedResource != null && last.updated_at !== aChangedResource.updated_at) ||
-                prevLetterSelected !== letterSelected ||
-                prevSearchString !== searchString ||
-                prevPerPage !== perPage)) }
+    const { data, isLoading, refetch } = useQuery(`${resourceType}s`, () =>
+        ticketMule.fetchResources(currentPage, perPage, letterSelected, resourceType, searchString), { refetchOnMount: true,
+        refetchOnWindowFocus: true,
+        enabled: (state.user != null) }
     );
+    prevData.current = usePrevious(data);
 
     React.useEffect(() => {
-        if (data && !isLoading && JSON.stringify(data['data']) !== JSON.stringify(resources)) {
+        const fetchData = async () => {
+            await refetch();
+        }
+
+        if (prevPage !== currentPage ||
+            prevLetterSelected !== letterSelected ||
+            prevSearchString !== searchString ||
+            prevPerPage !== perPage) {
+            fetchData().catch(console.error);
+        }
+        if (!isLoading && !prevData.current && data || (prevData.current && data && JSON.stringify(prevData.current.data) !== JSON.stringify(data.data))) {
             dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData: data});
         }
-    }, [dispatch, data, currentPage, resources, resourceType]);
+    }, [prevSearchString, searchString, prevPerPage, perPage, prevPage, currentPage,
+        prevLetterSelected, letterSelected, dispatch, prevData, data, currentPage]);
 
-    if (resources && lastPage) {
-        return { [`${resourceType}s`]: resources, currentPage, resourceCount, lastPage, isLoading };
+    if (data && lastPage) {
+        return { [`${resourceType}s`]: data.data, currentPage, resourceCount, lastPage, isLoading, refetch };
     } else {
-        return { [`${resourceType}s`]: null, currentPage: 1, lastPage: null, isLoading };
+        return { [`${resourceType}s`]: null, currentPage: 1, lastPage: null, isLoading, refetch };
     }
 };
 

@@ -38,12 +38,12 @@ export const ErrorNotificationStyled = styled(NotificationStyled)`
 
 export const createStandardSuccessMessage = (msg:string) => {
     return (<SuccessNotificationStyled>
-        <img src={`/assets/${EnableIcon}`} /> {msg}
+        <img src={`${EnableIcon}`} /> {msg}
     </SuccessNotificationStyled>);
 };
 
 export const createStandardErrorMessage = (msg:string) => {
     return (<ErrorNotificationStyled>
-        <img src={`assets/${DisableIcon}`} /> {msg}
+        <img src={`${DisableIcon}`} /> {msg}
     </ErrorNotificationStyled>);
 };
