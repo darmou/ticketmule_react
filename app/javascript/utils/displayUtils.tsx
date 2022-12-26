@@ -22,7 +22,6 @@ export const getQueryKey =  (resourceType: RESOURCE_TYPES) => {
 };
 
 export const onSubmitForm = async (data, type, formAction) => {
-    debugger;
     data = cleanData(data);
     try {
         const toSend = {
