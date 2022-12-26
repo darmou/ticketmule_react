@@ -5,8 +5,7 @@ import LetterButtons from "../People/LetterButtons";
 import useGetResources from "../../hooks/useGetResources";
 import { RESOURCE_TYPES } from "../../types/types";
 
-// eslint-disable-next-line react/display-name
-const Users =  React.memo(() => {
+const Users = () => {
     const { users, isLoading } = useGetResources(RESOURCE_TYPES.USER);
     const { state } = useContext(TicketContext);
     const { userPageInfo  } = state;
@@ -19,7 +18,7 @@ const Users =  React.memo(() => {
          <UsersTable users={users}/>
         }
     </>);
-});
+};
 
 export default Users;
 

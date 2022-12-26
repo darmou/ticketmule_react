@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import useGetResources from "../../hooks/useGetResources";
@@ -11,12 +11,12 @@ const TicketsPerPage = styled.div`
 `;
 
 // eslint-disable-next-line react/display-name
-const Tickets =  React.memo(() => {
+const Tickets =  () => {
     const { tickets, isLoading } = useGetResources(RESOURCE_TYPES.TICKET);
     const { state, dispatch } = useContext(TicketContext);
     const { ticketPageInfo  } = state;
     const { perPage, searchString } = ticketPageInfo;
-    const filteredTickets = (tickets) ? (searchString.includes("search[status_id]=2")) ? tickets : tickets.filter(ticket => ticket.status.name  !== "Closed") : null;
+    const filteredTickets = (tickets) ? (searchString.includes("search[status_id]=2")) ? tickets : tickets.filter(ticket => ticket?.status?.name && ticket.status.name !== "Closed") : null;
 
     const updatePageLength = (event, pageLen) => {
         event.preventDefault();
@@ -38,7 +38,7 @@ const Tickets =  React.memo(() => {
             <TicketsTable isPagination={true} isAgo={false} tickets={filteredTickets}/>
         }
     </>);
-});
+};
 
 export default Tickets;
 

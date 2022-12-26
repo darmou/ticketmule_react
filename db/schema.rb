@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.0].define(version: 2022_02_21_073407) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "hstore"
   enable_extension "plpgsql"
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|

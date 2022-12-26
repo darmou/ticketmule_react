@@ -111,7 +111,7 @@ const TicketControls = ({loggedIn} : Props) => {
             switch (type) {
                 case "my_open":
                     dispatch({action_fn: ResourceStore.setSearchString,
-                        searchStr: `&search[status_id]=${user.id}&search[owned_by]=${user.id}`,
+                        searchStr: `&search[status_id]=1&search[owned_by]=${user.id}`,
                         resourceType: RESOURCE_TYPES.TICKET});
                     break;
                 case "all":

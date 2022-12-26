@@ -31,6 +31,9 @@ const StyledInput = styled.input`
     width: 76%;
 `;
 
+const ErrorStyle = styled.p`
+    color: red;
+`;
 
 const StyledForm = styled.form`
     width: 500px;
@@ -57,7 +60,7 @@ interface Props {
 }
 
 const TicketForm = ({user, formAction, slug, ticket} : Props) => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const { options } = useGetOptions(true);
 
     const cleanData = (data) => {
@@ -91,11 +94,12 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
     return(<StyledForm acceptCharset="UTF-8" onSubmit={handleSubmit(onSubmit)}>
         <Row>
             <StyledLabel>Title:</StyledLabel>
-            <StyledInput name="title" {...register("title")} defaultValue={(ticket) ? ticket.title : ""} type="text"/>
+            <StyledInput name="title" {...register("title",  { required: true, maxLength: 20 })} defaultValue={(ticket) ? ticket.title : ""} type="text"/>
+            {errors.title && <ErrorStyle>Title is required and should be no more than 20 characters</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Contact:</StyledLabel>
-            <select defaultValue={(ticket && ticket.contact) ? ticket.contact.id : null} name="contact_id" {...register("contact_id")}>
+            <select defaultValue={(ticket && ticket.contact) ? ticket.contact.id : null} name="contact_id" {...register("contact_id", { required: true })}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'contacts')) && options.contacts.map(contact => {
                     return (<option key={`contact_${contact.id}`} value={contact.id}>{contact.first_name} {contact.last_name}</option>);
@@ -105,7 +109,7 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
         </Row>
         <Row>
             <StyledLabel>Group:</StyledLabel>
-            <select defaultValue={(ticket && ticket.group) ? ticket.group.id : null} name="group_id" {...register("group_id")}>
+            <select defaultValue={(ticket && ticket.group) ? ticket.group.id : null} name="group_id" {...register("group_id", { required: true} )}>
                 <option  value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'groups')) &&
                     options.groups.filter((group) => group.disabled_at == null).map(group => {
@@ -113,10 +117,11 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
                 })
                 }
             </select>
+            {errors.group_id && <ErrorStyle>Group is required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Status:</StyledLabel>
-            <select defaultValue={(ticket && ticket.status) ? ticket.status.id : (options && options.statuses) ? options.statuses[0].id : null} name="status_id" {...register("status_id")}>
+            <select defaultValue={(ticket && ticket.status) ? ticket.status.id : (options && options.statuses) ? options.statuses[0].id : null} name="status_id" {...register("status_id", { required: true })}>
                 <option  value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'statuses')) &&
                     options.statuses.filter((group) => group.disabled_at == null).map(status => {
@@ -124,10 +129,11 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
                 })
                 }
             </select>
+            {errors.status_id && <ErrorStyle>Status is required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Time Type:</StyledLabel>
-            <select defaultValue={(ticket && ticket.time_type) ? ticket.time_type.id : null}  name="time_type_id" {...register("time_type_id")}>
+            <select defaultValue={(ticket && ticket.time_type) ? ticket.time_type.id : null}  name="time_type_id" {...register("time_type_id", { required: true })}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'time_types')) &&
                     options.time_types.filter((group) => group.disabled_at == null).map(time_type => {
@@ -135,10 +141,11 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
                 })
                 }
             </select>
+            {errors.time_type_id && <ErrorStyle>Time Type is required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Priority:</StyledLabel>
-            <select  defaultValue={(ticket && ticket.priority) ? ticket.priority.id : null} name="priority_id" {...register("priority_id")}>
+            <select  defaultValue={(ticket && ticket.priority) ? ticket.priority.id : null} name="priority_id" {...register("priority_id", { required: true })}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'priorities')) &&
                     options.priorities.filter((group) => group.disabled_at == null).map(priority => {
@@ -146,20 +153,23 @@ const TicketForm = ({user, formAction, slug, ticket} : Props) => {
                 })
                 }
             </select>
+            {errors.priority_id && <ErrorStyle>Priority is required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Owner:</StyledLabel>
-            <select defaultValue={(ticket && ticket.owner) ? ticket.owner.id : null} name="owned_by" {...register("owned_by")}>
+            <select defaultValue={(ticket && ticket.owner) ? ticket.owner.id : null} name="owned_by" {...register("owned_by", { required: true })}>
                 <option value=""/>
                 { (options && Object.prototype.hasOwnProperty.call(options, 'owners')) && options.owners.map(owner => {
                     return (<option key={`owner_${owner.id}`} value={owner.id}>{owner.username}</option>);
                 })
                 }
             </select>
+            {errors.owned_by && <ErrorStyle>Owned By is required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>Details: </StyledLabel>
-            <textarea defaultValue={(ticket) ? ticket.details : ""} name="details" {...register("details")} cols={45} rows={6}/>
+            <textarea defaultValue={(ticket) ? ticket.details : ""} name="details" {...register("details", { required: true })} cols={45} rows={6}/>
+            {errors.details && <ErrorStyle>Details are required</ErrorStyle>}
         </Row>
         <Row>
             <StyledLabel>&nbsp;</StyledLabel>

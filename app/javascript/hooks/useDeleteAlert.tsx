@@ -30,8 +30,8 @@ const useDeleteAlert = () => {
                     resourceType: RESOURCE_TYPES.TICKET
                 });
                 // Query Invalidations
-                queryClient.removeQueries("ticket", { exact: true });
-                queryClient.removeQueries("aUser", { exact: true });
+                await queryClient.resetQueries("ticket", { exact: true });
+                await queryClient.resetQueries("aUser", { exact: true });
             },
         }
     );

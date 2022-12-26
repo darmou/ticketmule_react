@@ -33,7 +33,7 @@ const ContactNew = () => {
 
     return (<>
         <h2>New contact</h2>
-        <ContactForm addOrUpdate={addTheContact} user={user} contact={null}/>
+        <ContactForm formAction={addTheContact} user={user} contact={null}/>
     </>);
 };
 

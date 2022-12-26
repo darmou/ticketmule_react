@@ -30,7 +30,7 @@ const useGetResources = (resourceType) => {
             let newResources;
             if (typeof resources === 'object' && 'data' in resources) {
                 //@ts-ignore
-                newResources = resources.data.map((resource, idx) => {
+                newResources = resources?.data?.map((resource) => {
                     if (resource.id === last.id) {
                         return last;
                     } else {
@@ -61,7 +61,7 @@ const useGetResources = (resourceType) => {
             prevPerPage !== perPage) {
             fetchData().catch(console.error);
         }
-        if (!isLoading && !prevData.current && data || (prevData.current && data && JSON.stringify(prevData.current.data) !== JSON.stringify(data.data))) {
+        if (data?.['pagy']?.['page'] && !isLoading && !prevData.current && data || (prevData.current && data && JSON.stringify(prevData.current.data) !== JSON.stringify(data.data))) {
             dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData: data});
         }
     }, [prevSearchString, searchString, prevPerPage, perPage, prevPage, currentPage,

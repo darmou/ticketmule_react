@@ -69,13 +69,7 @@ const ResourceStore = {
         return produce(state, draftState => {
             draftState[queryKey] = resource;
         });
-    },
-    deleteResource: function ({state, resourceType, id}: ResourceProps) {
-        const index = state[`${resourceType}s`].findIndex(resource => resource.id === id);
-        return produce(state, draftState => {
-            draftState[`${resourceType}s`].splice(index, 1);
-        });
-    },
+    }
 };
 
 export default ResourceStore;

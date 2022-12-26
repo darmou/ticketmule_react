@@ -53,11 +53,30 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         }
     );
 
+    const updateCache = (resourceType: string) => {
+        // Optomistic query
+        queryClient.setQueryData(`${resourceType}s`, (resources) => {
+            let newResources;
+            if (typeof resources === 'object' && 'data' in resources) {
+                //@ts-ignore
+                newResources = resources?.data?.map((res) => {
+                    if (res.id !== resource.id) {
+                        return res;
+                    }
+                });
+            }
+            //@ts-ignore
+            return  { data: newResources, pagy: resources?.pagy };
+        });
+    }
+
     const { mutate: deleteTheResource } = useMutation(
         ticketMule.deleteResource.bind(this, state, resourceType, resource.id),
         {
             onSuccess: async () => {
-                // Query Invalidations
+                updateCache(resourceType);
+                //await queryClient.resetQueries(`${resourceType}s`);
+                // Query Invalidations, update our cache to remove deleted resource
                 // If after deletion our page data is out of date we want to update the page data
                 // So we don't try to pull a current page that does not exist.
                 const resourceCount = state[`${resourceType}PageInfo`].resourceCount;
@@ -75,9 +94,11 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
                         },
                         data: state[`${resourceType}s`]
                     };
-                    dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData});
+                    if (pageData && pageData?.['pagy']?.['page']) {
+                        dispatch({action_fn: ResourceStore.setPageData, resourceType, pageData});
+                    }
                 }
-                queryClient.removeQueries(`${resourceType}s`, { exact: true });
+
             },
         }
     );
@@ -126,7 +147,6 @@ const Controls = ({setShowCommentForm, resource, resourceType, setShowAttachment
         if (window.confirm(`Really delete ${resourceType} #${resource.id} ${text}?`)) {
             //useMutation to use delete method on ticket
             await deleteTheResource();
-            dispatch({action_fn: ResourceStore.deleteResource, resourceType, id: resource.id});
             navigate(`/${resourceType}s`);
         }
     };

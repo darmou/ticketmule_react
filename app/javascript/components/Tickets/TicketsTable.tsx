@@ -71,7 +71,7 @@ const TicketsTable = React.memo(({tickets, isAgo, isPagination} : Props) => {
 
     const getData = () => {
         // @ts-ignore
-        return (ticketsRef.current != null) ? ticketsRef.current.map((ticket) => {
+        return (ticketsRef.current != null) ? ticketsRef.current.filter((ticket) => { return ticket?.updated_at !== undefined && ticket?.updated_at !== null; }).map((ticket) => {
             const lastActivity = (!isAgo) ? moment(ticket.updated_at).format(dateFormat) : formatSentence(moment(ticket.updated_at).fromNow());
             return {
                 id:  <ImageSpan background={getTicketImage(ticket.priority.id)}>

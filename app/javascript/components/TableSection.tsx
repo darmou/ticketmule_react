@@ -18,7 +18,7 @@ interface Props  {
 const TableSection = memo(({isLoading, type, tickets, sectionName, sectionId}: Props) => {
 
     const filteredTickets = (tickets) ? tickets.slice(0, MAX_TICKETS_INDEX).filter(ticket => {
-       return (type == TICKET_STATUS_TYPES.NOT_CLOSED) ? ticket.status.name !== "Closed" : ticket.status.name === "Closed";
+       return (type == TICKET_STATUS_TYPES.NOT_CLOSED) ? ticket?.status?.name !== "Closed" : ticket?.status?.name === "Closed";
     }) : null;
 
     const { expandableRef, slideToggleState, toggle } = useSliderToggle({duration: SLIDE_DURATION});

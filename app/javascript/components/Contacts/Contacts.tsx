@@ -6,7 +6,7 @@ import LetterButtons from "../People/LetterButtons";
 import { RESOURCE_TYPES } from "../../types/types";
 
 // eslint-disable-next-line react/display-name
-const Contacts =  React.memo(() => {
+const Contacts =  () => {
     const { contacts, isLoading } = useGetResources(RESOURCE_TYPES.CONTACT);
     const { state } = useContext(TicketContext);
     const { contactPageInfo  } = state;
@@ -19,7 +19,7 @@ const Contacts =  React.memo(() => {
          <ContactsTable contacts={contacts}/>
         }
     </>);
-});
+};
 
 export default Contacts;
 
