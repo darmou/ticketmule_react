@@ -6,7 +6,7 @@ const UserNew = () => {
     const { addTheUser } = useAddUser();
 
     return (<>
-        <h2>New user</h2>
+        <h2>New User</h2>
         <UserForm formAction={addTheUser} aUser={null}/>
     </>);
 };

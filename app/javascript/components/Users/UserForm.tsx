@@ -284,7 +284,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
                 required: isAdminForm,
                 minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")
-            })} defaultValue="" type="text"/>
+            })} defaultValue="" type="password"/>
             { (errors.password && errors.password.type === "minLength") &&
             <>
                 {(!isAdminForm) && <StyledLabel>&nbsp;</StyledLabel>}
@@ -301,7 +301,7 @@ const UserForm = ({formAction, slug, aUser, isAdminForm = false}: Props) => {
                              required: isAdminForm,
                 minLength: MIN_PASSWORD_LEN,
                 validate: () => getValues("password") === getValues("confirm_password")
-            })} defaultValue="" type="text"/>
+            })} defaultValue="" type="password"/>
             { (errors.confirm_password && errors.confirm_password.type === "minLength") &&
             <>
                 <StyledLabel>&nbsp;</StyledLabel>

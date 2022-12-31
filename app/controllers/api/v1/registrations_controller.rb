@@ -72,6 +72,10 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
 
   def user_params
     # whitelist user params
-    params.require(:user).permit!
+    if params[:user].is_a? String
+      JSON.parse(params[:user])["user"]
+    else
+      params.require(:user).permit(:username, :first_name, :last_name, :time_zone, :email, :password)
+    end
   end
 end

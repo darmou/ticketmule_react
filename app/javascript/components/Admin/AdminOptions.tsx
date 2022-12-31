@@ -14,6 +14,7 @@ import { Error } from "../ComponentLibrary/FormComponentsStyled";
 import { getPlural, queryClient } from "../../utils/network";
 import ResourceStore from "../../actions/resourceStore";
 import {OptionType, OptionTypes, Result} from "../../types/types";
+import useGetOptions from "../../hooks/useGetOptions";
 
 const FieldContainer = styled.div`
     display: flex;
@@ -28,6 +29,7 @@ interface Props {
 const AdminOptions = React.memo(({type}: Props) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const { state, dispatch } = useContext(TicketContext);
+    const { options } = useGetOptions(false);
     const plural = getPlural(type);
     const label = `${type}`.replace("_", " ");
     const captial = capitalizeEachWord(label);
@@ -39,7 +41,7 @@ const AdminOptions = React.memo(({type}: Props) => {
             onSuccess: async (option: OptionType) => {
                 const msg = (option.disabled_at) ? 'disabled' : 'enabled';
                 dispatch({
-                        action_fn: ResourceStore.setFlashMsg,
+                    action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} was successfully ${msg}!`)});
                 queryClient.removeQueries("options", { exact: true });
                 dispatch({action_fn: OptionsStore.updateOption, type, anOption: option});
@@ -92,11 +94,11 @@ const AdminOptions = React.memo(({type}: Props) => {
     };
 
     return (<div>
-        {(state.options && Object.prototype.hasOwnProperty.call(state.options, plural)) &&
+        {(options && Object.prototype.hasOwnProperty.call(options, plural)) &&
         <>
-            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={true}
+            <AdminSection optionResources={(options) ? options[plural] : []} isEnabled={true}
                           toggleDisabled={toggleOption}/>
-            <AdminSection optionResources={(state.options) ? state.options[plural] : []} isEnabled={false}
+            <AdminSection optionResources={(options) ? options[plural] : []} isEnabled={false}
                           toggleDisabled={toggleOption}/>
 
             <form onSubmit={handleSubmit(onSubmit)}>

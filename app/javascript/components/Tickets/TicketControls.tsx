@@ -139,7 +139,7 @@ const TicketControls = ({loggedIn} : Props) => {
     );
 
     const buttons = (location != null && !location.pathname.includes('/admin')) ?
-        (<Fragment><PrimaryButton click={e => newResource(e, navigate, 'tickets')} text="New ticket"/>
+        (<Fragment><PrimaryButton click={e => newResource(e, navigate, 'tickets')} text="New Ticket"/>
             <PrimaryButton click={e => newResource(e, navigate, 'contacts')} text="New Contact"/></Fragment>) : null;
 
     const onSubmit = (values) => {
