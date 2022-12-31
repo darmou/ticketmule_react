@@ -15,6 +15,7 @@ import { getPlural, queryClient } from "../../utils/network";
 import ResourceStore from "../../actions/resourceStore";
 import {OptionType, OptionTypes, Result} from "../../types/types";
 import useGetOptions from "../../hooks/useGetOptions";
+import { ref } from "yup";
 
 const FieldContainer = styled.div`
     display: flex;
@@ -29,12 +30,15 @@ interface Props {
 const AdminOptions = React.memo(({type}: Props) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const { state, dispatch } = useContext(TicketContext);
-    const { options } = useGetOptions(false);
+    const { options, refetch } = useGetOptions(false);
     const plural = getPlural(type);
     const label = `${type}`.replace("_", " ");
     const captial = capitalizeEachWord(label);
     const ticketMule = useTicketMule();
 
+    const fetchOptions = async () => {
+        await refetch();
+    }
     const {mutate: toggleEnableOption} = useMutation(
         ticketMule.toggleEnableOption.bind(this, state, type),
         {
@@ -43,9 +47,8 @@ const AdminOptions = React.memo(({type}: Props) => {
                 dispatch({
                     action_fn: ResourceStore.setFlashMsg,
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} was successfully ${msg}!`)});
-                queryClient.removeQueries("options", { exact: true });
-                dispatch({action_fn: OptionsStore.updateOption, type, anOption: option});
                 // Query Invalidations
+                fetchOptions();
             },
         }
     );
@@ -60,9 +63,8 @@ const AdminOptions = React.memo(({type}: Props) => {
                     flashMsg: createStandardSuccessMessage(`${captial} ${option.name} successfully added!`)});
 
                 queryClient.removeQueries("options", { exact: true });
-
-                dispatch({action_fn: OptionsStore.addOption, type, anOption: option});
                 // Query Invalidations
+                fetchOptions();
             },
             onError: async (result: Result) => {
                 dispatch({
