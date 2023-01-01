@@ -1,13 +1,10 @@
-import React, {ForwardedRef, useContext} from "react";
+import React, { ForwardedRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import ResourceStore from "../actions/resourceStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import {
-    TIMEOUT,
-    createStandardSuccessMessage, createStandardErrorMessage
-} from "./ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { TicketContext } from "../application";
 
 interface Props {
@@ -79,12 +76,17 @@ export const CommentForm = React.forwardRef((props: Props, ref :ForwardedRef<HTM
             </p>
             <p>
                 <SecondaryButton className="button" id="comment_submit" name="commit" type="submit"
-                       >Add Comment</SecondaryButton>
+                       >Add Comment</SecondaryButton><ButtonSpacer/>
                 <Link to={'#'} onClick={toggleForm}>Cancel</Link>
             </p>
         </form>
     </StyledCommentForm>);
 });
+
+const ButtonSpacer = styled.span`
+  display:inline-block;
+  width:10px;
+`;
 
 const StyledEnclosingDiv = styled.div`
     width: 490px;

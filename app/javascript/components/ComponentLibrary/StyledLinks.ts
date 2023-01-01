@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link}  from "react-router-dom";
+import { Link } from "react-router-dom";
 import TrashIcon from "../../images/trash.png";
 
 export const DeleteLink = styled(Link)`

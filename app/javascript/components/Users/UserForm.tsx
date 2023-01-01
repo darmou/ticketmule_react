@@ -4,15 +4,16 @@ import { Link } from "react-router-dom";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { useForm } from "react-hook-form";
 import {
+    Error,
+    Label,
+    MIN_PASSWORD_LEN,
+    Row,
     StyledForm,
     StyledLabel,
-    Label,
-    StyledRow,
-    Row,
-    MIN_PASSWORD_LEN,
-    Error } from "../ComponentLibrary/FormComponentsStyled";
+    StyledRow
+} from "../ComponentLibrary/FormComponentsStyled";
 import { onSubmitForm } from "../../utils/displayUtils";
-import { User, RESOURCE_TYPES } from "../../types/types";
+import { RESOURCE_TYPES, User } from "../../types/types";
 
 type TimeZone = {
     value: string,

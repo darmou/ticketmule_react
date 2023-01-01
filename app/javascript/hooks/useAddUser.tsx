@@ -5,7 +5,7 @@ import { TicketContext } from "../application";
 import ResourceStore from "../actions/resourceStore";
 import { RESOURCE_TYPES, Result, User } from "../types/types";
 import { useNavigate } from "react-router-dom";
-import { createStandardSuccessMessage, createStandardErrorMessage } from "../components/ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage } from "../components/ComponentLibrary/FlashMessages";
 import { queryClient } from "../utils/network";
 
 const useAddUser = (isAdminForm = false) => {

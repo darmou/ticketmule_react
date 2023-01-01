@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { Dispatch } from "react";
+import AttachmentList from "../components/AttachmentList";
 
 export enum TICKET_STATUS_TYPES  {
     NOT_CLOSED = "NOT_CLOSED",
@@ -51,6 +52,19 @@ export type Contact = {
     updated_at?: string | null
 }
 
+export type Attachment = {
+    user: User,
+    ticket: Ticket,
+    id?: number,
+    url: string,
+    data_file_name: string,
+    data_file_size: number,
+    download_count: number,
+    data_content_type: string,
+    created_at?: string,
+    updated_at?: string
+}
+
 export type Ticket = {
     id?: number,
     title: string,
@@ -63,7 +77,10 @@ export type Ticket = {
     owner?: User,
     creator?: User,
     created_at?: string,
-    updated_at?: string | null
+    updated_at?: string | null,
+
+    comments?: Comment[] | null,
+    attachments?: Attachment[] | null
 }
 
 export type User = {

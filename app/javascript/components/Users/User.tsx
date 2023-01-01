@@ -6,7 +6,7 @@ import { RESOURCE_TYPES } from "../../types/types";
 import Controls from "../Controls";
 import moment from "moment";
 import { DeleteLink } from "../ComponentLibrary/StyledLinks";
-import { ResourceItem} from "../ComponentLibrary/Resources";
+import { ResourceItem } from "../ComponentLibrary/Resources";
 import { deleteAlert, SLIDE_DURATION } from "../../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import { H3ToggleStyled } from "../ComponentLibrary/H3ToggleStyled";

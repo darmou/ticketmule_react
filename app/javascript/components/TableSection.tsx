@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { H3ToggleStyled } from "./ComponentLibrary/H3ToggleStyled";
 import TicketsTable from "./Tickets/TicketsTable";
 import useSliderToggle from "react-slide-toggle-hooks";
-import { TICKET_STATUS_TYPES, Ticket } from "../types/types";
+import { Ticket, TICKET_STATUS_TYPES } from "../types/types";
 import { SLIDE_DURATION } from "../utils/displayUtils";
 
 const MAX_TICKETS_INDEX = 6;

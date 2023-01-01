@@ -5,9 +5,9 @@ import { TicketContext } from "../application";
 import { useMutation } from "react-query";
 import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import { createStandardSuccessMessage, createStandardErrorMessage } from "./ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage } from "./ComponentLibrary/FlashMessages";
 import ResourceStore from "../actions/resourceStore";
-import { BoxStyled, LoginStyled, ValidationDiv, StyledInputPassword } from "./Login";
+import { BoxStyled, LoginStyled, StyledInputPassword, ValidationDiv } from "./Login";
 import { MIN_PASSWORD_LEN } from "./ComponentLibrary/FormComponentsStyled";
 import { Link, useNavigate } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import Contacts from "./Contacts";
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Contact from "./Contact";
 import ContactEdit from "./ContactEdit";
 import ContactNew from "./ContactNew";

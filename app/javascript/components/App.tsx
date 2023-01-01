@@ -1,12 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-    Routes,
-    Route, useNavigate, useLocation
-} from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import IdleTimer from "react-idle-timer";
 import styled from "styled-components";
 import { SSEProvider } from "react-hooks-sse";
-//import EventSource from "eventsource";
 import Login from "./Login";
 import Header from "./Header";
 import Dashboard from "./Dashboard";

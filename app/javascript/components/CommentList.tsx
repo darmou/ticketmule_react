@@ -11,7 +11,7 @@ import useTicketmule from "../hooks/useTicketMule";
 import { ResourceItem } from "./ComponentLibrary/Resources";
 import { DeleteLink } from "./ComponentLibrary/StyledLinks";
 import { Timestamp } from "./ComponentLibrary/TimeFormating";
-import { Comment, State } from "../types/types";
+import { Comment, State, Ticket } from "../types/types";
 import { queryClient } from "../utils/network";
 
 const CommentSquare = styled.span`
@@ -20,7 +20,6 @@ const CommentSquare = styled.span`
     background: #ccc;
     color: #fff;
     text-decoration: none;
-    padding: 1px 5px;
     border: 1px solid #ccc;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -31,15 +30,15 @@ const DeletedUserLabel = styled.strong`
 `;
 
 interface Props {
-    comments: Comment[],
+    ticket: Ticket,
     state: State
 }
 
-const CommentList = React.memo(({comments, state}: Props) => {
+const CommentList = React.memo(({ticket, state}: Props) => {
     const ticketMule = useTicketmule();
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
-    const {mutate} = useMutation(
-        ticketMule.deleteRelatedTicketRecord.bind(this, state, "comments"),
+    const { mutate } = useMutation(
+        ticketMule.deleteRelatedTicketRecord.bind(this, state, "comments", ticket.id),
         {
             onSuccess: async () => {
                 // Query Invalidations
@@ -58,7 +57,7 @@ const CommentList = React.memo(({comments, state}: Props) => {
         }
     };
 
-    const commentList = comments.map(comment => {
+    const commentList = ticket.comments.map(comment => {
        return (
            <ResourceItem key={`comment_id_${comment.id}`}>
 

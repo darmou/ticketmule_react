@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import usePrevious from "../../hooks/usePrevious";
-import {RESOURCE_TYPES, Contact } from "../../types/types";
+import { Contact, RESOURCE_TYPES } from "../../types/types";
 import ResourcesTable from "../Resources/ResourcesTable";
 import { personDateFormat } from "../../utils/displayUtils";
 

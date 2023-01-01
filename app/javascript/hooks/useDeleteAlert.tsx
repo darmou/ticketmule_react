@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { TicketContext } from "../application";
 import { SuccessNotificationStyled } from "../components/ComponentLibrary/FlashMessages";
 import ResourceStore from "../actions/resourceStore";
-import {RESOURCE_TYPES, Ticket} from "../types/types";
+import { RESOURCE_TYPES, Ticket } from "../types/types";
 import EnableIcon from "../images/accept.png";
 import { queryClient } from "../utils/network";
 

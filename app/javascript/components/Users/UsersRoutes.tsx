@@ -1,5 +1,5 @@
 import Users from "./Users";
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import User from "./User";
 import UserEdit from "./UserEdit";
 import UserNew from "./UserNew";

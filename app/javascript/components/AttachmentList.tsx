@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { H3ToggleStyled } from "./ComponentLibrary/H3ToggleStyled";
-import { SLIDE_DURATION } from "../utils/displayUtils";
+import { getAttachmentFileSize, SLIDE_DURATION } from "../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import styled from "styled-components";
 import TextDocumentIcon from "../images/document-text.png";
@@ -15,8 +15,7 @@ import { useMutation } from "react-query";
 import useTicketmule from "../hooks/useTicketMule";
 import { Timestamp } from "./ComponentLibrary/TimeFormating";
 import { DeleteLink } from "./ComponentLibrary/StyledLinks";
-import { getAttachmentFileSize } from "../utils/displayUtils";
-import { State } from "../types/types";
+import { State, Ticket } from "../types/types";
 import { queryClient } from "../utils/network";
 
 const DOC_TYPES = {
@@ -52,20 +51,19 @@ const StyledUL = styled.ul`
 `;
 
 interface Props {
-    attachments: any[],
+    ticket: Ticket,
     state: State
 }
 
-const AttachmentList = React.memo(({attachments, state} : Props) => {
+const AttachmentList = React.memo(({ticket, state} : Props) => {
     const ticketMule = useTicketmule();
     const getSliderToggle = React.useCallback(useSliderToggle,[]);
 
-    const { mutate } = useMutation(ticketMule.deleteRelatedTicketRecord.bind(this, state, "attachments"),{
-        onSuccess:()=>{
-            // Query Invalidations
-            queryClient.removeQueries('ticket', { exact: true });
-        }
-    });
+    const { mutate } = useMutation(ticketMule.deleteRelatedTicketRecord.bind(this, state, "attachments", ticket.id),{
+        onSuccess: async ()=>{
+            queryClient.removeQueries("ticket", { exact: true });
+
+        }});
 
     const { expandableRef, toggle, slideToggleState } =
         getSliderToggle({duration: SLIDE_DURATION});
@@ -89,7 +87,7 @@ const AttachmentList = React.memo(({attachments, state} : Props) => {
         }
     };
 
-    const attachmentList = attachments.map(attachment => {
+    const attachmentList = ticket.attachments.map(attachment => {
         const fileSizeKB = getAttachmentFileSize(attachment.data_file_size);
 
         return (

@@ -1,11 +1,11 @@
-import React, { ForwardedRef, useContext} from "react";
+import React, { ForwardedRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import useTicketmule from "../hooks/useTicketMule";
 import { getAttachmentFileSize } from "../utils/displayUtils";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import { useMutation } from "react-query";
 import { TicketContext } from "../application";
 import ResourceStore from "../actions/resourceStore";

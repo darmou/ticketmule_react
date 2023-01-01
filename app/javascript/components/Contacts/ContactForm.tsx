@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
-import { StyledForm, StyledLabel, StyledInput, Row } from "../ComponentLibrary/FormComponentsStyled";
+import { Row, StyledForm, StyledInput, StyledLabel } from "../ComponentLibrary/FormComponentsStyled";
 import { onSubmitForm } from "../../utils/displayUtils";
 import { RESOURCE_TYPES } from "../../types/types";
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import TicketsTable from "./TicketsTable";
 import styled from "styled-components";
 import useGetResources from "../../hooks/useGetResources";

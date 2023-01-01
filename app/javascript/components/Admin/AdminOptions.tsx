@@ -1,21 +1,18 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import OptionsStore from "../../actions/optionsStore";
 import { useMutation } from "react-query";
 import useTicketMule from "../../hooks/useTicketMule";
 import AdminSection from "./AdminSection";
 import { TicketContext } from "../../application";
 import SecondaryButton from "../ComponentLibrary/SecondaryButton";
-import { FieldStyled } from "../ComponentLibrary/FormComponentsStyled";
+import { Error, FieldStyled } from "../ComponentLibrary/FormComponentsStyled";
 import { useForm } from "react-hook-form";
-import { createStandardSuccessMessage, createStandardErrorMessage } from "../ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage } from "../ComponentLibrary/FlashMessages";
 import { capitalizeEachWord } from "../../utils/displayUtils";
-import { Error } from "../ComponentLibrary/FormComponentsStyled";
 import { getPlural, queryClient } from "../../utils/network";
 import ResourceStore from "../../actions/resourceStore";
-import {OptionType, OptionTypes, Result} from "../../types/types";
+import { OptionType, OptionTypes, Result } from "../../types/types";
 import useGetOptions from "../../hooks/useGetOptions";
-import { ref } from "yup";
 
 const FieldContainer = styled.div`
     display: flex;

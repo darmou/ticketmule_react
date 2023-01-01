@@ -1,6 +1,6 @@
-import React, {Fragment, useContext} from "react";
+import React, { Fragment, useContext } from "react";
 import styled from "styled-components";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import PrimaryButton from "../PrimaryButton";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import { isEmpty } from "../../utils/displayUtils";
 import "react-datepicker/dist/react-datepicker.css";
 import useGetOptions from "../../hooks/useGetOptions";
 import usePrevious from "../../hooks/usePrevious";
-import {RESOURCE_TYPES} from "../../types/types";
+import { RESOURCE_TYPES } from "../../types/types";
 
 const newResource = (event, navigate, resourceType) => {
     navigate(`/${resourceType}/new`);

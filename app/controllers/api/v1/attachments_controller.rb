@@ -27,6 +27,8 @@ class Api::V1::AttachmentsController < ApplicationController
 
 
   def destroy
+    # Destroy associated attachment comment before the attachment itself
+    Comment.where("comment LIKE ? AND ticket_id = ?", "<strong>Attached</strong> #{@attachment.data_file_name}%", @attachment.ticket_id).destroy_all
     @attachment.destroy
     json_response({})
     head :ok

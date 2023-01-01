@@ -1,6 +1,5 @@
 import produce from "immer";
 
-
 const UserStore = {
     resetIsLoggingOut: function ({state}) {
         return produce(state, draftState => {

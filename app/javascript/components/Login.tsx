@@ -8,7 +8,7 @@ import { useMutation } from "react-query";
 import moment from "moment";
 import UserStore from "../actions/userStore";
 import SecondaryButton from "./ComponentLibrary/SecondaryButton";
-import { createStandardSuccessMessage, createStandardErrorMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
+import { createStandardErrorMessage, createStandardSuccessMessage, TIMEOUT } from "./ComponentLibrary/FlashMessages";
 import ResourceStore from "../actions/resourceStore";
 import { stringToBoolean } from "../utils/displayUtils";
 import { User } from "../types/types";

@@ -1,7 +1,7 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import {Link, useNavigate} from "react-router-dom";
-import {useMutation} from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
 import EditTicketIcon from "../images/edit-ticket.png";
 import PDFIcon from "../images/document-pdf.png";
 import AddAlertIcon from "../images/add-alert.png";
@@ -16,10 +16,10 @@ import BackArrowIcon from "../images/back-arrow.png";
 import TicketmuleNetwork from "../utils/ticketmuleNetworkClass";
 import { deleteAlert } from "../utils/displayUtils";
 import ResourceStore from "../actions/resourceStore";
-import {RESOURCE_TYPES, Ticket} from "../types/types";
-import {TicketContext} from "../application";
+import { RESOURCE_TYPES, Ticket } from "../types/types";
+import { TicketContext } from "../application";
 import useDeleteAlert from "../hooks/useDeleteAlert";
-import {createStandardSuccessMessage} from "./ComponentLibrary/FlashMessages";
+import { createStandardSuccessMessage } from "./ComponentLibrary/FlashMessages";
 import { queryClient } from "../utils/network";
 
 

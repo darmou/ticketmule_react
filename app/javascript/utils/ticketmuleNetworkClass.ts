@@ -1,5 +1,5 @@
 import { doNetworkRequest, getPlural } from "./network";
-import { SEND_METHOD } from "../types/types";
+import { SEND_METHOD, State } from "../types/types";
 
 class TicketmuleNetwork {
     // eslint-disable-next-line
@@ -102,8 +102,8 @@ class TicketmuleNetwork {
         }
     }
 
-    async deleteRelatedTicketRecord(app_state, type, id, alert = null) {
-        const aTicketId =  (alert == null) ? app_state.ticket.id : alert.ticket_id;
+    async deleteRelatedTicketRecord(app_state: State, type: string, ticketId: number, id: number, alert = null) {
+        const aTicketId =  (alert == null) ? ticketId : alert.ticket_id;
         if (id == null && alert) {
             id = alert.id;
         }

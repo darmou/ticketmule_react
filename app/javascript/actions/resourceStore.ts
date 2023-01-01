@@ -1,6 +1,6 @@
 import produce from "immer";
 import { getQueryKey } from "../utils/displayUtils";
-import { RESOURCE_TYPES, State, User, Ticket, Contact } from "../types/types";
+import { Contact, RESOURCE_TYPES, State, Ticket, User } from "../types/types";
 
 interface ResourceProps  {
     state: State,

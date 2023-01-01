@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import usePrevious from "../hooks/usePrevious";
 import styled from "styled-components";
 import ResourceStore from "../actions/resourceStore";

@@ -58,10 +58,10 @@ const Ticket = React.memo(() => {
                         toggleForm={attachmentToggle.toggle} id={parseInt(slug)}/>
 
         { (ticket && true && ticket.attachments != null && ticket.attachments.length > 0) &&
-            <AttachmentList  state={state} attachments={ticket.attachments}/>
+            <AttachmentList  state={state} ticket={ticket} />
         }
         { (ticket && true && ticket.comments != null && ticket.comments.length > 0) &&
-            <CommentList state={state} comments={ticket.comments}/>
+            <CommentList state={state} ticket={ticket} />
         }
 
     </>);

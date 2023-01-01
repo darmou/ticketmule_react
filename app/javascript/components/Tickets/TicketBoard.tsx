@@ -1,16 +1,15 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { renderList } from "../../utils/displayUtils";
+import { renderList, SLIDE_DURATION } from "../../utils/displayUtils";
 import moment from "moment";
 import { TableSection } from "../TableSection";
 import { H3ToggleStyled } from "../ComponentLibrary/H3ToggleStyled";
 import RedBullet from "../../images/bullet_red.png";
 import YellowBullet from "../../images/bullet_yellow.png";
 import BlueBullet from "../../images/bullet_blue.png";
-import { SLIDE_DURATION } from "../../utils/displayUtils";
 import useSliderToggle from "react-slide-toggle-hooks";
 import useGetResources from "../../hooks/useGetResources";
-import { RESOURCE_TYPES, TICKET_TYPES, TICKET_STATUS_TYPES } from "../../types/types";
+import { RESOURCE_TYPES, TICKET_STATUS_TYPES, TICKET_TYPES } from "../../types/types";
 
 const ticketTimeLineList = (type, style) => {
     let the_str_date, content = null;

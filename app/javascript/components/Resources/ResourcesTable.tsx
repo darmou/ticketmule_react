@@ -1,8 +1,8 @@
 import { useTable } from "react-table";
 import {
+    StyledBodyTableRow,
     TableHeaderStyled,
     TableListingStyled,
-    StyledBodyTableRow,
     TableWithPagination,
     TRHeaderStyled
 } from "../ComponentLibrary/TableStyles";
