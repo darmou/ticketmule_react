@@ -2,7 +2,7 @@ version: "3.9"
 services:
   esbuild:
     build: .
-    command: yarn add esbuild-linux-arm64 ; yarn build --watch
+    command: yarn add-no-save esbuild-linux-arm64 ; yarn build --watch
     volumes:
       - .:/usr/src/app
     ports:
