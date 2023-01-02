@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:2.7.3
+FROM ruby:3.1.0
 
 # Update
 RUN apt-get update -y
@@ -25,7 +25,7 @@ RUN bundle install
 RUN yarn install --frozen-lockfile
 RUN npm rebuild node-sass
 RUN bundle exec rails assets:precompile
-RUN rake 
+RUN rake
 
 # COPY ../compose /myapp
 

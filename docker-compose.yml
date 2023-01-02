@@ -1,8 +1,8 @@
 version: "3.9"
 services:
-  webpack:
+  esbuild:
     build: .
-    command: ./bin/webpack-dev-server --mode development --env development
+    command: yarn add esbuild-linux-arm64 ; yarn build --watch
     volumes:
       - .:/usr/src/app
     ports:
@@ -10,9 +10,25 @@ services:
     environment:
       NODE_ENV: development
       RAILS_ENV: development
-      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+      ESBUILD_DEV_SERVER_HOST: 0.0.0.0
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rake db:seed && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      RACK_ENV: development
+      POSTGRES_USER: ticketmule
+      POSTGRES_PASSWORD: z!Yh2Kw7^mJ
+      POSTGRES_DB: ticketmule_db
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - esbuild
   db:
-    image: postgres
+    image: postgres:15
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     ports:
@@ -21,19 +37,3 @@ services:
       POSTGRES_PASSWORD: z!Yh2Kw7^mJ
       POSTGRES_USER: ticketmule
       POSTGRES_DB: ticketmule_db
-  web:
-    build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    ports:
-      - "3000:3000" 
-    environment:
-      RAILS_ENV: development
-      RACK_ENV: development
-      POSTGRES_USER: ticketmule
-      POSTGRES_PASSWORD: z!Yh2Kw7^mJ
-      POSTGRES_DB: ticketmule_db  
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - "db"
-      - "webpack"

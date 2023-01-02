@@ -17,9 +17,7 @@ gem 'sass-rails', '>= 6'
 gem "sprockets-rails"
 gem "jsbundling-rails"
 
-#gem 'simple_token_authentication', '~> 1.0'
-gem 'simple_token_authentication', git: 'https://github.com/OskarEichler/simple_token_authentication'
-
+gem 'simple_token_authentication', '~> 1.0'
 
 gem 'devise'
 # See https://github.com/rails/execjs#readme for more supported runtimes
