@@ -28,7 +28,7 @@ services:
       - db
       - esbuild
   db:
-    image: postgres:15
+    image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     ports:
