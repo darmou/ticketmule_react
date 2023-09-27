@@ -11,7 +11,7 @@ gem 'pg', '~> 1.2'
 gem "activerecord-session_store"
 #gem 'simple_token_authentication'
 # Use Puma as the app server
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 5.6'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 gem "sprockets-rails"
