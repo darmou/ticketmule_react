@@ -6,6 +6,31 @@
     <%= csp_meta_tag %>
 
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application.ts' %>
+    <!--
+      If using a TypeScript entrypoint file:
+        vite_typescript_tag 'application'
+
+      If using a .jsx or .tsx entrypoint, add the extension:
+        vite_javascript_tag 'application.jsx'
+
+      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
+    -->
+<%# stylesheet_link_tag "application" %>
+<%= vite_stylesheet_tag "application.scss" %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
+    <!--
+      If using a TypeScript entrypoint file:
+        vite_typescript_tag 'application'
+
+      If using a .jsx or .tsx entrypoint, add the extension:
+        vite_javascript_tag 'application.jsx'
+
+      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
+    -->
+
   </head>
 
   <body>

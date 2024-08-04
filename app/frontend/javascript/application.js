@@ -69,3 +69,5 @@ document.addEventListener('DOMContentLoaded', function () {
           </react_cookie_1.CookiesProvider>
         </exports.TicketContextProvider>, container);
 });
+import "@hotwired/turbo-rails"
+import "./controllers"

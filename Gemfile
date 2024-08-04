@@ -3,8 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.0'
 
+
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 7.0.3.1"
+#gem "rails", "~> 7.0.7"
+gem 'rails', '~> 7.1.0'
+
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
 gem 'pg', '~> 1.2'
@@ -35,6 +39,15 @@ gem 'ruport'
 gem 'prawn'
 gem 'prawn-rails', '~> 1.4.2'
 gem 'jsonapi-serializer'
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Vite.js integration in Ruby web apps [https://vite-ruby.netlify.app/]
+gem "vite_rails"
 
 #gem 'protected_attributes'
 
