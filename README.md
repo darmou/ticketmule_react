@@ -20,7 +20,7 @@ Also once finished will include, Jest and rspec for unit testing and Cypress tes
 * Export ticket in PDF format
 * No complicated permission system...only admins can perform negative actions
 * In-line admin controls to delete comments, attachments, and tickets
-* Ruby on Rails 6.0, ReactJS 16.13.1
+* Ruby on Rails 7.0, ReactJS 16.13.1
 
 
 ## Included Gems
